@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Crew Dawg Calculator</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -28,6 +29,7 @@
       padding: 6px;
       width: 140px;
       margin-top: 5px;
+      font-size: 16px;
     }
 
     button {
@@ -54,8 +56,8 @@
     .subtext {
       font-size: 12px;
       color: #666;
-      margin-left: 2px;
       margin-top: 2px;
+      margin-bottom: 6px;
     }
 
     .disclaimer {
@@ -86,12 +88,12 @@
 
   <label>
     Scheduled Takeoff Time (Zulu)
-    <input id="takeoffTime" placeholder="HHMM">
+    <input id="takeoffTime" placeholder="HHMM" maxlength="4">
   </label>
 
   <label>
     Scheduled Land Time (Zulu)
-    <input id="landingTime" placeholder="HHMM">
+    <input id="landingTime" placeholder="HHMM" maxlength="4">
   </label>
 
   <button id="calcBtn">Calculate</button>
@@ -122,7 +124,7 @@
       mins = ((mins % 1440) + 1440) % 1440;
       const h = Math.floor(mins / 60);
       const m = mins % 60;
-      return `${String(h).padStart(2, "0")}${String(m).padStart(2, "0")}Z`;
+      return String(h).padStart(2, "0") + String(m).padStart(2, "0") + "Z";
     }
 
     function calculate() {
@@ -131,11 +133,9 @@
       const out = document.getElementById("output");
 
       if (takeoff.length !== 4 || landing.length !== 4) {
-        out.innerHTML = "❌ Please enter times in HHMM format.";
+        out.innerHTML = "Please enter times in HHMM format.";
         return;
       }
-
-      document.getElementById("calcBtn").addEventListener("click", calculate);
 
       const takeoffMin = hhmmToMinutes(takeoff);
       const landingMin = hhmmToMinutes(landing);
@@ -145,13 +145,13 @@
 
       const flightHours = (flightMinutes / 60).toFixed(1);
 
-      const crewRest = takeoffMin - 855;      // 14h 15m
-      const lastBeer = takeoffMin - 720;      // 12h
-      const legalAlert = takeoffMin - 255;    // 4h 15m
-      const showTime = takeoffMin - 195;      // 3h 15m
-      const briefTime = takeoffMin - 150;     // 2h 30m
-      const stepTime = takeoffMin - 120;      // 2h
-      const engineStart = takeoffMin - 30;    // 30m
+      const crewRest   = takeoffMin - 855; // 14:15
+      const lastBeer   = takeoffMin - 720; // 12:00
+      const legalAlert = takeoffMin - 255; // 4:15
+      const showTime   = takeoffMin - 195; // 3:15
+      const briefTime  = takeoffMin - 150; // 2:30
+      const stepTime   = takeoffMin - 120; // 2:00
+      const engine     = takeoffMin - 30;  // 0:30
 
       out.innerHTML = `
         <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
@@ -172,11 +172,19 @@
         <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
         <div class="subtext">Takeoff − 2 hours</div>
 
-        <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engineStart)}</span></div>
+        <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
         <div class="subtext">Takeoff − 30 minutes</div>
 
         <div class="row"><span>Takeoff</span><span>${minutesToHHMM(takeoffMin)}</span></div>
-
         <div class="row"><span>Landing</span><span>${minutesToHHMM(landingMin)}</span></div>
+        <div class="row"><span>Flight Time</span><span>${flightHours} hrs</span></div>
+      `;
+    }
 
-        <div class="r
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("calcBtn").addEventListener("click", calculate);
+    });
+  </script>
+
+</body>
+</html>
