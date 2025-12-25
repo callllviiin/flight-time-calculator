@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crew Dawg Calculator</title>
 
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f5f7fa;
-      padding: 40px;
-      max-width: 700px;
+      padding: 30px;
+      max-width: 420px;
       margin: auto;
       color: #222;
     }
@@ -27,8 +28,9 @@
       font-weight: bold;
     }
 
-    .input-row span {
-      white-space: nowrap;
+    .label-text {
+      width: 220px;
+      display: inline-block;
     }
 
     input {
@@ -52,6 +54,7 @@
       padding: 12px 22px;
       font-size: 16px;
       cursor: pointer;
+      width: 100%;
     }
 
     .output {
@@ -80,6 +83,8 @@
       font-size: 13px;
       color: #444;
       line-height: 1.5;
+      text-align: justify;
+      text-justify: inter-word;
     }
 
     .footer {
@@ -102,14 +107,14 @@
   <h1>Crew Dawg Calculator</h1>
 
   <div class="input-row">
-    <span>Scheduled Takeoff Time:</span>
+    <span class="label-text">Scheduled Takeoff Time:</span>
     <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
     <span>at</span>
     <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
   </div>
 
   <div class="input-row">
-    <span>Scheduled Land Time:</span>
+    <span class="label-text">Scheduled Land Time:</span>
     <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
     <span>at</span>
     <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
