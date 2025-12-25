@@ -134,6 +134,7 @@ function formatZuluAndLocalFromWorker(zuluMinutes, localMinutes) {
   async function calculate() {
   try {
     const toTimeRaw = document.getElementById('to_time').value.trim();
+    const localOffset = toData.localMinutes - toData.zuluMinutes;
     const ldTimeRaw = document.getElementById('ld_time').value.trim();
 
     if (!/^\d{4}$/.test(toTimeRaw) || !/^\d{4}$/.test(ldTimeRaw)) {
@@ -192,7 +193,7 @@ function formatZuluAndLocalFromWorker(zuluMinutes, localMinutes) {
           <td>${e.label}</td>
           <td>${formatZuluAndLocalFromWorker(
             zulu,
-            (zulu + (toData.localMinutes - toZulu)) % 1440
+            (zulu + localOffset + 1440) % 1440
           )}</td>
         </tr>`;
     }
@@ -204,7 +205,8 @@ function formatZuluAndLocalFromWorker(zuluMinutes, localMinutes) {
           <td>${d.label}</td>
           <td>${formatZuluAndLocalFromWorker(
             d.time,
-            (d.time + (toData.localMinutes - toZulu)) % 1440
+            (d.time + (zulu + localOffset + 1440) % 1440
+
           )}</td>
         </tr>`;
     }
