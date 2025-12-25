@@ -2,67 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Flight Time Calculator (Zulu)</title>
+  <title>Crew Dawg Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f5f7fa;
       padding: 40px;
+      max-width: 700px;
+      margin: auto;
+      color: #222;
     }
+
     h1 {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      text-align: center;
     }
+
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 18px;
+      font-weight: bold;
     }
+
     input {
       padding: 6px;
-      width: 120px;
+      width: 140px;
+      margin-top: 5px;
     }
+
     button {
-      margin-top: 20px;
-      padding: 10px 18px;
+      margin-top: 25px;
+      padding: 12px 22px;
       font-size: 16px;
+      cursor: pointer;
     }
+
     .output {
-      margin-top: 30px;
-      padding: 20px;
+      margin-top: 35px;
+      padding: 25px;
       background: white;
       border-radius: 6px;
     }
+
     .row {
-      margin: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .subtext {
+      font-size: 12px;
+      color: #666;
+      margin-left: 2px;
+      margin-top: 2px;
+    }
+
+    .disclaimer {
+      margin-top: 50px;
+      font-size: 13px;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .footer small {
+      display: block;
+      font-weight: normal;
+      color: #666;
+      margin-top: 4px;
     }
   </style>
 </head>
 
 <body>
-  <h1>Flight Time Calculator (Zulu)</h1>
+
+  <h1>Crew Dawg Calculator</h1>
 
   <label>
-    Departure ICAO:
-    <input id="depIcao" placeholder="KADW">
+    Scheduled Takeoff Time (Zulu)
+    <input id="takeoffTime" placeholder="HHMM">
   </label>
 
   <label>
-    Takeoff Time (HHMM Z):
-    <input id="takeoffTime" placeholder="1200">
-  </label>
-
-  <label>
-    Arrival ICAO:
-    <input id="arrIcao" placeholder="EGLL">
-  </label>
-
-  <label>
-    Landing Time (HHMM Z):
-    <input id="landingTime" placeholder="1625">
+    Scheduled Land Time (Zulu)
+    <input id="landingTime" placeholder="HHMM">
   </label>
 
   <button onclick="calculate()">Calculate</button>
 
   <div id="output" class="output"></div>
+
+  <div class="disclaimer">
+    <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there’s no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only).</p>
+
+    <p>Also, as much as I’d like to take credit for this and lead you to think I’m smart, I created this tool with the help of ChatGPT. If you find an error, please let me know at <strong>[your email]</strong>.</p>
+
+    <p><strong>Donations:</strong> This tool is free for you to use to help manage your crew. It costs you nothing and costs me a little time. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot buy them a beer. I appreciate your consideration, but I’ve already taken the bonus, so I’m screwed either way. Cheers!</p>
+  </div>
+
+  <div class="footer">
+    NKAWT...GF
+    <small>(If you know, you know…)</small>
+  </div>
 
   <script>
     function hhmmToMinutes(hhmm) {
@@ -79,14 +126,12 @@
     }
 
     function calculate() {
-      const depIcao = document.getElementById("depIcao").value.trim().toUpperCase();
-      const arrIcao = document.getElementById("arrIcao").value.trim().toUpperCase();
       const takeoff = document.getElementById("takeoffTime").value;
       const landing = document.getElementById("landingTime").value;
       const out = document.getElementById("output");
 
-      if (!depIcao || !arrIcao || takeoff.length !== 4 || landing.length !== 4) {
-        out.innerHTML = "❌ Please fill all fields using HHMM format.";
+      if (takeoff.length !== 4 || landing.length !== 4) {
+        out.innerHTML = "❌ Please enter times in HHMM format.";
         return;
       }
 
@@ -98,27 +143,38 @@
 
       const flightHours = (flightMinutes / 60).toFixed(1);
 
-      const showTime = takeoffMin - 195;
-      const briefTime = takeoffMin - 150;
-      const stepTime = takeoffMin - 120;
-      const engineStart = takeoffMin - 30;
-      const legalAlert = takeoffMin - 255;
-      const crewRest = takeoffMin - 855;
-      const lastBeer = takeoffMin - 720;
+      const crewRest = takeoffMin - 855;      // 14h 15m
+      const lastBeer = takeoffMin - 720;      // 12h
+      const legalAlert = takeoffMin - 255;    // 4h 15m
+      const showTime = takeoffMin - 195;      // 3h 15m
+      const briefTime = takeoffMin - 150;     // 2h 30m
+      const stepTime = takeoffMin - 120;      // 2h
+      const engineStart = takeoffMin - 30;    // 30m
 
       out.innerHTML = `
-        <div class="row"><b>Enter Crew Rest:</b> ${minutesToHHMM(crewRest)}</div>
-        <div class="row"><b>Last Beer:</b> ${minutesToHHMM(lastBeer)}</div>
-        <div class="row"><b>Legal for Alert:</b> ${minutesToHHMM(legalAlert)}</div>
-        <div class="row"><b>Show Time:</b> ${minutesToHHMM(showTime)}</div>
-        <div class="row"><b>Brief Time:</b> ${minutesToHHMM(briefTime)}</div>
-        <div class="row"><b>Step Time:</b> ${minutesToHHMM(stepTime)}</div>
-        <div class="row"><b>Engine Start:</b> ${minutesToHHMM(engineStart)}</div>
-        <div class="row"><b>Takeoff:</b> ${minutesToHHMM(takeoffMin)}</div>
-        <div class="row"><b>Landing:</b> ${minutesToHHMM(landingMin)}</div>
-        <div class="row"><b>Estimated Flight Time:</b> ${flightHours} hrs</div>
-      `;
-    }
-  </script>
-</body>
-</html>
+        <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
+        <div class="subtext">Takeoff − 14 hours 15 minutes</div>
+
+        <div class="row"><span>Last Beer</span><span>${minutesToHHMM(lastBeer)}</span></div>
+        <div class="subtext">Takeoff − 12 hours</div>
+
+        <div class="row"><span>Legal for Alert</span><span>${minutesToHHMM(legalAlert)}</span></div>
+        <div class="subtext">Takeoff − 4 hours 15 minutes</div>
+
+        <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
+        <div class="subtext">Takeoff − 3 hours 15 minutes</div>
+
+        <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
+        <div class="subtext">Takeoff − 2 hours 30 minutes</div>
+
+        <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
+        <div class="subtext">Takeoff − 2 hours</div>
+
+        <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engineStart)}</span></div>
+        <div class="subtext">Takeoff − 30 minutes</div>
+
+        <div class="row"><span>Takeoff</span><span>${minutesToHHMM(takeoffMin)}</span></div>
+
+        <div class="row"><span>Landing</span><span>${minutesToHHMM(landingMin)}</span></div>
+
+        <div class="r
