@@ -94,7 +94,7 @@
     <input id="landingTime" placeholder="HHMM">
   </label>
 
-  <button onclick="calculate()">Calculate</button>
+  <button id="calcBtn">Calculate</button>
 
   <div id="output" class="output"></div>
 
@@ -134,6 +134,8 @@
         out.innerHTML = "❌ Please enter times in HHMM format.";
         return;
       }
+
+      document.getElementById("calcBtn").addEventListener("click", calculate);
 
       const takeoffMin = hhmmToMinutes(takeoff);
       const landingMin = hhmmToMinutes(landing);
