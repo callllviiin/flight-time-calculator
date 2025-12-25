@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Flight Time Calculator</title>
+  <title>Zulu Flight Timeline</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
       background: #111;
       color: #eee;
       padding: 40px;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
     }
     label {
@@ -26,55 +26,51 @@
       margin-top: 25px;
       cursor: pointer;
     }
-    .result {
+    table {
       margin-top: 30px;
-      line-height: 1.6;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #333;
+    }
+    td:first-child {
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1>Flight Time Calculator</h1>
+
+  <h1>Flight Timeline (Zulu)</h1>
 
   <label>
-    Takeoff Time (HH:MM)
+    Takeoff Time (Z)
     <input type="time" id="takeoff">
   </label>
 
   <label>
-    Landing Time (HH:MM)
+    Estimated Landing Time (Z)
     <input type="time" id="landing">
   </label>
 
-  <label>
-    Alert Time Offset (minutes before takeoff)
-    <input type="number" id="alert" value="180">
-  </label>
+  <button onclick="calculate()">Calculate Timeline</button>
 
-  <label>
-    Show Time Offset (minutes before takeoff)
-    <input type="number" id="show" value="150">
-  </label>
-
-  <label>
-    Brief Time Offset (minutes before takeoff)
-    <input type="number" id="brief" value="90">
-  </label>
-
-  <button onclick="calculate()">Calculate</button>
-
-  <div class="result" id="result"></div>
+  <div id="output"></div>
 
   <script>
+    // Convert HH:MM to minutes since midnight
     function toMinutes(time) {
       const [h, m] = time.split(':').map(Number);
       return h * 60 + m;
     }
 
+    // Convert minutes to HH:MM Zulu, wrapping around midnight
     function formatTime(mins) {
-      mins = (mins + 24 * 60) % (24 * 60);
+      mins = (mins + 1440) % 1440;
       const h = Math.floor(mins / 60);
       const m = mins % 60;
-      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}Z`;
     }
 
     function calculate() {
@@ -82,7 +78,7 @@
       const landingVal = document.getElementById('landing').value;
 
       if (!takeoffVal || !landingVal) {
-        document.getElementById('result').textContent =
+        document.getElementById('output').textContent =
           "Please enter both takeoff and landing times.";
         return;
       }
@@ -91,29 +87,39 @@
       let landing = toMinutes(landingVal);
 
       if (landing < takeoff) {
-        landing += 24 * 60;
+        landing += 1440;
       }
 
-      const duration = landing - takeoff;
+      const timeline = [
+        { label: "Enter Crew Rest", offset: -975 },   // 16:15
+        { label: "Legal for Alert", offset: -255 },   // 4:15
+        { label: "Show Time", offset: -195 },         // 3:15
+        { label: "Brief Time", offset: -150 },        // 2:30
+        { label: "Step Time", offset: -120 },         // 2:00
+        { label: "Engine Start", offset: -30 },       // 0:30
+        { label: "Takeoff Time", offset: 0 },
+        { label: "Estimated Land Time", absolute: landing }
+      ];
 
-      const alertOffset = Number(document.getElementById('alert').value);
-      const showOffset = Number(document.getElementById('show').value);
-      const briefOffset = Number(document.getElementById('brief').value);
+      let rows = "";
 
-      const alertTime = formatTime(takeoff - alertOffset);
-      const showTime = formatTime(takeoff - showOffset);
-      const briefTime = formatTime(takeoff - briefOffset);
+      for (const event of timeline) {
+        let time;
+        if (event.absolute !== undefined) {
+          time = formatTime(event.absolute);
+        } else {
+          time = formatTime(takeoff + event.offset);
+        }
+        rows += `<tr><td>${event.label}</td><td>${time}</td></tr>`;
+      }
 
-      const hours = Math.floor(duration / 60);
-      const minutes = duration % 60;
-
-      document.getElementById('result').innerHTML = `
-        <strong>Estimated Flight Time:</strong> ${hours}h ${minutes}m<br><br>
-        <strong>Alert Time:</strong> ${alertTime}<br>
-        <strong>Show Time:</strong> ${showTime}<br>
-        <strong>Brief Time:</strong> ${briefTime}
+      document.getElementById('output').innerHTML = `
+        <table>
+          ${rows}
+        </table>
       `;
     }
   </script>
+
 </body>
 </html>
