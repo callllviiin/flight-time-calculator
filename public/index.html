@@ -9,7 +9,7 @@
       background: #111;
       color: #eee;
       padding: 40px;
-      max-width: 700px;
+      max-width: 750px;
       margin: auto;
     }
     label {
@@ -23,11 +23,16 @@
       width: 100%;
     }
     button {
-      margin-top: 25px;
+      margin-top: 30px;
       cursor: pointer;
     }
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }
     table {
-      margin-top: 30px;
+      margin-top: 15px;
       width: 100%;
       border-collapse: collapse;
     }
@@ -42,84 +47,103 @@
 </head>
 <body>
 
-  <h1>Flight Timeline (Zulu)</h1>
+<h1>Flight Timeline (Zulu)</h1>
 
-  <label>
-    Takeoff Time (Z)
-    <input type="time" id="takeoff">
-  </label>
+<label>
+  Takeoff Time (HHMM Z)
+  <input type="text" id="takeoff" placeholder="1300">
+</label>
 
-  <label>
-    Estimated Landing Time (Z)
-    <input type="time" id="landing">
-  </label>
+<label>
+  Estimated Landing Time (HHMM Z)
+  <input type="text" id="landing" placeholder="1625">
+</label>
 
-  <button onclick="calculate()">Calculate Timeline</button>
+<button onclick="calculate()">Calculate</button>
 
-  <div id="output"></div>
+<div id="output"></div>
 
-  <script>
-    // Convert HH:MM to minutes since midnight
-    function toMinutes(time) {
-      const [h, m] = time.split(':').map(Number);
-      return h * 60 + m;
+<script>
+  function parseHHMM(value) {
+    if (!/^\d{4}$/.test(value)) return null;
+    const h = Number(value.slice(0,2));
+    const m = Number(value.slice(2,4));
+    if (h > 23 || m > 59) return null;
+    return h * 60 + m;
+  }
+
+  function formatTime(mins) {
+    mins = (mins + 1440) % 1440;
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}Z`;
+  }
+
+  function calculate() {
+    const takeoffVal = document.getElementById('takeoff').value.trim();
+    const landingVal = document.getElementById('landing').value.trim();
+
+    const takeoff = parseHHMM(takeoffVal);
+    let landing = parseHHMM(landingVal);
+
+    if (takeoff === null || landing === null) {
+      document.getElementById('output').textContent =
+        "Please enter times in HHMM Zulu format.";
+      return;
     }
 
-    // Convert minutes to HH:MM Zulu, wrapping around midnight
-    function formatTime(mins) {
-      mins = (mins + 1440) % 1440;
-      const h = Math.floor(mins / 60);
-      const m = mins % 60;
-      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}Z`;
+    if (landing < takeoff) landing += 1440;
+
+    const flightMinutes = landing - takeoff;
+    const flightHours = (flightMinutes / 60).toFixed(1);
+
+    // Core timeline (offsets in minutes from takeoff)
+    const timeline = [
+      { label: "Enter Crew Rest", offset: -975 },
+      { label: "Legal for Alert", offset: -255 },
+      { label: "Show Time", offset: -195 },
+      { label: "Brief Time", offset: -150 },
+      { label: "Step Time", offset: -120 },
+      { label: "Engine Start", offset: -30 },
+      { label: "Last Beer", offset: -720 },
+      { label: "Takeoff Time", offset: 0 },
+      { label: "Estimated Land Time", absolute: landing }
+    ];
+
+    const showTime = takeoff - 195;
+
+    const dutyLimits = [
+      { label: "Flight Duty Period Ends", time: showTime + 960 },
+      { label: "Crew Duty Period Ends", time: showTime + 1080 },
+      { label: "Transition Duty Period Ends", time: showTime + 720 },
+      { label: "Autopilot INOP Duty Ends", time: showTime + 720 }
+    ];
+
+    let timelineRows = "";
+    for (const e of timeline) {
+      const time = e.absolute !== undefined
+        ? formatTime(e.absolute)
+        : formatTime(takeoff + e.offset);
+      timelineRows += `<tr><td>${e.label}</td><td>${time}</td></tr>`;
     }
 
-    function calculate() {
-      const takeoffVal = document.getElementById('takeoff').value;
-      const landingVal = document.getElementById('landing').value;
-
-      if (!takeoffVal || !landingVal) {
-        document.getElementById('output').textContent =
-          "Please enter both takeoff and landing times.";
-        return;
-      }
-
-      const takeoff = toMinutes(takeoffVal);
-      let landing = toMinutes(landingVal);
-
-      if (landing < takeoff) {
-        landing += 1440;
-      }
-
-      const timeline = [
-        { label: "Enter Crew Rest", offset: -975 },   // 16:15
-        { label: "Legal for Alert", offset: -255 },   // 4:15
-        { label: "Show Time", offset: -195 },         // 3:15
-        { label: "Brief Time", offset: -150 },        // 2:30
-        { label: "Step Time", offset: -120 },         // 2:00
-        { label: "Engine Start", offset: -30 },       // 0:30
-        { label: "Takeoff Time", offset: 0 },
-        { label: "Estimated Land Time", absolute: landing }
-      ];
-
-      let rows = "";
-
-      for (const event of timeline) {
-        let time;
-        if (event.absolute !== undefined) {
-          time = formatTime(event.absolute);
-        } else {
-          time = formatTime(takeoff + event.offset);
-        }
-        rows += `<tr><td>${event.label}</td><td>${time}</td></tr>`;
-      }
-
-      document.getElementById('output').innerHTML = `
-        <table>
-          ${rows}
-        </table>
-      `;
+    let dutyRows = "";
+    for (const d of dutyLimits) {
+      dutyRows += `<tr><td>${d.label}</td><td>${formatTime(d.time)}</td></tr>`;
     }
-  </script>
+
+    document.getElementById('output').innerHTML = `
+      <h2>Timeline</h2>
+      <table>${timelineRows}</table>
+
+      <h2>Estimated Flight Time</h2>
+      <p><strong>${flightHours} hours</strong></p>
+
+      <h2>Duty Limits</h2>
+      <table>${dutyRows}</table>
+    `;
+  }
+</script>
 
 </body>
 </html>
