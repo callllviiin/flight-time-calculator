@@ -2,151 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Zulu Flight Time Calculator</title>
+  <title>Flight Time Calculator (Zulu)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 12px;
+      background: #f5f7fa;
+      padding: 40px;
+    }
+    h1 {
+      margin-bottom: 20px;
     }
     label {
       display: block;
-      margin-top: 12px;
+      margin-top: 15px;
     }
-    input, select, button {
-      margin-top: 4px;
+    input {
       padding: 6px;
-      font-size: 14px;
+      width: 120px;
     }
-    table {
-      border-collapse: collapse;
-      margin-top: 10px;
-      width: 100%;
+    button {
+      margin-top: 20px;
+      padding: 10px 18px;
+      font-size: 16px;
     }
-    td, th {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: left;
+    .output {
+      margin-top: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 6px;
     }
-    h2 {
-      margin-top: 28px;
-    }
-    .note {
-      font-size: 13px;
-      color: #444;
-      margin-top: 6px;
+    .row {
+      margin: 6px 0;
     }
   </style>
 </head>
+
 <body>
+  <h1>Flight Time Calculator (Zulu)</h1>
 
-<h1>Flight Time Calculator (Zulu)</h1>
+  <label>
+    Departure ICAO:
+    <input id="depIcao" placeholder="KADW">
+  </label>
 
-<label>
-  Takeoff ICAO:
-  <input id="to_icao" placeholder="EGUL" />
-</label>
+  <label>
+    Takeoff Time (HHMM Z):
+    <input id="takeoffTime" placeholder="1200">
+  </label>
 
-<label>
-  Takeoff Time (HHMM):
-  <input id="to_time" placeholder="1200" />
-  <select id="to_ref">
-    <option value="Z">Zulu</option>
-    <option value="L">Local</option>
-  </select>
-</label>
+  <label>
+    Arrival ICAO:
+    <input id="arrIcao" placeholder="EGLL">
+  </label>
 
-<label>
-  Landing ICAO:
-  <input id="ld_icao" placeholder="EDDF" />
-</label>
+  <label>
+    Landing Time (HHMM Z):
+    <input id="landingTime" placeholder="1625">
+  </label>
 
-<label>
-  Landing Time (HHMM):
-  <input id="ld_time" placeholder="1525" />
-  <select id="ld_ref">
-    <option value="Z">Zulu</option>
-    <option value="L">Local</option>
-  </select>
-</label>
+  <button onclick="calculate()">Calculate</button>
 
-<div class="note">
-  All outputs are shown in <b>Zulu time</b>. Local time will be reintroduced later.
-</div>
+  <div id="output" class="output"></div>
 
-<br />
-<button onclick="calculate()">Calculate</button>
-
-<div id="output"></div>
-
-<script>
-const WORKER_URL = "https://old-surf-349b.calvincraig.workers.dev/convert";
-
-function formatZulu(mins) {
-  mins = ((mins % 1440) + 1440) % 1440;
-  const h = Math.floor(mins / 60).toString().padStart(2, "0");
-  const m = (mins % 60).toString().padStart(2, "0");
-  return `${h}${m}Z`;
-}
-
-async function getZuluFromWorker(icao, time, ref) {
-  const response = await fetch(
-    `${WORKER_URL}?icao=${encodeURIComponent(icao)}&time=${encodeURIComponent(time)}&ref=${encodeURIComponent(ref)}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Worker error");
-  }
-
-  const data = await response.json();
-  return data.zuluMinutes;
-}
-
-async function calculate() {
-  try {
-    const toICAO = document.getElementById("to_icao").value.trim().toUpperCase();
-    const ldICAO = document.getElementById("ld_icao").value.trim().toUpperCase();
-    const toTime = document.getElementById("to_time").value.trim();
-    const ldTime = document.getElementById("ld_time").value.trim();
-    const toRef = document.getElementById("to_ref").value;
-    const ldRef = document.getElementById("ld_ref").value;
-
-    if (!toICAO || !ldICAO) {
-      document.getElementById("output").textContent =
-        "Please enter both ICAO codes.";
-      return;
+  <script>
+    function hhmmToMinutes(hhmm) {
+      const h = parseInt(hhmm.slice(0, 2), 10);
+      const m = parseInt(hhmm.slice(2, 4), 10);
+      return h * 60 + m;
     }
 
-    if (!/^\d{4}$/.test(toTime) || !/^\d{4}$/.test(ldTime)) {
-      document.getElementById("output").textContent =
-        "Times must be entered as HHMM.";
-      return;
+    function minutesToHHMM(mins) {
+      mins = ((mins % 1440) + 1440) % 1440;
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return `${String(h).padStart(2, "0")}${String(m).padStart(2, "0")}Z`;
     }
 
-    const toZulu = await getZuluFromWorker(toICAO, toTime, toRef);
-    let ldZulu = await getZuluFromWorker(ldICAO, ldTime, ldRef);
+    function calculate() {
+      const depIcao = document.getElementById("depIcao").value.trim().toUpperCase();
+      const arrIcao = document.getElementById("arrIcao").value.trim().toUpperCase();
+      const takeoff = document.getElementById("takeoffTime").value;
+      const landing = document.getElementById("landingTime").value;
+      const out = document.getElementById("output");
 
-    if (ldZulu < toZulu) {
-      ldZulu += 1440;
+      if (!depIcao || !arrIcao || takeoff.length !== 4 || landing.length !== 4) {
+        out.innerHTML = "❌ Please fill all fields using HHMM format.";
+        return;
+      }
+
+      const takeoffMin = hhmmToMinutes(takeoff);
+      const landingMin = hhmmToMinutes(landing);
+
+      let flightMinutes = landingMin - takeoffMin;
+      if (flightMinutes < 0) flightMinutes += 1440;
+
+      const flightHours = (flightMinutes / 60).toFixed(1);
+
+      const showTime = takeoffMin - 195;
+      const briefTime = takeoffMin - 150;
+      const stepTime = takeoffMin - 120;
+      const engineStart = takeoffMin - 30;
+      const legalAlert = takeoffMin - 255;
+      const crewRest = takeoffMin - 855;
+      const lastBeer = takeoffMin - 720;
+
+      out.innerHTML = `
+        <div class="row"><b>Enter Crew Rest:</b> ${minutesToHHMM(crewRest)}</div>
+        <div class="row"><b>Last Beer:</b> ${minutesToHHMM(lastBeer)}</div>
+        <div class="row"><b>Legal for Alert:</b> ${minutesToHHMM(legalAlert)}</div>
+        <div class="row"><b>Show Time:</b> ${minutesToHHMM(showTime)}</div>
+        <div class="row"><b>Brief Time:</b> ${minutesToHHMM(briefTime)}</div>
+        <div class="row"><b>Step Time:</b> ${minutesToHHMM(stepTime)}</div>
+        <div class="row"><b>Engine Start:</b> ${minutesToHHMM(engineStart)}</div>
+        <div class="row"><b>Takeoff:</b> ${minutesToHHMM(takeoffMin)}</div>
+        <div class="row"><b>Landing:</b> ${minutesToHHMM(landingMin)}</div>
+        <div class="row"><b>Estimated Flight Time:</b> ${flightHours} hrs</div>
+      `;
     }
-
-    const flightMinutes = ldZulu - toZulu;
-    const flightHours = (flightMinutes / 60).toFixed(1);
-
-    const showTime = toZulu - 195;
-
-    const timeline = [
-      { label: "Enter Crew Rest", time: toZulu - 975 },
-      { label: "Last Beer 🍺", time: toZulu - 720 },
-      { label: "Legal for Alert", time: toZulu - 255 },
-      { label: "Show Time", time: showTime },
-      { label: "Brief Time", time: toZulu - 150 },
-      { label: "Step Time", time: toZulu - 120 },
-      { label: "Engine Start", time: toZulu - 30 },
-      { label: "Takeoff Time", time: toZulu },
-      { label: "Estimated Land Time", time: ldZulu }
-    ];
-
-    const dutyLimits = [
-      { label: "Flight Duty Ends", time: showTime + 960 }
+  </script>
+</body>
+</html>
