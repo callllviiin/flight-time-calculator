@@ -78,6 +78,18 @@
       margin-bottom: 6px;
     }
 
+    .warn {
+      background-color: #fff3cd;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
+    .danger {
+      background-color: #f8d7da;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
     .disclaimer {
       margin-top: 50px;
       font-size: 13px;
@@ -104,140 +116,146 @@
 
 <body>
 
-  <h1>Crew Dawg Calculator</h1>
+<h1>Crew Dawg Calculator</h1>
 
-  <div class="input-row">
-    <span class="label-text">Scheduled Takeoff Time:</span>
-    <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
-    <span>at</span>
-    <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
-  </div>
+<div class="input-row">
+  <span class="label-text">Scheduled Takeoff Time:</span>
+  <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
+  <span>at</span>
+  <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
+</div>
 
-  <div class="input-row">
-    <span class="label-text">Scheduled Land Time:</span>
-    <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
-    <span>at</span>
-    <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
-  </div>
+<div class="input-row">
+  <span class="label-text">Scheduled Land Time:</span>
+  <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
+  <span>at</span>
+  <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
+</div>
 
-  <button id="calcBtn">Calculate</button>
+<button id="calcBtn">Calculate</button>
 
-  <div id="output" class="output"></div>
+<div id="output" class="output"></div>
 
-  <div class="disclaimer">
-    <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there’s no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only). Information in this calcualtor is based on AFMAN11-202V3_AMC SUP, 29 JULY 2024.</p>
+<div class="disclaimer">
+  <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there’s no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only). Information in this calculator is based on AFMAN11-202V3_AMC SUP, 29 JULY 2024.</p>
 
-    <p>Also, as much as I’d like to take credit for this and lead you to think I am smart, I created this tool with the help of ChatGPT. If you find an error, please let me know at <strong>[your email]</strong>.</p>
+  <p>Also, as much as I’d like to take credit for this and lead you to think I am smart, I created this tool with the help of ChatGPT. If you find an error, please let me know at <strong>[your email]</strong>.</p>
 
-    <p><strong>Donations:</strong> This tool is free for you to use to help manage your crew. It costs you nothing and costs me a little time. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot do it. I appreciate your consideration, but I’ve already taken the bonus, so I’m screwed either way. Cheers!</p>
-  </div>
+  <p><strong>Donations:</strong> This tool is free for you to use to help manage your crew. It costs you nothing and costs me a little time. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot do it. I appreciate your consideration, but I’ve already taken the bonus, so I’m screwed either way. Cheers!</p>
+</div>
 
-  <div class="footer">
-    NKAWT...GF
-    <small>(If you know, you know…)</small>
-  </div>
+<div class="footer">
+  NKAWT...GF
+  <small>(If you know, you know…)</small>
+</div>
 
-  <script>
-    function hhmmToMinutes(hhmm) {
-      const h = parseInt(hhmm.slice(0, 2), 10);
-      const m = parseInt(hhmm.slice(2, 4), 10);
-      return h * 60 + m;
-    }
+<script>
+function hhmmToMinutes(hhmm) {
+  return parseInt(hhmm.slice(0,2)) * 60 + parseInt(hhmm.slice(2,4));
+}
 
-    function minutesToHHMM(mins) {
-      mins = ((mins % 1440) + 1440) % 1440;
-      const h = Math.floor(mins / 60);
-      const m = mins % 60;
-      return String(h).padStart(2, "0") + String(m).padStart(2, "0") + "Z";
-    }
+function minutesToHHMM(mins) {
+  mins = ((mins % 1440) + 1440) % 1440;
+  return String(Math.floor(mins/60)).padStart(2,"0") +
+         String(mins%60).padStart(2,"0") + "Z";
+}
 
-    function calculate() {
-      const takeoff = document.getElementById("takeoffTime").value;
-      const landing = document.getElementById("landingTime").value;
-      const out = document.getElementById("output");
+function diffMinutes(start, end) {
+  let d = end - start;
+  if (d < 0) d += 1440;
+  return d;
+}
 
-      if (takeoff.length !== 4 || landing.length !== 4) {
-        out.innerHTML = "Please enter times in HHMM format.";
-        return;
-      }
+function calculate() {
+  const takeoff = document.getElementById("takeoffTime").value;
+  const landing = document.getElementById("landingTime").value;
+  const out = document.getElementById("output");
 
-      const takeoffMin = hhmmToMinutes(takeoff);
-      const landingMin = hhmmToMinutes(landing);
+  if (takeoff.length !== 4 || landing.length !== 4) {
+    out.innerHTML = "Please enter times in HHMM format.";
+    return;
+  }
 
-      let flightMinutes = landingMin - takeoffMin;
-      if (flightMinutes < 0) flightMinutes += 1440;
+  const takeoffMin = hhmmToMinutes(takeoff);
+  const landingMin = hhmmToMinutes(landing);
 
-      const flightHours = (flightMinutes / 60).toFixed(1);
+  let flightMinutes = landingMin - takeoffMin;
+  if (flightMinutes < 0) flightMinutes += 1440;
+  const flightHours = (flightMinutes / 60).toFixed(1);
 
-      const crewRest   = takeoffMin - 855;
-      const lastBeer   = takeoffMin - 720;
-      const legalAlert = takeoffMin - 255;
-      const showTime   = takeoffMin - 195;
-      const briefTime  = takeoffMin - 150;
-      const stepTime   = takeoffMin - 120;
-      const engine     = takeoffMin - 30;
+  const crewRest   = takeoffMin - 855;
+  const lastBeer   = takeoffMin - 720;
+  const legalAlert = takeoffMin - 255;
+  const showTime   = takeoffMin - 195;
+  const briefTime  = takeoffMin - 150;
+  const stepTime   = takeoffMin - 120;
+  const engine     = takeoffMin - 30;
 
-      const fdpLimit   = showTime + 960;  // +16h
-      const cdpLimit   = showTime + 1080; // +18h
-      const tdpLimit   = showTime + 720;  // +12h
-      const apuInop    = showTime + 720;  // +12h
+  const fdpLimit = showTime + 960;
+  const cdpLimit = showTime + 1080;
+  const tdpLimit = showTime + 720;
+  const apuInop  = showTime + 720;
 
-      out.innerHTML = `
-        <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
-        <div class="subtext">T/O − 14+15</div>
+  const landingFromShow = diffMinutes(showTime, landingMin);
 
-        <div class="row"><span>Last Beer</span><span>${minutesToHHMM(lastBeer)}</span></div>
-        <div class="subtext">T/O − 12+00</div>
+  function highlight(limit) {
+    const limitFromShow = limit - showTime;
+    if (landingFromShow > limitFromShow) return "danger";
+    if (landingFromShow >= limitFromShow * 0.8) return "warn";
+    return "";
+  }
 
-        <div class="row"><span>Legal for Alert</span><span>${minutesToHHMM(legalAlert)}</span></div>
-        <div class="subtext">T/O − 4+15</div>
+  out.innerHTML = `
+    <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
+    <div class="subtext">T/O − 14+15</div>
 
-        <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
-        <div class="subtext">T/O − 3+15</div>
+    <div class="row"><span>Last Beer</span><span>${minutesToHHMM(lastBeer)}</span></div>
+    <div class="subtext">T/O − 12+00</div>
 
-        <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
-        <div class="subtext">T/O − 2+30</div>
+    <div class="row"><span>Legal for Alert</span><span>${minutesToHHMM(legalAlert)}</span></div>
+    <div class="subtext">T/O − 4+15</div>
 
-        <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
-        <div class="subtext">T/O − 2+00</div>
+    <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
+    <div class="subtext">T/O − 3+15</div>
 
-        <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
-        <div class="subtext">T/O − 0+30</div>
+    <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
+    <div class="subtext">T/O − 2+30</div>
 
-        <hr style="margin:20px 0;">
+    <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
+    <div class="subtext">T/O − 2+00</div>
 
-        <div class="row"><span>Flight Time</span><span>${flightHours} hrs</span></div>
+    <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
+    <div class="subtext">T/O − 0+30</div>
 
-        <hr style="margin:20px 0;">
+    <hr style="margin:20px 0;">
 
-        <div style="
-        font-weight: bold;
-        font-size: 18px;
-        text-align: center;
-        margin: 10px 0 12px 0;
-        ">
-        Duty Limitations
-        </div>
+    <div class="row"><span>Scheduled Takeoff</span><span>${minutesToHHMM(takeoffMin)}</span></div>
+    <div class="subtext">As entered</div>
 
-        <div class="row"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(fdpLimit)}</span></div>
-        <div class="subtext">Show + 16+00</div>
+    <div class="row"><span>Flight Time</span><span>${flightHours} hrs</span></div>
 
-        <div class="row"><span>Crew Duty Period Ends</span><span>${minutesToHHMM(cdpLimit)}</span></div>
-        <div class="subtext">Show + 18+00</div>
+    <hr style="margin:20px 0;">
 
-        <div class="row"><span>Transition Duty Period Ends</span><span>${minutesToHHMM(tdpLimit)}</span></div>
-        <div class="subtext">Show + 12+00</div>
+    <div style="font-weight:bold;font-size:18px;text-align:center;margin:10px 0 12px;">
+      Duty Limitations
+    </div>
 
-        <div class="row"><span>Autopilot INOP Duty Ends</span><span>${minutesToHHMM(apuInop)}</span></div>
-        <div class="subtext">Show + 12+00</div>
-        
-      `;
-    }
+    <div class="row ${highlight(fdpLimit)}"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(fdpLimit)}</span></div>
+    <div class="subtext">Show + 16+00</div>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("calcBtn").addEventListener("click", calculate);
-    });
-  </script>
+    <div class="row ${highlight(cdpLimit)}"><span>Crew Duty Period Ends</span><span>${minutesToHHMM(cdpLimit)}</span></div>
+    <div class="subtext">Show + 18+00</div>
+
+    <div class="row"><span>Transition Duty Period Ends</span><span>${minutesToHHMM(tdpLimit)}</span></div>
+    <div class="subtext">Show + 12+00</div>
+
+    <div class="row"><span>Autopilot INOP Duty Ends</span><span>${minutesToHHMM(apuInop)}</span></div>
+    <div class="subtext">Show + 12+00</div>
+  `;
+}
+
+document.getElementById("calcBtn").addEventListener("click", calculate);
+</script>
 
 </body>
 </html>
