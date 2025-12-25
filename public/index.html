@@ -5,18 +5,115 @@
   <title>Flight Time Calculator</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: system-ui, sans-serif;
       background: #111;
       color: #eee;
       padding: 40px;
+      max-width: 600px;
+      margin: auto;
     }
-    h1 {
-      margin-bottom: 20px;
+    label {
+      display: block;
+      margin-top: 20px;
+    }
+    input, button {
+      margin-top: 5px;
+      padding: 8px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button {
+      margin-top: 25px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 30px;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
   <h1>Flight Time Calculator</h1>
-  <p>If you can read this, the site works.</p>
+
+  <label>
+    Takeoff Time (HH:MM)
+    <input type="time" id="takeoff">
+  </label>
+
+  <label>
+    Landing Time (HH:MM)
+    <input type="time" id="landing">
+  </label>
+
+  <label>
+    Alert Time Offset (minutes before takeoff)
+    <input type="number" id="alert" value="180">
+  </label>
+
+  <label>
+    Show Time Offset (minutes before takeoff)
+    <input type="number" id="show" value="150">
+  </label>
+
+  <label>
+    Brief Time Offset (minutes before takeoff)
+    <input type="number" id="brief" value="90">
+  </label>
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function toMinutes(time) {
+      const [h, m] = time.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function formatTime(mins) {
+      mins = (mins + 24 * 60) % (24 * 60);
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    function calculate() {
+      const takeoffVal = document.getElementById('takeoff').value;
+      const landingVal = document.getElementById('landing').value;
+
+      if (!takeoffVal || !landingVal) {
+        document.getElementById('result').textContent =
+          "Please enter both takeoff and landing times.";
+        return;
+      }
+
+      const takeoff = toMinutes(takeoffVal);
+      let landing = toMinutes(landingVal);
+
+      if (landing < takeoff) {
+        landing += 24 * 60;
+      }
+
+      const duration = landing - takeoff;
+
+      const alertOffset = Number(document.getElementById('alert').value);
+      const showOffset = Number(document.getElementById('show').value);
+      const briefOffset = Number(document.getElementById('brief').value);
+
+      const alertTime = formatTime(takeoff - alertOffset);
+      const showTime = formatTime(takeoff - showOffset);
+      const briefTime = formatTime(takeoff - briefOffset);
+
+      const hours = Math.floor(duration / 60);
+      const minutes = duration % 60;
+
+      document.getElementById('result').innerHTML = `
+        <strong>Estimated Flight Time:</strong> ${hours}h ${minutes}m<br><br>
+        <strong>Alert Time:</strong> ${alertTime}<br>
+        <strong>Show Time:</strong> ${showTime}<br>
+        <strong>Brief Time:</strong> ${briefTime}
+      `;
+    }
+  </script>
 </body>
 </html>
