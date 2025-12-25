@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Flight Time Calculator</title>
+  <title>Zulu Flight Time Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 800px;
+      max-width: 900px;
       margin: 40px auto;
+      padding: 0 12px;
     }
     label {
       display: block;
@@ -29,17 +30,22 @@
       text-align: left;
     }
     h2 {
-      margin-top: 30px;
+      margin-top: 28px;
+    }
+    .note {
+      font-size: 13px;
+      color: #444;
+      margin-top: 6px;
     }
   </style>
 </head>
 <body>
 
-<h1>Flight Time Calculator</h1>
+<h1>Flight Time Calculator (Zulu)</h1>
 
 <label>
   Takeoff ICAO:
-  <input id="to_icao" placeholder="KADW" />
+  <input id="to_icao" placeholder="EGUL" />
 </label>
 
 <label>
@@ -53,7 +59,7 @@
 
 <label>
   Landing ICAO:
-  <input id="ld_icao" placeholder="KDEN" />
+  <input id="ld_icao" placeholder="EDDF" />
 </label>
 
 <label>
@@ -65,47 +71,40 @@
   </select>
 </label>
 
+<div class="note">
+  All outputs are shown in <b>Zulu time</b>. Local time will be reintroduced later.
+</div>
+
 <br />
 <button onclick="calculate()">Calculate</button>
 
 <div id="output"></div>
 
 <script>
-const WORKER_URL = "https://old-surf-349b.calvincraig.workers.dev/convert/";
+const WORKER_URL = "https://old-surf-349b.calvincraig.workers.dev/convert";
 
-function parseTime(hhmm) {
-  const h = parseInt(hhmm.slice(0, 2), 10);
-  const m = parseInt(hhmm.slice(2), 10);
-  return h * 60 + m;
-}
-
-function formatTime(mins, suffix) {
+function formatZulu(mins) {
   mins = ((mins % 1440) + 1440) % 1440;
-  const h = Math.floor(mins / 60).toString().padStart(2, '0');
-  const m = (mins % 60).toString().padStart(2, '0');
-  return `${h}${m}${suffix}`;
+  const h = Math.floor(mins / 60).toString().padStart(2, "0");
+  const m = (mins % 60).toString().padStart(2, "0");
+  return `${h}${m}Z`;
 }
 
-async function getTimesFromWorker(icao, time, ref) {
+async function getZuluFromWorker(icao, time, ref) {
   const response = await fetch(
-    `${WORKER_URL}?icao=${icao}&time=${time}&ref=${ref}`
+    `${WORKER_URL}?icao=${encodeURIComponent(icao)}&time=${encodeURIComponent(time)}&ref=${encodeURIComponent(ref)}`
   );
 
   if (!response.ok) {
     throw new Error("Worker error");
   }
 
-  return await response.json();
-}
-
-function formatZuluLocal(zulu, local) {
-  return `${formatTime(zulu, "Z")} / ${formatTime(local, "L")}`;
+  const data = await response.json();
+  return data.zuluMinutes;
 }
 
 async function calculate() {
   try {
-    console.log("CALCULATE RUNNING");
-
     const toICAO = document.getElementById("to_icao").value.trim().toUpperCase();
     const ldICAO = document.getElementById("ld_icao").value.trim().toUpperCase();
     const toTime = document.getElementById("to_time").value.trim();
@@ -113,23 +112,24 @@ async function calculate() {
     const toRef = document.getElementById("to_ref").value;
     const ldRef = document.getElementById("ld_ref").value;
 
+    if (!toICAO || !ldICAO) {
+      document.getElementById("output").textContent =
+        "Please enter both ICAO codes.";
+      return;
+    }
+
     if (!/^\d{4}$/.test(toTime) || !/^\d{4}$/.test(ldTime)) {
       document.getElementById("output").textContent =
         "Times must be entered as HHMM.";
       return;
     }
 
-    const toData = await getTimesFromWorker(toICAO, toTime, toRef);
-    const ldData = await getTimesFromWorker(ldICAO, ldTime, ldRef);
-
-    let toZulu = toData.zuluMinutes;
-    let ldZulu = ldData.zuluMinutes;
+    const toZulu = await getZuluFromWorker(toICAO, toTime, toRef);
+    let ldZulu = await getZuluFromWorker(ldICAO, ldTime, ldRef);
 
     if (ldZulu < toZulu) {
       ldZulu += 1440;
     }
-
-    const localOffset = toData.localMinutes - toData.zuluMinutes;
 
     const flightMinutes = ldZulu - toZulu;
     const flightHours = (flightMinutes / 60).toFixed(1);
@@ -149,37 +149,4 @@ async function calculate() {
     ];
 
     const dutyLimits = [
-      { label: "Flight Duty Ends", time: showTime + 960 },
-      { label: "Crew Duty Ends", time: showTime + 1080 },
-      { label: "Transition Duty Ends", time: showTime + 720 },
-      { label: "Autopilot INOP Duty Ends", time: showTime + 720 }
-    ];
-
-    let html = "<h2>Timeline</h2><table>";
-    for (const e of timeline) {
-      const local = e.time + localOffset;
-      html += `<tr><td>${e.label}</td><td>${formatZuluLocal(e.time, local)}</td></tr>`;
-    }
-    html += "</table>";
-
-    html += `<h2>Estimated Flight Time</h2><p><strong>${flightHours} hours</strong></p>`;
-
-    html += "<h2>Duty Limits</h2><table>";
-    for (const d of dutyLimits) {
-      const local = d.time + localOffset;
-      html += `<tr><td>${d.label}</td><td>${formatZuluLocal(d.time, local)}</td></tr>`;
-    }
-    html += "</table>";
-
-    document.getElementById("output").innerHTML = html;
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("output").textContent =
-      "Error calculating timeline. Check ICAO codes.";
-  }
-}
-</script>
-
-</body>
-</html>
+      { label: "Flight Duty Ends", time: showTime + 960 }
