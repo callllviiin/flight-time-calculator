@@ -2,21 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Zulu Flight Timeline</title>
+  <title>Flight Timeline</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
       background: #111;
       color: #eee;
       padding: 40px;
-      max-width: 750px;
+      max-width: 800px;
       margin: auto;
+    }
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
     }
     label {
       display: block;
-      margin-top: 20px;
+      margin-top: 15px;
     }
-    input, button {
+    input, select, button {
       margin-top: 5px;
       padding: 8px;
       font-size: 1rem;
@@ -25,11 +30,6 @@
     button {
       margin-top: 30px;
       cursor: pointer;
-    }
-    h2 {
-      margin-top: 40px;
-      border-bottom: 1px solid #333;
-      padding-bottom: 5px;
     }
     table {
       margin-top: 15px;
@@ -47,23 +47,56 @@
 </head>
 <body>
 
-<h1>Flight Timeline (Zulu)</h1>
+<h1>Flight Timeline</h1>
+
+<h2>Takeoff</h2>
 
 <label>
-  Takeoff Time (HHMM Z)
-  <input type="text" id="takeoff" placeholder="1300">
+  Time (HHMM)
+  <input type="text" id="to_time" placeholder="1300">
 </label>
 
 <label>
-  Estimated Landing Time (HHMM Z)
-  <input type="text" id="landing" placeholder="1625">
+  Time Reference
+  <select id="to_ref">
+    <option value="Z">Zulu</option>
+    <option value="L">Local</option>
+  </select>
 </label>
 
-<button onclick="calculate()">Calculate</button>
+<label>
+  ICAO Airfield
+  <input type="text" id="to_icao" placeholder="KADW">
+</label>
+
+<h2>Landing</h2>
+
+<label>
+  Time (HHMM)
+  <input type="text" id="ld_time" placeholder="1625">
+</label>
+
+<label>
+  Time Reference
+  <select id="ld_ref">
+    <option value="Z">Zulu</option>
+    <option value="L">Local</option>
+  </select>
+</label>
+
+<label>
+  ICAO Airfield
+  <input type="text" id="ld_icao" placeholder="EDDF">
+</label>
+
+<button onclick="calculate()">Generate Timeline</button>
 
 <div id="output"></div>
 
 <script>
+  // TEMPORARY fixed offset for Local → Zulu (hours)
+  const MOCK_LOCAL_OFFSET = 5 * 60; // Local = Zulu - 5
+
   function parseHHMM(value) {
     if (!/^\d{4}$/.test(value)) return null;
     const h = Number(value.slice(0,2));
@@ -79,25 +112,41 @@
     return `${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}Z`;
   }
 
+  function toZulu(minutes, ref) {
+    if (ref === "L") {
+      return minutes + MOCK_LOCAL_OFFSET;
+    }
+    return minutes;
+  }
+
   function calculate() {
-    const takeoffVal = document.getElementById('takeoff').value.trim();
-    const landingVal = document.getElementById('landing').value.trim();
+    const toTime = parseHHMM(document.getElementById('to_time').value.trim());
+    const ldTime = parseHHMM(document.getElementById('ld_time').value.trim());
 
-    const takeoff = parseHHMM(takeoffVal);
-    let landing = parseHHMM(landingVal);
-
-    if (takeoff === null || landing === null) {
+    if (toTime === null || ldTime === null) {
       document.getElementById('output').textContent =
-        "Please enter times in HHMM Zulu format.";
+        "Please enter times in HHMM format.";
       return;
     }
 
-    if (landing < takeoff) landing += 1440;
+    const toZuluTime = toZulu(
+      toTime,
+      document.getElementById('to_ref').value
+    );
 
-    const flightMinutes = landing - takeoff;
+    let ldZuluTime = toZulu(
+      ldTime,
+      document.getElementById('ld_ref').value
+    );
+
+    if (ldZuluTime < toZuluTime) {
+      ldZuluTime += 1440;
+    }
+
+    const flightMinutes = ldZuluTime - toZuluTime;
     const flightHours = (flightMinutes / 60).toFixed(1);
 
-    // Core timeline (offsets in minutes from takeoff)
+    // Timeline offsets (minutes from takeoff Zulu)
     const timeline = [
       { label: "Enter Crew Rest", offset: -975 },
       { label: "Legal for Alert", offset: -255 },
@@ -107,24 +156,24 @@
       { label: "Engine Start", offset: -30 },
       { label: "Last Beer", offset: -720 },
       { label: "Takeoff Time", offset: 0 },
-      { label: "Estimated Land Time", absolute: landing }
+      { label: "Estimated Land Time", absolute: ldZuluTime }
     ];
 
-    const showTime = takeoff - 195;
+    const showTime = toZuluTime - 195;
 
     const dutyLimits = [
-      { label: "Flight Duty Period Ends", time: showTime + 960 },
-      { label: "Crew Duty Period Ends", time: showTime + 1080 },
-      { label: "Transition Duty Period Ends", time: showTime + 720 },
+      { label: "Flight Duty Ends", time: showTime + 960 },
+      { label: "Crew Duty Ends", time: showTime + 1080 },
+      { label: "Transition Duty Ends", time: showTime + 720 },
       { label: "Autopilot INOP Duty Ends", time: showTime + 720 }
     ];
 
     let timelineRows = "";
     for (const e of timeline) {
-      const time = e.absolute !== undefined
+      const t = e.absolute !== undefined
         ? formatTime(e.absolute)
-        : formatTime(takeoff + e.offset);
-      timelineRows += `<tr><td>${e.label}</td><td>${time}</td></tr>`;
+        : formatTime(toZuluTime + e.offset);
+      timelineRows += `<tr><td>${e.label}</td><td>${t}</td></tr>`;
     }
 
     let dutyRows = "";
@@ -133,7 +182,7 @@
     }
 
     document.getElementById('output').innerHTML = `
-      <h2>Timeline</h2>
+      <h2>Timeline (Zulu)</h2>
       <table>${timelineRows}</table>
 
       <h2>Estimated Flight Time</h2>
