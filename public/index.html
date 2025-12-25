@@ -125,7 +125,7 @@
   <div id="output" class="output"></div>
 
   <div class="disclaimer">
-    <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there’s no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only).</p>
+    <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there’s no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only). Information in this calcualtor is based on AFMAN11-202V3_AMC SUP, 29 JULY 2024.</p>
 
     <p>Also, as much as I’d like to take credit for this and lead you to think I am smart, I created this tool with the help of ChatGPT. If you find an error, please let me know at <strong>[your email]</strong>.</p>
 
@@ -184,25 +184,25 @@
 
       out.innerHTML = `
         <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
-        <div class="subtext">T/O − 14 hours 15 minutes</div>
+        <div class="subtext">T/O − 14+15</div>
 
         <div class="row"><span>Last Beer</span><span>${minutesToHHMM(lastBeer)}</span></div>
-        <div class="subtext">T/O − 12 hours</div>
+        <div class="subtext">T/O − 12+00</div>
 
         <div class="row"><span>Legal for Alert</span><span>${minutesToHHMM(legalAlert)}</span></div>
-        <div class="subtext">T/O − 4 hours 15 minutes</div>
+        <div class="subtext">T/O − 4+15</div>
 
         <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
-        <div class="subtext">T/O − 3 hours 15 minutes</div>
+        <div class="subtext">T/O − 3+15</div>
 
         <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
-        <div class="subtext">T/O − 2 hours 30 minutes</div>
+        <div class="subtext">T/O − 2+30</div>
 
         <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
-        <div class="subtext">T/O − 2 hours</div>
+        <div class="subtext">T/O − 2+00</div>
 
         <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
-        <div class="subtext">T/O − 30 minutes</div>
+        <div class="subtext">T/O − 0+30</div>
 
         <hr style="margin:20px 0;">
 
@@ -220,16 +220,16 @@
         </div>
 
         <div class="row"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(fdpLimit)}</span></div>
-        <div class="subtext">Show Time + 16 hours</div>
+        <div class="subtext">Show + 16+00</div>
 
         <div class="row"><span>Crew Duty Period Ends</span><span>${minutesToHHMM(cdpLimit)}</span></div>
-        <div class="subtext">Show Time + 18 hours</div>
+        <div class="subtext">Show Time + 18+00</div>
 
         <div class="row"><span>Transition Duty Period Ends</span><span>${minutesToHHMM(tdpLimit)}</span></div>
-        <div class="subtext">Show Time + 12 hours</div>
+        <div class="subtext">Show Time + 12+00</div>
 
         <div class="row"><span>Autopilot INOP Duty Ends</span><span>${minutesToHHMM(apuInop)}</span></div>
-        <div class="subtext">Show Time + 12 hours</div>
+        <div class="subtext">Show Time + 12+00</div>
         
       `;
     }
