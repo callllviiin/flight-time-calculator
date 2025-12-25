@@ -195,6 +195,21 @@
         <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
         <div class="subtext">T/O − 3 hours 15 minutes</div>
 
+        <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
+        <div class="subtext">T/O − 2 hours 30 minutes</div>
+
+        <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
+        <div class="subtext">T/O − 2 hours</div>
+
+        <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
+        <div class="subtext">T/O − 30 minutes</div>
+
+        <div class="row"><span>Flight Time</span><span>${flightHours} hrs</span></div>
+
+        <hr style="margin:20px 0;">
+
+        <div style="font-weight:bold; margin-bottom:8px;">Duty Limitations</div>
+
         <div class="row"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(fdpLimit)}</span></div>
         <div class="subtext">Show Time + 16 hours</div>
 
@@ -206,17 +221,7 @@
 
         <div class="row"><span>Autopilot INOP Duty Ends</span><span>${minutesToHHMM(apuInop)}</span></div>
         <div class="subtext">Show Time + 12 hours</div>
-
-        <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
-        <div class="subtext">T/O − 2 hours 30 minutes</div>
-
-        <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
-        <div class="subtext">T/O − 2 hours</div>
-
-        <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
-        <div class="subtext">T/O − 30 minutes</div>
-
-        <div class="row"><span>Flight Time</span><span>${flightHours} hrs</span></div>
+        
       `;
     }
 
