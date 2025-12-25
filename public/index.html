@@ -177,6 +177,11 @@
       const stepTime   = takeoffMin - 120;
       const engine     = takeoffMin - 30;
 
+      const fdpLimit   = showTime + 960;  // +16h
+      const cdpLimit   = showTime + 1080; // +18h
+      const tdpLimit   = showTime + 720;  // +12h
+      const apuInop    = showTime + 720;  // +12h
+
       out.innerHTML = `
         <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
         <div class="subtext">T/O − 14 hours 15 minutes</div>
@@ -189,6 +194,18 @@
 
         <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
         <div class="subtext">T/O − 3 hours 15 minutes</div>
+
+        <div class="row"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(fdpLimit)}</span></div>
+        <div class="subtext">Show Time + 16 hours</div>
+
+        <div class="row"><span>Crew Duty Period Ends</span><span>${minutesToHHMM(cdpLimit)}</span></div>
+        <div class="subtext">Show Time + 18 hours</div>
+
+        <div class="row"><span>Transition Duty Period Ends</span><span>${minutesToHHMM(tdpLimit)}</span></div>
+        <div class="subtext">Show Time + 12 hours</div>
+
+        <div class="row"><span>Autopilot INOP Duty Ends</span><span>${minutesToHHMM(apuInop)}</span></div>
+        <div class="subtext">Show Time + 12 hours</div>
 
         <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
         <div class="subtext">T/O − 2 hours 30 minutes</div>
