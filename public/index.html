@@ -19,17 +19,32 @@
       text-align: center;
     }
 
-    label {
-      display: block;
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-top: 18px;
       font-weight: bold;
     }
 
+    .input-row span {
+      white-space: nowrap;
+    }
+
     input {
       padding: 6px;
-      width: 140px;
-      margin-top: 5px;
       font-size: 16px;
+    }
+
+    .time-input {
+      width: 70px;
+      text-align: center;
+    }
+
+    .icao-input {
+      width: 70px;
+      text-transform: uppercase;
+      text-align: center;
     }
 
     button {
@@ -86,15 +101,19 @@
 
   <h1>Crew Dawg Calculator</h1>
 
-  <label>
-    Scheduled Takeoff Time (Zulu)
-    <input id="takeoffTime" placeholder="HHMM" maxlength="4">
-  </label>
+  <div class="input-row">
+    <span>Scheduled Takeoff Time:</span>
+    <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
+    <span>at</span>
+    <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
+  </div>
 
-  <label>
-    Scheduled Land Time (Zulu)
-    <input id="landingTime" placeholder="HHMM" maxlength="4">
-  </label>
+  <div class="input-row">
+    <span>Scheduled Land Time:</span>
+    <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
+    <span>at</span>
+    <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
+  </div>
 
   <button id="calcBtn">Calculate</button>
 
@@ -145,13 +164,13 @@
 
       const flightHours = (flightMinutes / 60).toFixed(1);
 
-      const crewRest   = takeoffMin - 855; // 14:15
-      const lastBeer   = takeoffMin - 720; // 12:00
-      const legalAlert = takeoffMin - 255; // 4:15
-      const showTime   = takeoffMin - 195; // 3:15
-      const briefTime  = takeoffMin - 150; // 2:30
-      const stepTime   = takeoffMin - 120; // 2:00
-      const engine     = takeoffMin - 30;  // 0:30
+      const crewRest   = takeoffMin - 855;
+      const lastBeer   = takeoffMin - 720;
+      const legalAlert = takeoffMin - 255;
+      const showTime   = takeoffMin - 195;
+      const briefTime  = takeoffMin - 150;
+      const stepTime   = takeoffMin - 120;
+      const engine     = takeoffMin - 30;
 
       out.innerHTML = `
         <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
