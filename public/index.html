@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Flight Timeline</title>
+  <title>Flight Timeline Calculator</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -12,8 +12,8 @@
       max-width: 800px;
       margin: auto;
     }
-    h2 {
-      margin-top: 40px;
+    h1, h2 {
+      margin-top: 30px;
       border-bottom: 1px solid #333;
       padding-bottom: 5px;
     }
@@ -47,10 +47,9 @@
 </head>
 <body>
 
-<h1>Flight Timeline</h1>
+<h1>Flight Timeline Calculator</h1>
 
 <h2>Takeoff</h2>
-
 <label>
   Time (HHMM)
   <input type="text" id="to_time" placeholder="1300">
@@ -70,7 +69,6 @@
 </label>
 
 <h2>Landing</h2>
-
 <label>
   Time (HHMM)
   <input type="text" id="ld_time" placeholder="1625">
@@ -94,8 +92,8 @@
 <div id="output"></div>
 
 <script>
-  // TEMPORARY fixed offset for Local → Zulu (hours)
-  const MOCK_LOCAL_OFFSET = 5 * 60; // Local = Zulu - 5
+  // TEMPORARY mock offset: Local = Zulu - 5 hours
+  const MOCK_LOCAL_OFFSET = 5 * 60;
 
   function parseHHMM(value) {
     if (!/^\d{4}$/.test(value)) return null;
@@ -105,18 +103,21 @@
     return h * 60 + m;
   }
 
-  function formatTime(mins) {
+  function formatTime(mins, suffix) {
     mins = (mins + 1440) % 1440;
     const h = Math.floor(mins / 60);
     const m = mins % 60;
-    return `${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}Z`;
+    return `${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}${suffix}`;
+  }
+
+  function formatZuluAndLocal(mins) {
+    const zulu = formatTime(mins, "Z");
+    const local = formatTime(mins - MOCK_LOCAL_OFFSET, "L");
+    return `${zulu} / ${local}`;
   }
 
   function toZulu(minutes, ref) {
-    if (ref === "L") {
-      return minutes + MOCK_LOCAL_OFFSET;
-    }
-    return minutes;
+    return ref === "L" ? minutes + MOCK_LOCAL_OFFSET : minutes;
   }
 
   function calculate() {
@@ -129,15 +130,8 @@
       return;
     }
 
-    const toZuluTime = toZulu(
-      toTime,
-      document.getElementById('to_ref').value
-    );
-
-    let ldZuluTime = toZulu(
-      ldTime,
-      document.getElementById('ld_ref').value
-    );
+    let toZuluTime = toZulu(toTime, document.getElementById('to_ref').value);
+    let ldZuluTime = toZulu(ldTime, document.getElementById('ld_ref').value);
 
     if (ldZuluTime < toZuluTime) {
       ldZuluTime += 1440;
@@ -146,15 +140,14 @@
     const flightMinutes = ldZuluTime - toZuluTime;
     const flightHours = (flightMinutes / 60).toFixed(1);
 
-    // Timeline offsets (minutes from takeoff Zulu)
     const timeline = [
       { label: "Enter Crew Rest", offset: -975 },
+      { label: "Last Beer 🍺", offset: -720 },
       { label: "Legal for Alert", offset: -255 },
       { label: "Show Time", offset: -195 },
       { label: "Brief Time", offset: -150 },
       { label: "Step Time", offset: -120 },
       { label: "Engine Start", offset: -30 },
-      { label: "Last Beer", offset: -720 },
       { label: "Takeoff Time", offset: 0 },
       { label: "Estimated Land Time", absolute: ldZuluTime }
     ];
@@ -171,18 +164,18 @@
     let timelineRows = "";
     for (const e of timeline) {
       const t = e.absolute !== undefined
-        ? formatTime(e.absolute)
-        : formatTime(toZuluTime + e.offset);
+        ? formatZuluAndLocal(e.absolute)
+        : formatZuluAndLocal(toZuluTime + e.offset);
       timelineRows += `<tr><td>${e.label}</td><td>${t}</td></tr>`;
     }
 
     let dutyRows = "";
     for (const d of dutyLimits) {
-      dutyRows += `<tr><td>${d.label}</td><td>${formatTime(d.time)}</td></tr>`;
+      dutyRows += `<tr><td>${d.label}</td><td>${formatZuluAndLocal(d.time)}</td></tr>`;
     }
 
     document.getElementById('output').innerHTML = `
-      <h2>Timeline (Zulu)</h2>
+      <h2>Timeline</h2>
       <table>${timelineRows}</table>
 
       <h2>Estimated Flight Time</h2>
