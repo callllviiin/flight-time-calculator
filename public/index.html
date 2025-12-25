@@ -93,7 +93,7 @@
 
 <script>
   // TEMPORARY mock offset: Local = Zulu - 5 hours
-  const MOCK_LOCAL_OFFSET = 5 * 60;
+
 
   function parseHHMM(value) {
     if (!/^\d{4}$/.test(value)) return null;
@@ -110,34 +110,54 @@
     return `${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}${suffix}`;
   }
 
-  function formatZuluAndLocal(mins) {
-    const zulu = formatTime(mins, "Z");
-    const local = formatTime(mins - MOCK_LOCAL_OFFSET, "L");
-    return `${zulu} / ${local}`;
+const WORKER_URL = "https://old-surf-349b.calvincraig.workers.dev/convert";
+
+async function getTimesFromWorker(icao, time, ref) {
+  const response = await fetch(
+    `${WORKER_URL}?icao=${icao}&time=${time}&ref=${ref}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Worker error");
   }
 
-  function toZulu(minutes, ref) {
-    return ref === "L" ? minutes + MOCK_LOCAL_OFFSET : minutes;
-  }
+  return await response.json();
+}
 
-  function calculate() {
-    const toTime = parseHHMM(document.getElementById('to_time').value.trim());
-    const ldTime = parseHHMM(document.getElementById('ld_time').value.trim());
+function formatZuluAndLocalFromWorker(zuluMinutes, localMinutes) {
+  const zulu = formatTime(zuluMinutes, "Z");
+  const local = formatTime(localMinutes, "L");
+  return `${zulu} / ${local}`;
+}
 
-    if (toTime === null || ldTime === null) {
+  
+  async function calculate() {
+  try {
+    const toTimeRaw = document.getElementById('to_time').value.trim();
+    const ldTimeRaw = document.getElementById('ld_time').value.trim();
+
+    if (!/^\d{4}$/.test(toTimeRaw) || !/^\d{4}$/.test(ldTimeRaw)) {
       document.getElementById('output').textContent =
         "Please enter times in HHMM format.";
       return;
     }
 
-    let toZuluTime = toZulu(toTime, document.getElementById('to_ref').value);
-    let ldZuluTime = toZulu(ldTime, document.getElementById('ld_ref').value);
+    const toRef = document.getElementById('to_ref').value;
+    const ldRef = document.getElementById('ld_ref').value;
+    const toICAO = document.getElementById('to_icao').value.trim().toUpperCase();
+    const ldICAO = document.getElementById('ld_icao').value.trim().toUpperCase();
 
-    if (ldZuluTime < toZuluTime) {
-      ldZuluTime += 1440;
+    const toData = await getTimesFromWorker(toICAO, toTimeRaw, toRef);
+    let ldData = await getTimesFromWorker(ldICAO, ldTimeRaw, ldRef);
+
+    let toZulu = toData.zuluMinutes;
+    let ldZulu = ldData.zuluMinutes;
+
+    if (ldZulu < toZulu) {
+      ldZulu += 1440;
     }
 
-    const flightMinutes = ldZuluTime - toZuluTime;
+    const flightMinutes = ldZulu - toZulu;
     const flightHours = (flightMinutes / 60).toFixed(1);
 
     const timeline = [
@@ -149,10 +169,10 @@
       { label: "Step Time", offset: -120 },
       { label: "Engine Start", offset: -30 },
       { label: "Takeoff Time", offset: 0 },
-      { label: "Estimated Land Time", absolute: ldZuluTime }
+      { label: "Estimated Land Time", absolute: ldZulu }
     ];
 
-    const showTime = toZuluTime - 195;
+    const showTime = toZulu - 195;
 
     const dutyLimits = [
       { label: "Flight Duty Ends", time: showTime + 960 },
@@ -163,15 +183,30 @@
 
     let timelineRows = "";
     for (const e of timeline) {
-      const t = e.absolute !== undefined
-        ? formatZuluAndLocal(e.absolute)
-        : formatZuluAndLocal(toZuluTime + e.offset);
-      timelineRows += `<tr><td>${e.label}</td><td>${t}</td></tr>`;
+      const zulu = e.absolute !== undefined
+        ? e.absolute
+        : toZulu + e.offset;
+
+      timelineRows += `
+        <tr>
+          <td>${e.label}</td>
+          <td>${formatZuluAndLocalFromWorker(
+            zulu,
+            (zulu + (toData.localMinutes - toZulu)) % 1440
+          )}</td>
+        </tr>`;
     }
 
     let dutyRows = "";
     for (const d of dutyLimits) {
-      dutyRows += `<tr><td>${d.label}</td><td>${formatZuluAndLocal(d.time)}</td></tr>`;
+      dutyRows += `
+        <tr>
+          <td>${d.label}</td>
+          <td>${formatZuluAndLocalFromWorker(
+            d.time,
+            (d.time + (toData.localMinutes - toZulu)) % 1440
+          )}</td>
+        </tr>`;
     }
 
     document.getElementById('output').innerHTML = `
@@ -184,7 +219,12 @@
       <h2>Duty Limits</h2>
       <table>${dutyRows}</table>
     `;
+  } catch (err) {
+    document.getElementById('output').textContent =
+      "Error calculating timeline. Check ICAO codes.";
   }
+}
+
 </script>
 
 </body>
