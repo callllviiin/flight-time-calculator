@@ -88,8 +88,19 @@ input{
   display:inline-block;
   width:104px;
 }
-  
+
 .floating-label{
+  position:absolute;
+  left:8px;
+  top:-9px;
+  font-size:10px;
+  color:#666;
+  background:#f5f7fa;
+  padding:0 4px;
+  font-weight:normal;
+}
+
+/* Day shift indicator INSIDE the local input box */
 .day-shift{
   position:absolute;
   right:6px;
@@ -105,16 +116,6 @@ input{
 /* Give Local inputs room so the +1/-1 doesn't overlap digits */
 .local-wrap .box{
   padding-right:18px;
-}
-
-  position:absolute;
-  left:8px;
-  top:-9px;
-  font-size:10px;
-  color:#666;
-  background:#f5f7fa;
-  padding:0 4px;
-  font-weight:normal;
 }
 
 .at{
