@@ -430,7 +430,8 @@ button:disabled{
 
 /* Give ORM message column more space */
 .row3.midtext{
-  grid-template-columns: 1.6fr 0.8fr auto;
+  grid-template-columns: 0.65fr 2.35fr auto; /* steal more from label, give to message */
+  column-gap:10px;
 }
 
 .row3.midtext .lcol{
@@ -480,7 +481,10 @@ button:disabled{
   color:inherit;
   line-height:1.1;
   text-align:left;
-  margin-right:0;      /* ensure it doesn't inherit "scoot" feeling */
+  margin-right:0;
+
+  white-space:nowrap;
+  display:inline-block;
 }
   
 .warn{
