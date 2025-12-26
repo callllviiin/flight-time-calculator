@@ -536,8 +536,6 @@ const ICAO_TIMEZONE = {
   SBGR: "America/Sao_Paulo",    // São Paulo
 };
 
-};
-
 function getTimeZoneFromICAO(icao){
   const key = (icao || "").trim().toUpperCase();
   return ICAO_TIMEZONE[key] || null;
