@@ -375,6 +375,7 @@ button:disabled{
   padding:20px;
   background:white;
   border-radius:8px;
+  border:1px solid #1f2a44;  /* same as button background */
 }
 
 .output hr{
@@ -1121,6 +1122,8 @@ function calculate(){
 
     // For local-time output rows (crew timing uses takeoff ICAO)
     const tkIcao = normICAO(takeoffICAO.value);
+    const ldIcao = normICAO(landingICAO.value);
+
 
     const showTime   = takeoffMin - 195;
     const crewRest   = takeoffMin - 855;
@@ -1206,6 +1209,9 @@ function calculate(){
 
       ${row3Html("Takeoff", takeoffMin, tkIcao, true)}
       <div class="subtext">T/O − 0+00</div>
+
+      ${row3Html("Landing", landingMin, ldIcao, true)}
+      <div class="subtext">LND − 0+00</div>
 
       <hr>
 
