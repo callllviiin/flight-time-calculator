@@ -745,15 +745,16 @@ function showRuntimeError(err){
 function updateTimeHint(timeInput, hintEl){
   if(!hintEl) return;
 
-  const t = padHHMM(timeInput.value);
+  const raw = normHHMM(timeInput.value); // digits only, no padding
 
   // show nothing while typing fewer than 4 digits
-  if(t.length !== 4){
+  if(raw.length !== 4){
     hintEl.textContent = "";
     return;
   }
 
-  hintEl.textContent = isHHMM(t) ? "" : "Invalid time";
+  // only validate once they truly have 4 digits
+  hintEl.textContent = isHHMM(raw) ? "" : "Invalid time";
 }
 
 function setCalcEnabled(){
