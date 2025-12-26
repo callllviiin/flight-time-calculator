@@ -380,6 +380,12 @@ button:active{
   min-width:70px;
 }
 
+/* small-caps for left-column labels in output rows */
+.sc-label{
+  font-variant: small-caps;
+  letter-spacing: 0.6px;
+}
+  
 .tz-sfx{
   font-size:10px;
   font-weight:700;
@@ -847,7 +853,7 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
 
   return `
     <div class="row3 ${extraClass}">
-      <span>${label}</span>
+      <span class="sc-label">${label}</span>
       <span class="lcol">${middle}</span>
       <span class="zcol">${z}</span>
     </div>
