@@ -16,7 +16,7 @@ body{
 
 .app{
   width:100%;
-  max-width:548px;
+  max-width:580px;
   margin:0 auto;
   padding:10px;
 }
@@ -93,7 +93,6 @@ h1{
   justify-content:center;
 }
 
-/* ICAO wrapper so debug outlines match */
 .icao-wrap{
   display:inline-block;
   width:104px;
@@ -175,7 +174,7 @@ h1{
   background:#fff;
   border-radius:50%;
   display:grid;
-  place-items:center;
+  place-items:right;
   font-size:12px;
   color:#444;
   transition:0.25s;
@@ -293,13 +292,6 @@ button{
   <div class="app">
     <h1>Crew Dawg Calculator</h1>
 
-    <div class="topbar">
-      <label>
-        <input type="checkbox" id="debugBorders">
-        Debug borders
-      </label>
-    </div>
-
     <div class="form-grid">
 
       <!-- Row 1 -->
@@ -377,7 +369,6 @@ button{
     </div>
   </div>
 </div>
-
 
     </div>
 
@@ -622,11 +613,6 @@ syncToggleLabels();
 document.getElementById("calcBtn").addEventListener("click", () => {
   hasCalculated = true;
   calculate();
-});
-
-/* Debug borders toggle */
-document.getElementById("debugBorders").addEventListener("change", (e) => {
-  document.getElementById("pageRoot").classList.toggle("debug", e.target.checked);
 });
 
 /* Local time listeners (sync only; calculate only after first button press) */
