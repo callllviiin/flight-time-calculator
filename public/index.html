@@ -405,6 +405,16 @@ button:disabled{
   font-weight:bold;
 }
 
+/* Slightly larger text for Crew Timing rows only */
+.crew-timing .row3{
+  font-size:15px;
+}
+
+/* Duty section header slightly larger */
+.sc-head.duty-head{
+  font-size:18px;
+}
+  
 /* Output rows: label | local | zulu */
 .row3{
   display:grid;
@@ -457,6 +467,11 @@ button:disabled{
   letter-spacing: 1px;
 }
 
+/* Crew Timing header: largest emphasis */
+.sc-head.timing-head{
+  font-size:20px;
+}
+  
 /* Output times should look like your inputs */
 .mono{
   font-family: Consolas, Menlo, "Courier New", monospace;
@@ -1254,7 +1269,8 @@ function calculate(){
     }
 
     out.innerHTML = `
-      <div class="sc-head" style="font-weight:900;font-size:18px;text-align:center;">Crew Timing</div>
+      <div class="sc-head timing-head" style="font-weight:900;text-align:center;">Crew Timing</div>
+      <div class="crew-timing">
 
       ${row3Html("Enter Crew Rest", crewRest, tkIcao, true)}
       <div class="subtext">T/O − 14+15</div>
@@ -1287,6 +1303,7 @@ function calculate(){
       ${row3Html("Landing", landingAbs, ldIcao, true)}
       <div class="subtext">LND − 0+00</div>
 
+    </div>
       <hr>
 
       <div class="row">
@@ -1299,7 +1316,7 @@ function calculate(){
 
       <hr>
 
-      <div class="sc-head" style="font-weight:900;font-size:18px;text-align:center;">Crew Duty Limitations</div>
+      <div class="sc-head duty-head" style="font-weight:900;text-align:center;">Crew Duty Limitations</div>
 
       ${row3Html(
         "Flight Duty Period",
