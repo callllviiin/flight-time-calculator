@@ -6,215 +6,221 @@
 <title>Crew Dawg Calculator</title>
 
 <style>
-body {
+body{
   font-family: Arial, sans-serif;
-  background: #f5f7fa;
-  padding: 20px;
-  margin: 0;
-  color: #222;
+  background:#f5f7fa;
+  margin:0;
+  padding:20px;
+  color:#222;
 }
 
-/* App container so everything shares the same width */
-.app {
-  width: 100%;
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 10px;
+.app{
+  width:100%;
+  max-width:560px;
+  margin:0 auto;
+  padding:10px;
 }
 
-h1 {
-  text-align: center;
-  margin: 10px 0 18px;
+h1{
+  text-align:center;
+  margin:10px 0 18px;
 }
 
-/* ---------- INPUT ROWS ---------- */
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
-  font-weight: bold;
-  width: 100%;
+/* ---------- TOP FORM (GRID) ---------- */
+.form-grid{
+  display:grid;
+  row-gap:14px;
 }
 
-.label-text {
-  flex: 0 0 190px;
-  white-space: nowrap;
+/* Each row shares the SAME columns so everything aligns */
+.form-row{
+  display:grid;
+  grid-template-columns: 190px 92px 34px 92px 1fr;
+  align-items:center;
+  column-gap:8px;
+  width:100%;
+  font-weight:bold;
 }
 
-input, select {
-  padding: 6px;
-  font-size: 16px;
+/* label column */
+.form-row .label{
+  white-space:nowrap;
 }
 
-.time-input {
-  width: 76px;
-  text-align: center;
+/* HHMM + corner Z */
+.time-wrap{
+  position:relative;
+  display:inline-block;
+  width:92px;
+}
+.time-input{
+  width:92px;
+  padding:6px;
+  font-size:16px;
+  text-align:center;
+  box-sizing:border-box;
+}
+.z-badge{
+  position:absolute;
+  right:6px;
+  bottom:3px;
+  font-size:10px;
+  font-weight:normal;
+  color:#666;
+  pointer-events:none;
 }
 
-.icao-input {
-  width: 78px;
-  text-transform: uppercase;
-  text-align: center;
+/* small "at" */
+.at{
+  font-weight:bold;
 }
 
-/* HHMM + tiny Z in the corner */
-.time-wrap {
-  position: relative;
-  display: inline-block;
+/* ICAO input */
+.icao-input{
+  width:92px;
+  padding:6px;
+  font-size:16px;
+  text-transform:uppercase;
+  text-align:center;
+  box-sizing:border-box;
 }
 
-.z-badge {
-  position: absolute;
-  right: 6px;
-  bottom: 3px;
-  font-size: 10px;
-  font-weight: normal;
-  color: #666;
-  pointer-events: none;
+/* third row content spans the non-label columns */
+.third-content{
+  grid-column: 2 / 6;  /* starts exactly under time input column */
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-weight:normal;
 }
 
-/* ---------- 3rd ROW LAYOUT ---------- */
-.input-row.third {
-  justify-content: space-between;
-  font-weight: normal;
+/* aircraft select */
+#aircraft{
+  padding:6px;
+  font-size:16px;
+  width:48%;
+  max-width:240px;
+  box-sizing:border-box;
 }
 
-.aircraft-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
+/* toggle */
+.crew-toggle{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  width:52%;
+  min-width:230px;
 }
 
-#aircraft {
-  width: 100%;
-  max-width: 220px;
+.crew-label{
+  font-weight:normal;
+  color:#333;
+}
+.crew-label.active{
+  font-weight:bold;
 }
 
-/* ---------- TOGGLE ---------- */
-.crew-toggle {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
+/* switch */
+.switch{
+  position:relative;
+  width:52px;
+  height:26px;
+  flex:0 0 auto;
 }
+.switch input{ display:none; }
 
-.crew-label {
-  font-weight: normal;
-  color: #333;
+.slider{
+  position:absolute;
+  inset:0;
+  background:#d0d0d0;
+  border-radius:26px;
 }
-
-.crew-label.active {
-  font-weight: bold;
+.slider:before{
+  content:"◀";
+  position:absolute;
+  height:22px;
+  width:22px;
+  left:2px;
+  top:2px;
+  background:#fff;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  color:#444;
+  transition:0.25s;
+  box-shadow:0 1px 2px rgba(0,0,0,0.2);
 }
-
-/* switch container */
-.switch {
-  position: relative;
-  width: 52px;
-  height: 26px;
-}
-
-.switch input {
-  display: none;
-}
-
-.slider {
-  position: absolute;
-  inset: 0;
-  background: #d0d0d0;
-  border-radius: 26px;
-}
-
-/* knob */
-.slider:before {
-  content: "◀";
-  position: absolute;
-  height: 22px;
-  width: 22px;
-  left: 2px;
-  top: 2px;
-  background: #fff;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  color: #444;
-  transition: 0.25s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-/* when augmented, knob slides right and arrow flips */
-input:checked + .slider:before {
-  transform: translateX(26px);
-  content: "▶";
+input:checked + .slider:before{
+  transform:translateX(26px);
+  content:"▶";
 }
 
 /* ---------- BUTTON ---------- */
-button {
-  margin-top: 20px;
-  padding: 12px;
-  font-size: 16px;
-  width: 100%;
-  cursor: pointer;
+button{
+  margin-top:20px;
+  padding:12px;
+  font-size:16px;
+  width:100%;
+  cursor:pointer;
 }
 
 /* ---------- OUTPUT ---------- */
-.output {
-  margin-top: 28px;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
+.output{
+  margin-top:28px;
+  padding:20px;
+  background:white;
+  border-radius:8px;
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  font-weight: bold;
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
+  font-weight:bold;
 }
 
-.subtext {
-  font-size: 12px;
-  color: #666;
-  margin-top: 2px;
-  margin-bottom: 6px;
+.subtext{
+  font-size:12px;
+  color:#666;
+  margin-top:2px;
+  margin-bottom:6px;
 }
 
-.warn {
-  background-color: #fff3cd;
-  padding: 4px 6px;
-  border-radius: 4px;
+.warn{
+  background-color:#fff3cd;
+  padding:4px 6px;
+  border-radius:4px;
 }
 
-.danger {
-  background-color: #f8d7da;
-  padding: 4px 6px;
-  border-radius: 4px;
+.danger{
+  background-color:#f8d7da;
+  padding:4px 6px;
+  border-radius:4px;
 }
 
 /* ---------- DISCLAIMER ---------- */
-.disclaimer {
-  margin-top: 40px;
-  font-size: 13px;
-  color: #444;
-  line-height: 1.5;
-  text-align: justify;
-  text-justify: inter-word;
+.disclaimer{
+  margin-top:40px;
+  font-size:13px;
+  color:#444;
+  line-height:1.5;
+  text-align:justify;
+  text-justify:inter-word;
 }
 
 /* ---------- FOOTER ---------- */
-.footer {
-  margin-top: 40px;
-  text-align: center;
-  font-weight: bold;
+.footer{
+  margin-top:40px;
+  text-align:center;
+  font-weight:bold;
 }
-
-.footer small {
-  display: block;
-  font-weight: normal;
-  color: #666;
+.footer small{
+  display:block;
+  font-weight:normal;
+  color:#666;
 }
 </style>
 </head>
@@ -224,54 +230,69 @@ button {
 
 <h1>Crew Dawg Calculator</h1>
 
-<div class="input-row">
-  <span class="label-text">Scheduled Takeoff Time:</span>
+<div class="form-grid">
 
-  <span class="time-wrap">
-    <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
-    <span class="z-badge">Z</span>
-  </span>
+  <!-- Row 1 -->
+  <div class="form-row">
+    <div class="label">Scheduled Takeoff Time:</div>
 
-  <span>at</span>
-  <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
-</div>
+    <div class="time-wrap">
+      <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
+      <span class="z-badge">Z</span>
+    </div>
 
-<div class="input-row">
-  <span class="label-text">Scheduled Land Time:</span>
+    <div class="at">at</div>
 
-  <span class="time-wrap">
-    <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
-    <span class="z-badge">Z</span>
-  </span>
+    <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
 
-  <span>at</span>
-  <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
-</div>
-
-<div class="input-row third">
-  <div class="aircraft-wrap">
-    <select id="aircraft">
-      <option selected>KC-135</option>
-      <option>KC-46</option>
-      <option>C-5</option>
-      <option>C-17</option>
-      <option>C-130</option>
-      <option>C-21</option>
-      <option>C-32</option>
-      <option>C-37</option>
-      <option>C-40</option>
-      <option>VC-25</option>
-    </select>
+    <div></div>
   </div>
 
-  <div class="crew-toggle">
-    <span id="basicLbl" class="crew-label active">Basic</span>
-    <label class="switch">
-      <input type="checkbox" id="augmented">
-      <span class="slider"></span>
-    </label>
-    <span id="augLbl" class="crew-label">Augmented</span>
+  <!-- Row 2 -->
+  <div class="form-row">
+    <div class="label">Scheduled Land Time:</div>
+
+    <div class="time-wrap">
+      <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
+      <span class="z-badge">Z</span>
+    </div>
+
+    <div class="at">at</div>
+
+    <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
+
+    <div></div>
   </div>
+
+  <!-- Row 3 -->
+  <div class="form-row">
+    <div class="label"></div>
+
+    <div class="third-content">
+      <select id="aircraft">
+        <option selected>KC-135</option>
+        <option>KC-46</option>
+        <option>C-5</option>
+        <option>C-17</option>
+        <option>C-130</option>
+        <option>C-21</option>
+        <option>C-32</option>
+        <option>C-37</option>
+        <option>C-40</option>
+        <option>VC-25</option>
+      </select>
+
+      <div class="crew-toggle">
+        <span id="basicLbl" class="crew-label active">Basic</span>
+        <label class="switch">
+          <input type="checkbox" id="augmented">
+          <span class="slider"></span>
+        </label>
+        <span id="augLbl" class="crew-label">Augmented</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <button id="calcBtn">Calculate</button>
@@ -292,29 +313,29 @@ button {
 </div>
 
 <script>
-function hhmmToMinutes(hhmm) {
+function hhmmToMinutes(hhmm){
   return parseInt(hhmm.slice(0,2))*60 + parseInt(hhmm.slice(2,4));
 }
 
-function minutesToHHMM(mins) {
+function minutesToHHMM(mins){
   mins = ((mins % 1440) + 1440) % 1440;
   return String(Math.floor(mins/60)).padStart(2,"0") +
          String(mins%60).padStart(2,"0") + "Z";
 }
 
-function diffMinutes(start, end) {
+function diffMinutes(start, end){
   let d = end - start;
-  if (d < 0) d += 1440;
+  if(d < 0) d += 1440;
   return d;
 }
 
-function calculate() {
+function calculate(){
   const takeoff = takeoffTime.value;
   const landing = landingTime.value;
   const augmented = augmentedBox.checked;
   const out = document.getElementById("output");
 
-  if (takeoff.length !== 4 || landing.length !== 4) {
+  if(takeoff.length !== 4 || landing.length !== 4){
     out.innerHTML = "Please enter times in HHMM format.";
     return;
   }
@@ -331,19 +352,19 @@ function calculate() {
   const engine     = takeoffMin - 30;
 
   const flightMin = diffMinutes(takeoffMin, landingMin);
-  const flightHrs = (flightMin / 60).toFixed(1);
+  const flightHrs = (flightMin/60).toFixed(1);
 
   // KC-135 rules (for now)
-  const fdp = augmented ? 1440 : 960;        // 24 vs 16
-  const cdp = augmented ? 1485 : 1080;       // 24:45 vs 18
-  const tdp = 720;                           // 12 (unchanged)
-  const apu = augmented ? 1080 : 720;        // 18 vs 12
+  const fdp = augmented ? 1440 : 960;   // 24 vs 16
+  const cdp = augmented ? 1485 : 1080;  // 24:45 vs 18
+  const tdp = 720;                      // 12 (unchanged)
+  const apu = augmented ? 1080 : 720;   // 18 vs 12
 
   const landingFromShow = diffMinutes(showTime, landingMin);
 
-  function hl(limitMinutes) {
-    if (landingFromShow > limitMinutes) return "danger";
-    if (landingFromShow >= limitMinutes * 0.8) return "warn";
+  function hl(limitMinutes){
+    if(landingFromShow > limitMinutes) return "danger";
+    if(landingFromShow >= limitMinutes * 0.8) return "warn";
     return "";
   }
 
@@ -394,7 +415,6 @@ function calculate() {
   `;
 }
 
-/* ---------- EVENTS ---------- */
 const augmentedBox = document.getElementById("augmented");
 const basicLbl = document.getElementById("basicLbl");
 const augLbl = document.getElementById("augLbl");
