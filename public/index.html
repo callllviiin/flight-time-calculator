@@ -118,6 +118,15 @@ input{
   padding-right:18px;
 }
 
+/* Subtle +1/-1 marker in OUTPUT (superscript style) */
+.shift-sup{
+  font-size:10px;
+  color:#666;
+  font-weight:700;
+  margin-left:2px;
+  vertical-align:super;
+}
+  
 .at{
   font-weight:bold;
   display:flex;
@@ -481,6 +490,34 @@ function zuluToLocalWithDay(zuluMins, icao, zuluHHMM){
   const localMins = ((raw % 1440) + 1440) % 1440;
 
   return { localMins, dayShift };
+
+function splitDayShift(rawMinutes){
+  const dayShift = Math.floor(rawMinutes / 1440);               // -1,0,+1...
+  const mins = ((rawMinutes % 1440) + 1440) % 1440;             // normalized 0..1439
+  return { mins, dayShift };
+}
+
+function formatShiftSup(dayShift){
+  if(dayShift === 0) return "";
+  return dayShift > 0 ? `+${dayShift}` : `${dayShift}`;
+}
+
+// Returns HTML like "2315Z<sup>-1</sup>" but using span styling (safer than <sup> in some CSS)
+function zuluHtmlWithShift(rawMinutes){
+  const { mins, dayShift } = splitDayShift(rawMinutes);
+  const base = `${minutesToHHMM(mins)}Z`;
+  const sh = formatShiftSup(dayShift);
+  return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
+}
+
+// Returns "1300L" optionally with (+1/-1) as a superscript
+function localHtmlFromZulu(zuluMins, icao, zuluHHMM){
+  if(!isICAO(icao) || !getTimeZoneFromICAO(icao)) return "";
+  const res = zuluToLocalWithDay(zuluMins, icao, zuluHHMM); // you already added this helper
+  if(!res) return "";
+  const base = `${minutesToHHMM(res.localMins)}L`;
+  const sh = formatShiftSup(res.dayShift);
+  return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
 }
   
 /* ----------------- ICAO -> Time Zone (Phase 1 / Step 1) ----------------- */
@@ -661,6 +698,12 @@ function calculate(){
   const takeoffMin = hhmmToMinutes(takeoff);
   const landingMin = hhmmToMinutes(landing);
 
+// NEW (Phase 1 output local)
+  const tkIcao = (takeoffICAO.value || "").trim().toUpperCase();
+  const ldIcao = (landingICAO.value || "").trim().toUpperCase();
+  const takeoffLocalHtml = localHtmlFromZulu(takeoffMin, tkIcao, takeoff);
+  const landingLocalHtml = localHtmlFromZulu(landingMin, ldIcao, landing);
+
   const showTime   = takeoffMin - 195;
   const crewRest   = takeoffMin - 855;
   const lastBeer   = takeoffMin - 720;
@@ -690,32 +733,46 @@ function calculate(){
   out.innerHTML = `
     <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
 
-    <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMMZ(crewRest)}</span></div>
+    <div class="row"><span>Enter Crew Rest</span><span>${zuluHtmlWithShift(crewRest)}</span></div>
     <div class="subtext">T/O − 14+15</div>
 
-    <div class="row"><span>Last Beer</span><span>${minutesToHHMMZ(lastBeer)}</span></div>
+    <div class="row"><span>Last Beer</span><span>${zuluHtmlWithShift(lastBeer)}</span></div>
     <div class="subtext">T/O − 12+00</div>
 
-    <div class="row"><span>Legal for Alert</span><span>${minutesToHHMMZ(legalAlert)}</span></div>
+    <div class="row"><span>Legal for Alert</span><span>${zuluHtmlWithShift(legalAlert)}</span></div>
     <div class="subtext">T/O − 4+15</div>
 
-    <div class="row"><span>Show Time</span><span>${minutesToHHMMZ(showTime)}</span></div>
+    <div class="row"><span>Show Time</span><span>${zuluHtmlWithShift(showTime)}</span></div>
     <div class="subtext">T/O − 3+15</div>
 
-    <div class="row"><span>Brief Time</span><span>${minutesToHHMMZ(briefTime)}</span></div>
+    <div class="row"><span>Brief Time</span><span>${zuluHtmlWithShift(briefTime)}</span></div>
     <div class="subtext">
-      T/O − <input id="briefOffsetEdit" class="inline-mini" value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5" title="H+MM (e.g., 2+30)">
+      T/O − <input id="briefOffsetEdit" class="inline-mini" value="${zuluHtmlWithShift(briefOffsetMin)}" maxlength="5" title="H+MM (e.g., 2+30)">
     </div>
 
-    <div class="row"><span>Step Time</span><span>${minutesToHHMMZ(stepTime)}</span></div>
+    <div class="row"><span>Step Time</span><span>${zuluHtmlWithShift(stepTime)}</span></div>
     <div class="subtext">T/O − 2+00</div>
 
-    <div class="row"><span>Engine Start</span><span>${minutesToHHMMZ(engine)}</span></div>
+    <div class="row"><span>Engine Start</span><span>${zuluHtmlWithShift(engine)}</span></div>
     <div class="subtext">T/O − 0+30</div>
 
-    <div class="row"><span>Takeoff</span><span>${minutesToHHMMZ(takeoffMin)}</span></div>
+    <div class="row">
+      <span>Takeoff</span>
+      <span>
+        ${zuluHtmlWithShift(takeoffMin)}
+        ${takeoffLocalHtml ? ` <span style="font-weight:normal;color:#444;">(${takeoffLocalHtml})</span>` : ""}
+      </span>
+    </div>
     <div class="subtext">T/O − 0+00</div>
 
+    <div class="row">
+      <span>Landing</span>
+      <span>
+        ${zuluHtmlWithShift(landingMin)}
+        ${landingLocalHtml ? ` <span style="font-weight:normal;color:#444;">(${landingLocalHtml})</span>` : ""}
+      </span>
+    </div>
+    
     <hr>
 
     <div class="row"><span>Flight Time</span><span>${flightHrs} hrs</span></div>
