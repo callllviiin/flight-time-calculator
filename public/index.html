@@ -757,7 +757,26 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
     </div>
   `;
 }
-  
+
+// ---------- Phase 1.5: ICAO lookup wrapper (preps for big DB later) ----------
+let ICAO_TZ_DB = null; // optional external DB (Phase 2-ready)
+
+// optional: later you can load this from a JSON file without changing the rest of the code
+async function loadIcaoDb(){
+  try{
+    // If you add "icao_tz_db.json" in the same folder as this HTML, this will work.
+    // Example JSON shape: { "KADW":"America/New_York", "EGLL":"Europe/London", ... }
+    const res = await fetch("icao_tz_db.json", { cache: "no-store" });
+    if(!res.ok) return;
+    ICAO_TZ_DB = await res.json();
+  }catch(_){
+    // silent fail — we just fall back to the built-in map
+  }
+}
+
+// run once at page load (safe even if no JSON exists)
+loadIcaoDb();
+
 /* ----------------- ICAO -> Time Zone (Phase 1 / Step 1) ----------------- */
 const ICAO_TIMEZONE = {
   /* ===================== CONUS ===================== */
@@ -849,7 +868,7 @@ const ICAO_TIMEZONE = {
 
 function getTimeZoneFromICAO(icao){
   const key = (icao || "").trim().toUpperCase();
-  return ICAO_TIMEZONE[key] || null;
+  return (ICAO_TZ_DB && ICAO_TZ_DB[key]) || ICAO_TIMEZONE[key] || null;
 }
 
 function getOffsetMinutesForTimeZone(timeZone, dateUtc){
