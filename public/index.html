@@ -430,10 +430,14 @@ button:disabled{
 
 /* Give ORM message column more space */
 .row3.midtext{
-  grid-template-columns: 0.65fr 2.35fr auto; /* steal more from label, give to message */
+  grid-template-columns: 190px 1fr auto; /* fixed label width, message gets the rest */
   column-gap:10px;
 }
 
+.row3.midtext > span:first-child{
+  white-space:nowrap;
+}
+  
 .row3.midtext .lcol{
   text-align:left;
   margin-right:0;
@@ -482,7 +486,9 @@ button:disabled{
   line-height:1.1;
   text-align:left;
   margin-right:0;
+}
 
+.row3.midtext .orm-note{
   white-space:nowrap;
   display:inline-block;
 }
