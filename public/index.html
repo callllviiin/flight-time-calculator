@@ -78,6 +78,7 @@ h1{
   display:inline-block;
   width:104px;
 }
+  
 .floating-label{
   position:absolute;
   left:8px;
@@ -112,13 +113,14 @@ h1{
 }
 
 .third-content-wide{
-  grid-column: 2 / -1;     /* spans Zulu → Local columns */
+  grid-column: 2 / -1;    /* spans Zulu → Local columns */
   display:grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: auto 1fr auto;  /* left item, center space, right item */
   align-items:center;
   width: 100%;
+  justify-self: stretch;
 }
-
+  
 .third-content-wide > div:nth-child(1){
   justify-self:start;
 }
