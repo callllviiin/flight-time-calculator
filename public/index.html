@@ -87,7 +87,8 @@ h1{
 
 /* third row content spans the non-label columns */
 .third-content{
-  grid-column: 2 / 6;  /* starts exactly under time input column */
+  /* IMPORTANT: this is now a DIRECT child of .form-row (see Row 3 HTML) */
+  grid-column: 3 / 6; /* starts under the "at" column and spans to the end */
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -264,9 +265,11 @@ button{
     <div></div>
   </div>
 
-  <!-- Row 3 -->
+  <!-- Row 3 (FIXED ALIGNMENT) -->
   <div class="form-row">
     <div class="label"></div>
+
+    <div></div> <!-- spacer for the time column so the grid stays consistent -->
 
     <div class="third-content">
       <select id="aircraft">
@@ -402,16 +405,16 @@ function calculate(){
     <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
 
     <div class="row ${hl(fdp)}"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(showTime+fdp)}</span></div>
-    <div class="subtext">Show + ${fdp/60} hrs</div>
+    <div class="subtext">Show + ${fdp/60}+00</div>
 
     <div class="row ${hl(cdp)}"><span>Crew Duty Period Ends</span><span>${minutesToHHMM(showTime+cdp)}</span></div>
-    <div class="subtext">Show + ${(cdp/60).toFixed(2)} hrs</div>
+    <div class="subtext">Show + ${(cdp/60).toFixed(2)}+00</div>
 
     <div class="row"><span>Transition Duty Period Ends</span><span>${minutesToHHMM(showTime+tdp)}</span></div>
     <div class="subtext">Show + 12+00</div>
 
     <div class="row ${hl(apu)}"><span>Autopilot INOP FDP Ends</span><span>${minutesToHHMM(showTime+apu)}</span></div>
-    <div class="subtext">Show + ${apu/60} hrs</div>
+    <div class="subtext">Show + ${apu/60}+00</div>
   `;
 }
 
