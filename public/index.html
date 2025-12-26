@@ -839,7 +839,7 @@ function calculate(){
 function ormClass(limitMinutes){
   if(limitMinutes <= 0) return "";
 
-  // Exceed limit: inverse highlight
+  // Exceed limit: highlight
   if(landingFromShow > limitMinutes) return "orm-exceed";
 
   const ratio = landingFromShow / limitMinutes;
@@ -848,11 +848,11 @@ function ormClass(limitMinutes){
   if(ratio >= 0.90) return "orm-high";    // Orange (90–95%)
   if(ratio >= 0.75) return "orm-mod";     // Yellow (75–90%)
   return "orm-low";                       // Green (<75%)
+}
 
 function ormMessage(limitMinutes){
   if(limitMinutes <= 0) return "";
 
-  // Exceeded
   if(landingFromShow > limitMinutes){
     return "Mission NO-GO. Maximum Duty Day Exceeded";
   }
