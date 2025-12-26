@@ -99,7 +99,7 @@ body{
   grid-template-columns: 200px 104px 26px 104px 1fr;
   column-gap:4px;
   row-gap:14px;
-  align-items:flex-start;
+  align-items:center;
   margin-top: 24px;
 }
 
@@ -191,18 +191,33 @@ input{
 }
 
 .icao-wrap{
-  display:flex;
-  flex-direction:column;   /* input on top, hint below */
-  align-items:stretch;
+  position:relative;
   width:104px;
 }
+
 .icao-wrap .box{
   width:100%;
 }
 
 .icao-hint{
-  width:100%;
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  margin-top:2px;
+
+  font-size:10px;
+  font-weight:600;
+  line-height:1.1;
+  color:#666;
+
   text-align:center;
+  pointer-events:none;
+  white-space:nowrap;
+}
+
+.icao-hint.bad{
+  color:#8b0000;
 }
   
 /* slightly larger gap between ICAO and Local */
