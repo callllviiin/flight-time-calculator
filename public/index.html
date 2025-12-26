@@ -292,6 +292,17 @@ button{
   margin-bottom:6px;
 }
 
+/* Small explanatory text in the "middle" column of Duty Limitations */
+.orm-note{
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  color:#555;
+  line-height:1.1;
+  text-align:left;
+  margin-right:0;      /* ensure it doesn't inherit "scoot" feeling */
+}
+  
 .warn{
   background-color:#fff3cd;
   padding:4px 6px;
@@ -607,13 +618,18 @@ function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
   return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
 }
 
-function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass=""){
+function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHtml=""){
   const z = zuluHtml(zuluMinutes);
-  const l = showLocal ? localHtmlFromZuluSimple(zuluMinutes, localIcao) : "";
+
+  // Middle column content: either Local time OR an optional message OR blank
+  const middle = showLocal
+    ? localHtmlFromZuluSimple(zuluMinutes, localIcao)
+    : (midHtml || "");
+
   return `
     <div class="row3 ${extraClass}">
       <span>${label}</span>
-      <span class="lcol">${l}</span>
+      <span class="lcol">${middle}</span>
       <span class="zcol">${z}</span>
     </div>
   `;
@@ -832,6 +848,21 @@ function ormClass(limitMinutes){
   if(ratio >= 0.90) return "orm-high";    // Orange (90–95%)
   if(ratio >= 0.75) return "orm-mod";     // Yellow (75–90%)
   return "orm-low";                       // Green (<75%)
+
+function ormMessage(limitMinutes){
+  if(limitMinutes <= 0) return "";
+
+  // Exceeded
+  if(landingFromShow > limitMinutes){
+    return "Mission NO-GO. Maximum Duty Day Exceeded";
+  }
+
+  const ratio = landingFromShow / limitMinutes;
+
+  if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
+  if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
+  if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
+  return "ORM Low: <75% of Maximum Duty Day";
 }
 
   out.innerHTML = `
@@ -871,19 +902,26 @@ function ormClass(limitMinutes){
 
   <hr>
 
-  <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
+<div style="font-weight:bold;font-size:18px;text-align:center;">Crew Duty Limitations</div>
 
-    ${row3Html("Flight Duty Period", showTime+fdp, "", false, ormClass(fdp))}
-  <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
+${row3Html(
+  "Flight Duty Period",
+  showTime + fdp,
+  "",
+  false,
+  ormClass(fdp),
+  `<span class="orm-note">${ormMessage(fdp)}</span>`
+)}
+<div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
-   ${row3Html("Crew Duty Time", showTime+cdp, "", false, ormClass(cdp))}
-  <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
+${row3Html("Crew Duty Time", showTime + cdp, "", false, ormClass(cdp))}
+<div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
-    ${row3Html("Transition Duty Day", showTime+tdp, "", false, ormClass(tdp))}
-  <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
+${row3Html("Transition Duty Day", showTime + tdp, "", false, ormClass(tdp))}
+<div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
-    ${row3Html("Autopilot INOP FDP", showTime+apu, "", false, ormClass(apu))}
-  <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
+${row3Html("Autopilot INOP FDP", showTime + apu, "", false, ormClass(apu))}
+<div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
   
 `;
  
