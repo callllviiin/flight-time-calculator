@@ -23,7 +23,34 @@ body{
 
 h1{
   text-align:center;
-  margin:10px 0 18px;
+  margin:10px 0 10px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:8px;
+  margin:0 0 12px;
+  font-size:12px;
+  color:#555;
+}
+.topbar input{ transform:translateY(1px); }
+
+/* ---------- DEBUG BORDERS (toggle) ---------- */
+.debug .app{ outline:2px dashed rgba(0,0,0,0.35); outline-offset:6px; }
+.debug .label,
+.debug .at,
+.debug .floating-wrap,
+.debug .icao-wrap,
+.debug .local-wrap,
+.debug .third-row-wrap{
+  outline:1px solid rgba(0,0,0,0.25);
+  outline-offset:2px;
+}
+.debug .third-content > *{
+  outline:1px solid rgba(0,0,0,0.15);
+  outline-offset:2px;
 }
 
 /* ---------- TOP FORM (SINGLE GRID) ---------- */
@@ -31,10 +58,10 @@ h1{
   display:grid;
 
   /* label | Zulu | at | ICAO | Local  */
-  grid-template-columns: max-content 104px 28px 104px 104px;
+  grid-template-columns: max-content 104px 26px 104px 104px;
 
-  /* closer to label */
-  column-gap:6px;
+  /* bring zulu+icao closer to label */
+  column-gap:4px;
   row-gap:14px;
   align-items:center;
 }
@@ -81,14 +108,27 @@ h1{
   justify-content:center;
 }
 
-/* make ICAO->Local gap slightly smaller */
-.local-col{
-  margin-left:-2px;
+/* ICAO wrapper so debug outlines match */
+.icao-wrap{
+  display:inline-block;
+  width:104px;
+}
+
+/* slightly larger gap between ICAO and Local */
+.local-wrap{
+  margin-left:10px;
 }
 
 /* ---------- ROW 3 ---------- */
-.third-content{
+.third-row-wrap{
   grid-column: 1 / -1;
+  display:grid;
+  grid-template-columns: max-content 1fr;
+  align-items:center;
+  column-gap:8px;
+}
+
+.third-content{
   display:grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items:center;
@@ -238,113 +278,136 @@ button{
 /* ---------- MOBILE ---------- */
 @media (max-width:620px){
   .form-grid{
-    grid-template-columns: max-content 1fr 28px 1fr 1fr;
+    grid-template-columns: max-content 1fr 26px 1fr 1fr;
   }
   .floating-wrap{ width:100%; }
   .box{ width:100%; }
+  .icao-wrap{ width:100%; }
+  .local-wrap{ margin-left:0; }
 
+  .third-row-wrap{
+    grid-template-columns: 1fr;
+    row-gap:8px;
+  }
   .third-content{
     grid-template-columns: 1fr;
     gap:10px;
   }
-  .aircraft-wrap, .crew-toggle{ justify-self:start; }
-  .local-col{ margin-left:0; }
+  .crew-toggle{ justify-self:start; }
 }
 </style>
 </head>
 
 <body>
-<div class="app">
-<h1>Crew Dawg Calculator</h1>
+<div id="pageRoot">
 
-<div class="form-grid">
+  <div class="app">
+    <h1>Crew Dawg Calculator</h1>
 
-  <!-- Row 1 -->
-  <div class="form-row">
-    <div class="label">Scheduled Takeoff Time:</div>
-
-    <div class="floating-wrap">
-      <div class="floating-label">Zulu</div>
-      <input id="takeoffTime" class="box" placeholder="HHMM" maxlength="4">
+    <div class="topbar">
+      <label>
+        <input type="checkbox" id="debugBorders">
+        Debug borders
+      </label>
     </div>
 
-    <div class="at">at</div>
+    <div class="form-grid">
 
-    <input id="takeoffICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
+      <!-- Row 1 -->
+      <div class="form-row">
+        <div class="label">Scheduled Takeoff Time:</div>
 
-    <div class="floating-wrap local-col">
-      <div class="floating-label">Local</div>
-      <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4">
-    </div>
-  </div>
+        <div class="floating-wrap">
+          <div class="floating-label">Zulu</div>
+          <input id="takeoffTime" class="box" placeholder="HHMM" maxlength="4">
+        </div>
 
-  <!-- Row 2 -->
-  <div class="form-row">
-    <div class="label">Scheduled Land Time:</div>
+        <div class="at">at</div>
 
-    <div class="floating-wrap">
-      <div class="floating-label">Zulu</div>
-      <input id="landingTime" class="box" placeholder="HHMM" maxlength="4">
-    </div>
+        <div class="icao-wrap">
+          <input id="takeoffICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
+        </div>
 
-    <div class="at">at</div>
-
-    <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
-
-    <div class="floating-wrap local-col">
-      <div class="floating-label">Local</div>
-      <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4">
-    </div>
-  </div>
-
-  <!-- Row 3 -->
-  <div class="form-row">
-    <div class="third-content">
-      <div class="aircraft-wrap">
-        <select id="aircraft">
-          <option selected>KC-135</option>
-          <option>KC-46</option>
-          <option>C-5</option>
-          <option>C-17</option>
-          <option>C-130</option>
-          <option>C-21</option>
-          <option>C-32</option>
-          <option>C-37</option>
-          <option>C-40</option>
-          <option>VC-25</option>
-        </select>
+        <div class="floating-wrap local-wrap">
+          <div class="floating-label">Local</div>
+          <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4">
+        </div>
       </div>
 
-      <div></div>
+      <!-- Row 2 -->
+      <div class="form-row">
+        <div class="label">Scheduled Land Time:</div>
 
-      <div class="crew-toggle">
-        <span id="basicLbl" class="crew-label active">Basic</span>
-        <label class="switch">
-          <input type="checkbox" id="augmented">
-          <span class="slider"></span>
-        </label>
-        <span id="augLbl" class="crew-label">Augmented</span>
+        <div class="floating-wrap">
+          <div class="floating-label">Zulu</div>
+          <input id="landingTime" class="box" placeholder="HHMM" maxlength="4">
+        </div>
+
+        <div class="at">at</div>
+
+        <div class="icao-wrap">
+          <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
+        </div>
+
+        <div class="floating-wrap local-wrap">
+          <div class="floating-label">Local</div>
+          <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4">
+        </div>
       </div>
+
+      <!-- Row 3 -->
+      <div class="third-row-wrap">
+        <div class="label">Aircraft / Crew</div>
+
+        <div class="third-content">
+          <div class="aircraft-wrap">
+            <select id="aircraft">
+              <option selected>KC-135</option>
+              <option>KC-46</option>
+              <option>C-5</option>
+              <option>C-17</option>
+              <option>C-130</option>
+              <option>C-21</option>
+              <option>C-32</option>
+              <option>C-37</option>
+              <option>C-40</option>
+              <option>VC-25</option>
+            </select>
+          </div>
+
+          <div></div>
+
+          <div class="crew-toggle">
+            <span id="basicLbl" class="crew-label active">Basic</span>
+            <label class="switch">
+              <input type="checkbox" id="augmented">
+              <span class="slider"></span>
+            </label>
+            <span id="augLbl" class="crew-label">Augmented</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <button id="calcBtn">Calculate</button>
+
+    <div id="output" class="output"></div>
+
+    <div class="disclaimer">
+      <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there is no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only). Information in this calculator is based on AFMAN 11-202V3_AMC SUP, 29 JULY 2024.</p>
+
+      <p>Also, as much as I would like to take credit for this and lead you to think I am smart, I created this tool with the help of ChatGPT. If you find an error, please let me know at <strong>[your email]</strong>.</p>
+
+      <p><strong>Donations:</strong> This tool is free for you to use to help manage your crew. It costs you nothing and costs me a little time. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot do it. I appreciate your consideration, but I have already taken the bonus, so I am screwed either way. Cheers!</p>
+    </div>
+
+    <div class="footer">
+      NKAWT...GF
+      <small>(If you know, you know…)</small>
     </div>
   </div>
 
-</div>
-
-<button id="calcBtn">Calculate</button>
-
-<div id="output" class="output"></div>
-
-<div class="disclaimer">
-  <p><strong>Disclaimer:</strong> I am a crew dog, not a coder. I created this tool to try and help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there is no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only). Information in this calculator is based on AFMAN 11-202V3_AMC SUP, 29 JULY 2024.</p>
-
-  <p>Also, as much as I would like to take credit for this and lead you to think I am smart, I created this tool with the help of ChatGPT. If you find an error, please let me know at <strong>[your email]</strong>.</p>
-
-  <p><strong>Donations:</strong> This tool is free for you to use to help manage your crew. It costs you nothing and costs me a little time. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot do it. I appreciate your consideration, but I have already taken the bonus, so I am screwed either way. Cheers!</p>
-</div>
-
-<div class="footer">
-  NKAWT...GF
-  <small>(If you know, you know…)</small>
 </div>
 
 <script>
@@ -381,6 +444,9 @@ function parseHPlusMM(s){
   if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
   return null;
 }
+function isICAO(s){
+  return typeof s === "string" && /^[A-Z]{4}$/.test(s.trim().toUpperCase());
+}
 
 /* ----------------- ICAO offset (stub for now) ----------------- */
 function getUtcOffsetMinutesFromICAO(_icao){ return 0; } // placeholder: Local == Zulu
@@ -407,6 +473,13 @@ function calculate(){
   if(!isHHMM(takeoff) || !isHHMM(landing)){
     out.innerHTML = "Please enter times in HHMM format (0000–2359).";
     return;
+  }
+
+  // if the brief offset editor exists (from a previous render), honor it on every calculate
+  const existingBrief = document.getElementById("briefOffsetEdit");
+  if(existingBrief){
+    const v = parseHPlusMM(existingBrief.value);
+    if(v != null) briefOffsetMin = v;
   }
 
   const takeoffMin = hhmmToMinutes(takeoff);
@@ -489,35 +562,53 @@ function calculate(){
     <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
   `;
 
-  // wire brief offset editor (only exists after output renders)
+  // live-update brief time after first Calculate, without needing to click again
   const offInp = document.getElementById("briefOffsetEdit");
   offInp?.addEventListener("input", (e) => {
     const v = parseHPlusMM(e.target.value);
     if(v == null) return;
     briefOffsetMin = v;
-    // update live after first calculate
-    calculate();
+    if(hasCalculated) calculate();
   });
 }
 
 /* ----------------- local time sync ----------------- */
 let suppressSync = false;
+
 function syncLocalFromZulu(zuluInput, icaoInput, localInput){
   if(suppressSync) return;
+
+  const icao = (icaoInput.value || "").trim().toUpperCase();
+
+  // Don’t populate Local unless ICAO looks valid (matches your intent + future TZ logic)
+  if(!isICAO(icao)){
+    suppressSync = true;
+    localInput.value = "";
+    suppressSync = false;
+    return;
+  }
+
   const z = zuluInput.value.trim();
   if(!isHHMM(z)) return;
+
   const zM = hhmmToMinutes(z);
-  const locM = zuluToLocalMinutes(zM, icaoInput.value.trim());
+  const locM = zuluToLocalMinutes(zM, icao);
   suppressSync = true;
   localInput.value = minutesToHHMM(locM);
   suppressSync = false;
 }
+
 function syncZuluFromLocal(localInput, icaoInput, zuluInput){
   if(suppressSync) return;
+
+  const icao = (icaoInput.value || "").trim().toUpperCase();
+  if(!isICAO(icao)) return; // need ICAO to interpret Local
+
   const l = localInput.value.trim();
   if(!isHHMM(l)) return;
+
   const lM = hhmmToMinutes(l);
-  const zM = localToZuluMinutes(lM, icaoInput.value.trim());
+  const zM = localToZuluMinutes(lM, icao);
   suppressSync = true;
   zuluInput.value = minutesToHHMM(zM);
   suppressSync = false;
@@ -536,15 +627,19 @@ augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
   if(hasCalculated) calculate();
 });
+syncToggleLabels();
 
 document.getElementById("calcBtn").addEventListener("click", () => {
   hasCalculated = true;
   calculate();
 });
 
-syncToggleLabels();
+/* Debug borders toggle */
+document.getElementById("debugBorders").addEventListener("change", (e) => {
+  document.getElementById("pageRoot").classList.toggle("debug", e.target.checked);
+});
 
-/* Local time listeners (sync only; do NOT calculate until after button press) */
+/* Local time listeners (sync only; calculate only after first button press) */
 const takeoffTime = document.getElementById("takeoffTime");
 const takeoffICAO = document.getElementById("takeoffICAO");
 const takeoffLocal = document.getElementById("takeoffLocal");
@@ -572,6 +667,5 @@ landingLocal.addEventListener("input", () => {
 });
 </script>
 
-</div>
 </body>
 </html>
