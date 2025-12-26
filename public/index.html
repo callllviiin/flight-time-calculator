@@ -304,6 +304,45 @@ button{
   border-radius:4px;
 }
 
+/* ORM bands for duty limits */
+.orm-low{   /* Green (<75%) */
+  background:#d4edda;
+  color:#155724;
+  padding:4px 6px;
+  border-radius:4px;
+}
+  
+  .orm-mod{   /* Yellow (75–90%) */
+  background:#fff3cd;
+  padding:4px 6px;
+  border-radius:4px;
+}
+
+.orm-high{  /* Orange (90–95%) */
+  background:#ffe5b4;
+  padding:4px 6px;
+  border-radius:4px;
+}
+
+.orm-severe{ /* Red (>95%) */
+  background:#f8d7da;
+  padding:4px 6px;
+  border-radius:4px;
+}
+
+/* Exceeds limit: inverse (black/white) */
+.orm-exceed{
+  background:#111;
+  color:#fff;
+  padding:4px 6px;
+  border-radius:4px;
+}
+  
+.orm-exceed .tz-sfx{
+  color:#fff;
+  opacity:0.95;
+}
+
 /* tiny offset editor for brief */
 .inline-mini{
   width:48px;
@@ -776,11 +815,19 @@ function calculate(){
 
   const landingFromShow = diffMinutes(showTime, landingMin);
 
-  function hl(limitMinutes){
-    if(landingFromShow > limitMinutes) return "danger";
-    if(landingFromShow >= limitMinutes * 0.8) return "warn";
-    return "";
-  }
+function ormClass(limitMinutes){
+  if(limitMinutes <= 0) return "";
+
+  // Exceed limit: inverse highlight
+  if(landingFromShow > limitMinutes) return "orm-exceed";
+
+  const ratio = landingFromShow / limitMinutes;
+
+  if(ratio >= 0.95) return "orm-severe";  // Red (>95%)
+  if(ratio >= 0.90) return "orm-high";    // Orange (90–95%)
+  if(ratio >= 0.75) return "orm-mod";     // Yellow (75–90%)
+  return "orm-low";                       // Green (<75%)
+}
 
   out.innerHTML = `
   <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
