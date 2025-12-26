@@ -90,6 +90,17 @@ input{
 }
   
 .floating-label{
+  .day-shift{
+  position:absolute;
+  right:6px;
+  top:-9px;
+  font-size:10px;
+  color:#666;
+  background:#f5f7fa;
+  padding:0 3px;
+  font-weight:600;
+}
+
   position:absolute;
   left:8px;
   top:-9px;
@@ -274,6 +285,7 @@ button{
   text-align:center;
   font-weight:bold;
 }
+  
 .footer small{
   display:block;
   font-weight:normal;
@@ -329,6 +341,7 @@ button{
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
           <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4">
+          <span id="takeoffLocalDay" class="day-shift"></span>
         </div>
       </div>
 
@@ -350,6 +363,7 @@ button{
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
           <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4">
+          <span id="landingLocalDay" class="day-shift"></span>
         </div>
       </div>
 
@@ -446,7 +460,22 @@ function parseHPlusMM(s){
 function isICAO(s){
   return typeof s === "string" && /^[A-Z]{4}$/.test(s.trim().toUpperCase());
 }
+function formatDayShift(n){
+  if(!n) return "";
+  return n > 0 ? `+${n}` : `${n}`;   // +1, -1, +2, etc.
+}
 
+function zuluToLocalWithDay(zuluMins, icao, zuluHHMM){
+  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase(), zuluHHMM);
+  if(off == null) return null;
+
+  const raw = zuluMins + off;                   // can be <0 or >=1440
+  const dayShift = Math.floor(raw / 1440);      // -1, 0, +1 (or more)
+  const localMins = ((raw % 1440) + 1440) % 1440;
+
+  return { localMins, dayShift };
+}
+  
 /* ----------------- ICAO -> Time Zone (Phase 1 / Step 1) ----------------- */
 const ICAO_TIMEZONE = {
   /* ===================== CONUS ===================== */
@@ -714,26 +743,42 @@ function calculate(){
 /* ----------------- local time sync ----------------- */
 let suppressSync = false;
 
-function syncLocalFromZulu(zuluInput, icaoInput, localInput){
+function syncLocalFromZulu(zuluInput, icaoInput, localInput, dayElId){
   if(suppressSync) return;
 
+  const dayEl = document.getElementById(dayElId);
   const icao = (icaoInput.value || "").trim().toUpperCase();
 
-  // Don’t populate Local unless ICAO is valid AND mapped to a timezone
+  // Don't populate unless ICAO is valid AND mapped
   if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
     suppressSync = true;
     localInput.value = "";
+    if(dayEl) dayEl.textContent = "";
     suppressSync = false;
     return;
   }
 
   const z = zuluInput.value.trim();
-  if(!isHHMM(z)) return;
+  if(!isHHMM(z)){
+    suppressSync = true;
+    if(dayEl) dayEl.textContent = "";
+    suppressSync = false;
+    return;
+  }
 
   const zM = hhmmToMinutes(z);
-  const locM = zuluToLocalMinutes(zM, icao, z); // <-- pass HHMM for offset anchoring
+  const res = zuluToLocalWithDay(zM, icao, z);
+
   suppressSync = true;
-  localInput.value = (locM == null) ? "" : minutesToHHMM(locM);
+
+  if(res == null){
+    localInput.value = "";
+    if(dayEl) dayEl.textContent = "";
+  } else {
+    localInput.value = minutesToHHMM(res.localMins);
+    if(dayEl) dayEl.textContent = formatDayShift(res.dayShift);
+  }
+
   suppressSync = false;
 }
 
@@ -789,7 +834,7 @@ const landingICAO = document.getElementById("landingICAO");
 const landingLocal = document.getElementById("landingLocal");
 
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
-  syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal);
+  syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
   if(hasCalculated) calculate();
 }));
 takeoffLocal.addEventListener("input", () => {
@@ -798,7 +843,7 @@ takeoffLocal.addEventListener("input", () => {
 });
 
 [landingTime, landingICAO].forEach(el => el.addEventListener("input", () => {
-  syncLocalFromZulu(landingTime, landingICAO, landingLocal);
+  syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
   if(hasCalculated) calculate();
 }));
 landingLocal.addEventListener("input", () => {
