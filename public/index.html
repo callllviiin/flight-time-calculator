@@ -560,6 +560,23 @@ button{
 
 <script>
 /* ----------------- helpers ----------------- */
+function showRuntimeError(err){
+  const out = document.getElementById("output");
+  if(!out) return;
+  out.innerHTML = `
+    <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Dawg Calculator</div>
+    <div style="margin-top:12px; padding:10px; border-radius:8px; background:#f8d7da;">
+      <div style="font-weight:bold;">Something broke (runtime error)</div>
+      <div style="margin-top:6px; font-family:Consolas, Menlo, 'Courier New', monospace; font-size:12px; white-space:pre-wrap;">
+        ${String(err && err.message ? err.message : err)}
+      </div>
+      <div style="margin-top:6px; font-size:12px; color:#333;">
+        Copy/paste that error back to me and we’ll fix it fast.
+      </div>
+    </div>
+  `;
+}
+  
 function isHHMM(s){
   return typeof s === "string" && /^\d{4}$/.test(s) &&
     parseInt(s.slice(0,2),10) <= 23 && parseInt(s.slice(2,4),10) <= 59;
@@ -827,6 +844,7 @@ let briefOffsetMin = 150; // default 2+30
 
 /* ----------------- main calc + render ----------------- */
 function calculate(){
+  try{
   const takeoff = takeoffTime.value.trim();
   const landing = landingTime.value.trim();
   const augmented = augmentedBox.checked;
@@ -936,6 +954,9 @@ function ormMessage(limitMinutes){
   if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
   if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
   return "ORM Low: <75% of Maximum Duty Day";
+  }catch(err){
+    showRuntimeError(err);
+  }
 }
 
   out.innerHTML = `
