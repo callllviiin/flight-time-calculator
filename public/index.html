@@ -22,15 +22,23 @@ body{
 }
 
 .headerbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  position:relative;
   margin:0 0 8px;   /* tight, intentional spacing */
 }
 
+/* make the title look like your old h1 */
 .headerbar h1{
-  margin:0;
-  font-size:28px;
+  margin:10px 0 10px;     /* matches your original h1 spacing */
+  text-align:center;      /* CENTER like before */
+  font-size:28px;         /* keep size */
+}
+
+/* park reset button top-right without affecting centering */
+.headerbar .icon-btn{
+  position:absolute;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
 }
 
 .topbar{
@@ -497,15 +505,14 @@ button:active{
 <body>
 <div id="pageRoot">
 
-  <div class="app">
-    <h1>Crew Dawg Calculator</h1>
+ <div class="app">
 
-<div class="headerbar">
-  <h1>Crew Dawg Calculator</h1>
-  <button id="resetBtn" class="icon-btn" title="Reset">
-    &#x21bb;
-  </button>
-</div>
+  <div class="headerbar">
+    <h1>Crew Dawg Calculator</h1>
+    <button id="resetBtn" class="icon-btn" title="Reset">
+      &#x21bb;
+    </button>
+  </div>
 
     <div class="form-grid">
 
