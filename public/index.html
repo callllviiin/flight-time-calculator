@@ -16,7 +16,7 @@ body{
 
 .app{
   width:100%;
-  max-width:420px;
+  max-width:560px;
   margin:0 auto;
   padding:10px;
 }
@@ -72,9 +72,12 @@ h1{
   pointer-events:none;
 }
 
-/* small "at" */
+/* small "at" (CENTERED BETWEEN BOXES) */
 .at{
   font-weight:bold;
+  display:flex;              /* <-- added */
+  align-items:center;        /* <-- added */
+  justify-content:center;    /* <-- added */
 }
 
 /* ICAO input */
@@ -347,6 +350,13 @@ function diffMinutes(start, end){
   return d;
 }
 
+/* NEW: minutes -> H+MM (e.g., 1080 => 18+00, 1485 => 24+45) */
+function minutesToHPlusMM(mins){
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${h}+${String(m).padStart(2,"0")}`;
+}
+
 function calculate(){
   const takeoff = takeoffTime.value;
   const landing = landingTime.value;
@@ -420,16 +430,16 @@ function calculate(){
     <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
 
     <div class="row ${hl(fdp)}"><span>Flight Duty Period</span><span>${minutesToHHMM(showTime+fdp)}</span></div>
-    <div class="subtext">Show + ${fdp/60}+00</div>
+    <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
     <div class="row ${hl(cdp)}"><span>Crew Duty Time</span><span>${minutesToHHMM(showTime+cdp)}</span></div>
-    <div class="subtext">Show + ${(cdp/60).toFixed(2)}+00</div>
+    <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
     <div class="row"><span>Transition Duty Day</span><span>${minutesToHHMM(showTime+tdp)}</span></div>
-    <div class="subtext">Show + 12+00</div>
+    <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
     <div class="row ${hl(apu)}"><span>Autopilot INOP FDP</span><span>${minutesToHHMM(showTime+apu)}</span></div>
-    <div class="subtext">Show + ${apu/60}+00</div>
+    <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
   `;
 }
 
