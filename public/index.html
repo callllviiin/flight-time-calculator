@@ -21,9 +21,16 @@ body{
   padding:10px;
 }
 
-h1{
-  text-align:center;
-  margin:10px 0 10px;
+.headerbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:0 0 8px;   /* tight, intentional spacing */
+}
+
+.headerbar h1{
+  margin:0;
+  font-size:28px;
 }
 
 .topbar{
@@ -37,12 +44,6 @@ h1{
 }
 
   .topbar input{ transform:translateY(1px); }
-
-.actionbar{
-  display:flex;
-  justify-content:flex-end;
-  margin:6px 0 6px;
-}
 
 .icon-btn{
   width:36px;
@@ -498,7 +499,9 @@ button:active{
 
   <div class="app">
     <h1>Crew Dawg Calculator</h1>
-<div class="actionbar">
+
+<div class="headerbar">
+  <h1>Crew Dawg Calculator</h1>
   <button id="resetBtn" class="icon-btn" title="Reset">
     &#x21bb;
   </button>
