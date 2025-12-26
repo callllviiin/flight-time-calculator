@@ -23,22 +23,23 @@ body{
 
 .headerbar{
   position:relative;
-  margin:0 0 8px;   /* tight, intentional spacing */
+  margin:0 0 8px;
 }
 
-/* make the title look like your old h1 */
+/* Title: centered, slightly larger, more authority */
 .headerbar h1{
-  margin:10px 0 10px;     /* matches your original h1 spacing */
-  text-align:center;      /* CENTER like before */
-  font-size:28px;         /* keep size */
+  margin:10px 0 10px;
+  text-align:center;
+  font-size:30px;     /* slightly larger */
+  font-weight:800;    /* bolder */
+  line-height:1.1;    /* tight, predictable baseline */
 }
 
-/* park reset button top-right without affecting centering */
+/* Reset button aligned to title baseline */
 .headerbar .icon-btn{
   position:absolute;
   right:0;
-  top:50%;
-  transform:translateY(-50%);
+  bottom:10px;        /* aligns with bottom of title text */
 }
 
 .topbar{
