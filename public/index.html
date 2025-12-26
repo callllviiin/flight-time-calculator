@@ -318,27 +318,33 @@ button{
 }
 
 .orm-high{  /* Orange (90–95%) */
-  background:#ffd19a;   /* more orange/amber */
+  background:#ffb74d;          /* strong amber/orange */
   padding:4px 6px;
   border-radius:4px;
 }
 
 .orm-severe{ /* Red (>95%) */
-  background:#f8d7da;
-  padding:4px 6px;
-  border-radius:4px;
-}
-
-/* Exceeds limit: deep solid red */
-.orm-exceed{
-  background:#7a0000;   /* deep red */
+  background:#f44336;          /* strong red */
   color:#fff;
   padding:4px 6px;
   border-radius:4px;
 }
+.orm-severe .tz-sfx{
+  color:#fff;
+}
+
+/* Exceeds limit: BRIGHT emergency red */
 .orm-exceed{
-  outline:2px solid #3a0000;
+  background:#c62828;          /* vivid emergency red */
+  color:#fff;
+  padding:4px 6px;
+  border-radius:4px;
+  outline:2px solid #7f0000;
   outline-offset:-1px;
+}
+.orm-exceed .tz-sfx{
+  color:#fff;
+  opacity:1;
 }
 
 /* tiny offset editor for brief */
