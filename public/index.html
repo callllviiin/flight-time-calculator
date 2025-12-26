@@ -57,10 +57,9 @@ h1{
 .form-grid{
   display:grid;
 
-  /* label | Zulu | at | ICAO | Local  */
-  grid-template-columns: max-content 104px 26px 104px 104px;
+  /* Fixed label column so inputs don’t get shoved right */
+  grid-template-columns: 210px 104px 26px 104px 104px;
 
-  /* bring zulu+icao closer to label */
   column-gap:4px;
   row-gap:14px;
   align-items:center;
@@ -72,7 +71,9 @@ h1{
 }
 
 .label{
-  white-space:nowrap;
+  /* allow wrap so label column can stay narrow */
+  white-space:normal;
+  line-height:1.1;
 }
 
 /* all three boxes same size */
@@ -115,26 +116,31 @@ h1{
 }
 
 /* slightly larger gap between ICAO and Local */
-.local-wrap{
-  margin-left:10px;
+.local-wrap{ 
+  margin-left:10px; }
 }
 
 /* ---------- ROW 3 ---------- */
-.third-row-wrap{
-  grid-column: 1 / -1;
-  display:grid;
-  grid-template-columns: max-content 1fr;
-  align-items:center;
-  column-gap:8px;
+/* ---------- ROW 3 CLEAN LAYOUT ---------- */
+.aircraft-crew-label{
+  font-weight:bold;
 }
 
-.third-content{
+.third-content-wide{
+  grid-column: 2 / -1;     /* spans Zulu → Local columns */
   display:grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items:center;
-  gap:12px;
-  font-weight:normal;
-  width:100%;
+}
+
+.third-content-wide > div:nth-child(1){
+  justify-self:start;
+}
+.third-content-wide > div:nth-child(2){
+  justify-self:center;
+}
+.third-content-wide > div:nth-child(3){
+  justify-self:end;
 }
 
 .aircraft-wrap{ justify-self:start; }
@@ -356,37 +362,39 @@ button{
       </div>
 
       <!-- Row 3 -->
-      <div class="third-row-wrap">
-        <div class="label">Aircraft / Crew</div>
+<div class="form-row">
+  <div class="label aircraft-crew-label">Aircraft / Crew</div>
 
-        <div class="third-content">
-          <div class="aircraft-wrap">
-            <select id="aircraft">
-              <option selected>KC-135</option>
-              <option>KC-46</option>
-              <option>C-5</option>
-              <option>C-17</option>
-              <option>C-130</option>
-              <option>C-21</option>
-              <option>C-32</option>
-              <option>C-37</option>
-              <option>C-40</option>
-              <option>VC-25</option>
-            </select>
-          </div>
+  <!-- Use columns 2 through 5 for the 3 evenly-spaced items -->
+  <div class="third-content-wide">
+    <div class="aircraft-wrap">
+      <select id="aircraft">
+        <option selected>KC-135</option>
+        <option>KC-46</option>
+        <option>C-5</option>
+        <option>C-17</option>
+        <option>C-130</option>
+        <option>C-21</option>
+        <option>C-32</option>
+        <option>C-37</option>
+        <option>C-40</option>
+        <option>VC-25</option>
+      </select>
+    </div>
 
-          <div></div>
+    <div></div>
 
-          <div class="crew-toggle">
-            <span id="basicLbl" class="crew-label active">Basic</span>
-            <label class="switch">
-              <input type="checkbox" id="augmented">
-              <span class="slider"></span>
-            </label>
-            <span id="augLbl" class="crew-label">Augmented</span>
-          </div>
-        </div>
-      </div>
+    <div class="crew-toggle">
+      <span id="basicLbl" class="crew-label active">Basic</span>
+      <label class="switch">
+        <input type="checkbox" id="augmented">
+        <span class="slider"></span>
+      </label>
+      <span id="augLbl" class="crew-label">Augmented</span>
+    </div>
+  </div>
+</div>
+
 
     </div>
 
