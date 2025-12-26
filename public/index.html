@@ -29,13 +29,16 @@ h1{
 /* ---------- TOP FORM (SINGLE GRID) ---------- */
 .form-grid{
   display:grid;
-  grid-template-columns: 190px 92px 34px 92px 1fr;
+
+  /* KEY CHANGE: label column hugs the text width (removes the “inset” look) */
+  grid-template-columns: max-content 92px 34px 92px 1fr;
+
   column-gap:8px;
   row-gap:14px;
   align-items:center;
 }
 
-/* Rows are logical only, children align to the ONE grid */
+/* rows are logical only; children align to the ONE grid */
 .form-row{
   display:contents;
   font-weight:bold;
@@ -84,9 +87,10 @@ h1{
   box-sizing:border-box;
 }
 
-/* ---------- ROW 3 (aligned with label text start) ---------- */
+/* ---------- ROW 3 ---------- */
+/* span full width so dropdown + toggle sit on one line */
 .third-content{
-  grid-column: 1 / -1;     /* start at same left edge as the labels above */
+  grid-column: 1 / -1;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -100,9 +104,11 @@ h1{
   padding:6px;
   font-size:16px;
   box-sizing:border-box;
-  flex: 1 1 260px;    /* can grow/shrink */
-  min-width: 180px;   /* prevents “super skinny” */
-  max-width: 240px;   /* keeps it tidy on wide screens */
+
+  /* don’t collapse skinny */
+  flex: 1 1 260px;
+  min-width: 220px;
+  max-width: 320px;
 }
 
 /* toggle */
@@ -111,7 +117,7 @@ h1{
   align-items:center;
   justify-content:flex-end;
   gap:10px;
-  flex: 0 0 auto;     /* don’t shrink into the dropdown */
+  flex: 0 0 auto;
   white-space:nowrap;
 }
 
@@ -139,7 +145,7 @@ h1{
   border-radius:26px;
 }
 .slider:before{
-  content:"◀";                 /* DEFAULT = Basic */
+  content:"◀";              /* DEFAULT: Basic */
   position:absolute;
   height:22px;
   width:22px;
@@ -156,7 +162,7 @@ h1{
 }
 input:checked + .slider:before{
   transform:translateX(26px);
-  content:"▶";                 /* Augmented */
+  content:"▶";              /* Augmented */
 }
 
 /* ---------- BUTTON ---------- */
@@ -224,13 +230,15 @@ button{
   color:#666;
 }
 
-/* Optional small-screen help: keep row 3 sane if narrow */
+/* ---------- MOBILE ---------- */
 @media (max-width:520px){
   .third-content{
     flex-wrap:wrap;
+    gap:10px;
   }
   #aircraft{
     max-width:none;
+    min-width: 180px;
   }
 }
 </style>
@@ -294,7 +302,7 @@ button{
       <div class="crew-toggle">
         <span id="basicLbl" class="crew-label active">Basic</span>
         <label class="switch">
-          <!-- unchecked = Basic default -->
+          <!-- DEFAULT UNCHECKED = Basic -->
           <input type="checkbox" id="augmented">
           <span class="slider"></span>
         </label>
@@ -411,17 +419,17 @@ function calculate(){
 
     <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
 
-    <div class="row ${hl(fdp)}"><span>Flight Duty Period Ends</span><span>${minutesToHHMM(showTime+fdp)}</span></div>
-    <div class="subtext">Show + ${fdp/60} hrs</div>
+    <div class="row ${hl(fdp)}"><span>Flight Duty Period</span><span>${minutesToHHMM(showTime+fdp)}</span></div>
+    <div class="subtext">Show + ${fdp/60}+00</div>
 
-    <div class="row ${hl(cdp)}"><span>Crew Duty Period Ends</span><span>${minutesToHHMM(showTime+cdp)}</span></div>
-    <div class="subtext">Show + ${(cdp/60).toFixed(2)} hrs</div>
+    <div class="row ${hl(cdp)}"><span>Crew Duty Time</span><span>${minutesToHHMM(showTime+cdp)}</span></div>
+    <div class="subtext">Show + ${(cdp/60).toFixed(2)}+00</div>
 
-    <div class="row"><span>Transition Duty Period Ends</span><span>${minutesToHHMM(showTime+tdp)}</span></div>
+    <div class="row"><span>Transition Duty Day</span><span>${minutesToHHMM(showTime+tdp)}</span></div>
     <div class="subtext">Show + 12+00</div>
 
-    <div class="row ${hl(apu)}"><span>Autopilot INOP FDP Ends</span><span>${minutesToHHMM(showTime+apu)}</span></div>
-    <div class="subtext">Show + ${apu/60} hrs</div>
+    <div class="row ${hl(apu)}"><span>Autopilot INOP FDP</span><span>${minutesToHHMM(showTime+apu)}</span></div>
+    <div class="subtext">Show + ${apu/60}+00</div>
   `;
 }
 
@@ -436,12 +444,12 @@ function syncToggleLabels(){
 
 augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
-  calculate(); // keep outputs live when toggling
+  calculate();
 });
 
 document.getElementById("calcBtn").addEventListener("click", calculate);
 
-/* Ensure correct default visuals on load */
+/* ensure default: Basic bold + arrow left */
 syncToggleLabels();
 </script>
 
