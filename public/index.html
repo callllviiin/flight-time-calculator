@@ -194,6 +194,20 @@ input{
   margin-left:2px;
   vertical-align:super;
 }
+
+/* Float day-shift without affecting alignment */
+.timewrap{
+  position:relative;
+  display:inline-block;
+  padding-right:16px;     /* reserves space so columns stay aligned */
+}
+
+.timewrap .shift-sup{
+  position:absolute;
+  right:0;
+  top:-2px;              /* small lift (superscript feel) */
+  margin-left:0;         /* no inline spacing needed */
+}
   
 .at{
   font-weight:bold;
@@ -414,6 +428,17 @@ button:disabled{
   min-width:70px;
 }
 
+/* When the middle column is narrative text, give it room */
+.row3.midtext{
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.row3.midtext .lcol{
+  text-align:left;
+  margin-right:0;
+  min-width:0;
+}
+  
 /* small-caps for left-column labels in output rows */
 .sc-label{
   font-variant: small-caps;
@@ -548,6 +573,21 @@ button:disabled{
 }
 .ormm-severe .tz-sfx{ color:#000; }
 
+/* Make day shift readable on highlighted duty rows */
+.orm-low .shift-sup,
+.orm-mod .shift-sup,
+.orm-high .shift-sup,
+.orm-severe .shift-sup,
+.orm-exceed .shift-sup,
+.ormm-low .shift-sup,
+.ormm-mod .shift-sup,
+.ormm-high .shift-sup,
+.ormm-severe .shift-sup{
+  font-weight:900;
+  opacity:1;
+  color:inherit;
+}
+  
 /* tiny offset editor for brief */
 .inline-mini{
   width:48px;
@@ -876,23 +916,29 @@ function formatShiftSup(dayShift){
 }
   
 function zuluHtml(mins){
-  // day shift based on the absolute minute value (can be -1, 0, +1, ...)
   const dayShift = Math.floor(mins / 1440);
-
-  // normalize to 0..1439 for display
   const m = ((mins % 1440) + 1440) % 1440;
 
   const sh = formatShiftSup(dayShift);
-  return `<span class="mono">${minutesToHHMM(m)}<span class="tz-sfx">Z</span>${sh ? `<span class="shift-sup">${sh}</span>` : ""}</span>`;
+
+  return `<span class="mono timewrap">${minutesToHHMM(m)}<span class="tz-sfx">Z</span>${sh ? `<span class="shift-sup">${sh}</span>` : ""}</span>`;
 }
 
 function localHtmlFromZuluSimple(zuluMins, icao){
   if(!isICAO(icao) || !getTimeZoneFromICAO(icao)) return "";
-  const zHHMM = minutesToHHMM(((zuluMins % 1440) + 1440) % 1440);
-  const res = zuluToLocalWithDay(hhmmToMinutes(zHHMM), icao, zHHMM);
+
+  // preserve absolute day context
+  const baseShift = Math.floor(zuluMins / 1440);
+  const zNorm = ((zuluMins % 1440) + 1440) % 1440;
+  const zHHMM = minutesToHHMM(zNorm);
+
+  const res = zuluToLocalWithDay(zNorm, icao, zHHMM);
   if(!res) return "";
-  const sh = formatShiftSup(res.dayShift);
-  return `<span class="mono">${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span>${sh ? `<span class="shift-sup">${sh}</span>` : ""}</span>`;
+
+  const totalShift = baseShift + res.dayShift;
+  const sh = formatShiftSup(totalShift);
+
+  return `<span class="mono timewrap">${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span>${sh ? `<span class="shift-sup">${sh}</span>` : ""}</span>`;
 }
 
 function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
@@ -913,9 +959,10 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
   const middle = showLocal
     ? localHtmlFromZuluSimple(zuluMinutes, localIcao)
     : (midHtml || "");
+  const midClass = (!showLocal && midHtml) ? "midtext" : "";
 
   return `
-    <div class="row3 ${extraClass}">
+    <div class="row3 ${midClass} ${extraClass}">
       <span class="sc-label">${label}</span>
       <span class="lcol">${middle}</span>
       <span class="zcol">${z}</span>
@@ -1307,6 +1354,7 @@ if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
   const z = zuluInput.value.trim();
   if(!isHHMM(z)){
     suppressSync = true;
+    localInput.value = "";          // clear stale local while user edits zulu
     if(dayEl) dayEl.textContent = "";
     suppressSync = false;
     return;
