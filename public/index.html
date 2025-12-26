@@ -1165,9 +1165,8 @@ updateIcaoHint(icao, document.getElementById(
 
 // Don't populate unless ICAO is valid AND mapped
 if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
-
     suppressSync = true;
-    localInput.value = "";
+    // Don’t wipe the user’s Local entry; just clear the day marker.
     if(dayEl) dayEl.textContent = "";
     suppressSync = false;
     return;
