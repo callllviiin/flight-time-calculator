@@ -490,7 +490,8 @@ function zuluToLocalWithDay(zuluMins, icao, zuluHHMM){
   const localMins = ((raw % 1440) + 1440) % 1440;
 
   return { localMins, dayShift };
-
+}
+  
 function splitDayShift(rawMinutes){
   const dayShift = Math.floor(rawMinutes / 1440);               // -1,0,+1...
   const mins = ((rawMinutes % 1440) + 1440) % 1440;             // normalized 0..1439
@@ -747,7 +748,7 @@ function calculate(){
 
     <div class="row"><span>Brief Time</span><span>${zuluHtmlWithShift(briefTime)}</span></div>
     <div class="subtext">
-      T/O − <input id="briefOffsetEdit" class="inline-mini" value="${zuluHtmlWithShift(briefOffsetMin)}" maxlength="5" title="H+MM (e.g., 2+30)">
+      T/O − <input id="briefOffsetEdit" class="inline-mini" value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5" title="H+MM (e.g., 2+30)">
     </div>
 
     <div class="row"><span>Step Time</span><span>${zuluHtmlWithShift(stepTime)}</span></div>
