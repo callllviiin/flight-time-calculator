@@ -38,6 +38,32 @@ h1{
 
   .topbar input{ transform:translateY(1px); }
 
+.actionbar{
+  display:flex;
+  justify-content:flex-end;
+  margin:6px 0 6px;
+}
+
+.icon-btn{
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  border:1px solid #cfcfcf;
+  background:#fff;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+  display:grid;
+  place-items:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  color:#1f2a44;
+  padding:0;
+}
+
+.icon-btn:hover{ filter:brightness(0.98); }
+.icon-btn:active{ transform:translateY(1px); }
+
+  
 /* ---------- TOP FORM (SINGLE GRID) ---------- */
 .form-grid{
   display:grid;
@@ -232,10 +258,27 @@ input:checked + .slider:before{
 /* ---------- BUTTON ---------- */
 button{
   margin-top:20px;
-  padding:12px;
-  font-size:16px;
+  padding:14px 12px;
+  font-size:17px;
+  font-weight:800;
+  letter-spacing:0.3px;
   width:100%;
   cursor:pointer;
+
+  background:#1f2a44;      /* deep blue/gray */
+  color:#fff;
+  border:1px solid #141b2d;
+  border-radius:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.15);
+}
+
+button:hover{
+  filter:brightness(1.05);
+}
+
+button:active{
+  transform:translateY(1px);
+  box-shadow:0 2px 6px rgba(0,0,0,0.12);
 }
 
 /* ---------- OUTPUT ---------- */
@@ -455,6 +498,11 @@ button{
 
   <div class="app">
     <h1>Crew Dawg Calculator</h1>
+<div class="actionbar">
+  <button id="resetBtn" class="icon-btn" title="Reset">
+    &#x21bb;
+  </button>
+</div>
 
     <div class="form-grid">
 
@@ -1087,6 +1135,34 @@ syncToggleLabels();
 document.getElementById("calcBtn").addEventListener("click", () => {
   hasCalculated = true;
   calculate();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  // clear inputs
+  takeoffTime.value = "";
+  landingTime.value = "";
+  takeoffICAO.value = "";
+  landingICAO.value = "";
+  takeoffLocal.value = "";
+  landingLocal.value = "";
+
+  // clear day shift badges
+  const tDay = document.getElementById("takeoffLocalDay");
+  const lDay = document.getElementById("landingLocalDay");
+  if(tDay) tDay.textContent = "";
+  if(lDay) lDay.textContent = "";
+
+  // reset state + output
+  hasCalculated = false;
+  briefOffsetMin = 150;
+  document.getElementById("output").innerHTML = "";
+
+  // optional: reset crew toggle to Basic
+  augmentedBox.checked = false;
+  syncToggleLabels();
+
+  // put cursor back at first box
+  takeoffTime.focus();
 });
 
 /* Local time listeners (sync only; calculate only after first button press) */
