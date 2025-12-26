@@ -90,15 +90,21 @@ input{
 }
   
 .floating-label{
-  .day-shift{
+.day-shift{
   position:absolute;
   right:6px;
-  top:-9px;
+  bottom:6px;          /* inside the box, bottom-right */
   font-size:10px;
   color:#666;
-  background:#f5f7fa;
-  padding:0 3px;
-  font-weight:600;
+  font-weight:700;
+  line-height:1;
+  pointer-events:none; /* clicks go to the input */
+  background:transparent;
+}
+
+/* Give Local inputs room so the +1/-1 doesn't overlap digits */
+.local-wrap .box{
+  padding-right:18px;
 }
 
   position:absolute;
