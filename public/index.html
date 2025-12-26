@@ -255,22 +255,33 @@ button{
   font-weight:bold;
 }
 
-/* Output rows: label | zulu | local (borderless table feel) */
+/* Output rows: label | local | zulu */
 .row3{
   display:grid;
   grid-template-columns: 1fr auto auto;
-  column-gap:12px;
+  column-gap:10px;          /* tighter */
   align-items:center;
   margin-top:12px;
   font-weight:bold;
 }
 
-.row3 .zcol{ text-align:right; }
 .row3 .lcol{
   text-align:right;
   font-weight:normal;
   color:#444;
-  min-width:72px;      /* keeps column stable even when blank */
+  min-width:70px;
+}
+
+.row3 .zcol{
+  text-align:right;
+  min-width:70px;
+}
+
+.tz-sfx{
+  font-size:10px;
+  font-weight:700;
+  margin-left:1px;
+  opacity:0.8;
 }
   
 .subtext{
@@ -526,22 +537,18 @@ function formatShiftSup(dayShift){
   return dayShift > 0 ? `+${dayShift}` : `${dayShift}`;
 }
   
-// Returns HTML like "2315Z<sup>-1</sup>" but using span styling (safer than <sup> in some CSS)
-function zuluHtmlWithShift(rawMinutes){
-  const { mins, dayShift } = splitDayShift(rawMinutes);
-  const base = `${minutesToHHMM(mins)}Z`;
-  const sh = formatShiftSup(dayShift);
-  return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
+function zuluHtml(mins){
+  // normalize to 0..1439 for display
+  const m = ((mins % 1440) + 1440) % 1440;
+  return `${minutesToHHMM(m)}<span class="tz-sfx">Z</span>`;
 }
-  
-// Returns "1300L" optionally with (+1/-1) as a superscript
-function localHtmlFromZulu(zuluMins, icao, zuluHHMM){
+
+function localHtmlFromZuluSimple(zuluMins, icao){
   if(!isICAO(icao) || !getTimeZoneFromICAO(icao)) return "";
-  const res = zuluToLocalWithDay(zuluMins, icao, zuluHHMM); // you already added this helper
+  const zHHMM = minutesToHHMM(((zuluMins % 1440) + 1440) % 1440);
+  const res = zuluToLocalWithDay(hhmmToMinutes(zHHMM), icao, zHHMM);
   if(!res) return "";
-  const base = `${minutesToHHMM(res.localMins)}L`;
-  const sh = formatShiftSup(res.dayShift);
-  return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
+  return `${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span>`;
 }
 
 function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
@@ -555,14 +562,14 @@ function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
   return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
 }
 
-function row3Html(label, rawZuluMinutes, localIcao, anchorHHMM, extraRowClass=""){
-  const z = zuluHtmlWithShift(rawZuluMinutes);
-  const l = localHtmlAtRawZulu(rawZuluMinutes, localIcao, anchorHHMM);
+function row3Html(label, zuluMinutes, localIcao, showLocal){
+  const z = zuluHtml(zuluMinutes);
+  const l = showLocal ? localHtmlFromZuluSimple(zuluMinutes, localIcao) : "";
   return `
-    <div class="row3 ${extraRowClass}">
+    <div class="row3">
       <span>${label}</span>
-      <span class="zcol">${z}</span>
       <span class="lcol">${l}</span>
+      <span class="zcol">${z}</span>
     </div>
   `;
 }
@@ -780,35 +787,33 @@ function calculate(){
   out.innerHTML = `
   <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
 
-  ${row3Html("Enter Crew Rest", crewRest, tkIcao, takeoff)}
+  ${row3Html("Enter Crew Rest", crewRest, tkIcao, true)}
   <div class="subtext">T/O − 14+15</div>
 
-  ${row3Html("Last Beer", lastBeer, tkIcao, takeoff)}
+  ${row3Html("Last Beer", lastBeer, tkIcao, true)}
   <div class="subtext">T/O − 12+00</div>
 
-  ${row3Html("Legal for Alert", legalAlert, tkIcao, takeoff)}
+  ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
   <div class="subtext">T/O − 4+15</div>
 
-  ${row3Html("Show Time", showTime, tkIcao, takeoff)}
+  ${row3Html("Show Time", showTime, tkIcao, true)}
   <div class="subtext">T/O − 3+15</div>
 
-  ${row3Html("Brief Time", briefTime, tkIcao, takeoff)}
+  ${row3Html("Brief Time", briefTime, tkIcao, true)}
   <div class="subtext">
     T/O − <input id="briefOffsetEdit" class="inline-mini"
       value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5"
       title="H+MM (e.g., 2+30)">
   </div>
 
-  ${row3Html("Step Time", stepTime, tkIcao, takeoff)}
+  ${row3Html("Step Time", stepTime, tkIcao, true)}
   <div class="subtext">T/O − 2+00</div>
 
-  ${row3Html("Engine Start", engine, tkIcao, takeoff)}
+  ${row3Html("Engine Start", engine, tkIcao, true)}
   <div class="subtext">T/O − 0+30</div>
 
-  ${row3Html("Takeoff", takeoffMin, tkIcao, takeoff)}
+  ${row3Html("Takeoff", takeoffMin, tkIcao, true)}
   <div class="subtext">T/O − 0+00</div>
-
-  ${row3Html("Landing", landingMin, ldIcao, landing)}
 
   <hr>
 
@@ -818,16 +823,16 @@ function calculate(){
 
   <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
 
-  ${row3Html("Flight Duty Period", showTime+fdp, tkIcao, takeoff, hl(fdp))}
+  ${row3Html("Flight Duty Period", showTime+fdp, "", false)}
   <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
-  ${row3Html("Crew Duty Time", showTime+cdp, tkIcao, takeoff, hl(cdp))}
+  ${row3Html("Crew Duty Time", showTime+cdp, "", false)}
   <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
-  ${row3Html("Transition Duty Day", showTime+tdp, tkIcao, takeoff)}
+  ${row3Html("Transition Duty Day", showTime+tdp, "", false)}
   <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
-  ${row3Html("Autopilot INOP FDP", showTime+apu, tkIcao, takeoff, hl(apu))}
+  ${row3Html("Autopilot INOP FDP", showTime+apu, "", false)}
   <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
 `;
 
