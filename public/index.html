@@ -855,188 +855,154 @@ let briefOffsetMin = 150; // default 2+30
 /* ----------------- main calc + render ----------------- */
 function calculate(){
   try{
-  const takeoff = takeoffTime.value.trim();
-  const landing = landingTime.value.trim();
-  const augmented = augmentedBox.checked;
-  const out = document.getElementById("output");
+    const takeoff = takeoffTime.value.trim();
+    const landing = landingTime.value.trim();
+    const augmented = augmentedBox.checked;
+    const out = document.getElementById("output");
 
-  if(!isHHMM(takeoff) || !isHHMM(landing)){
-    out.innerHTML = "Please enter times in HHMM format (0000–2359).";
-    return;
-  }
+    if(!isHHMM(takeoff) || !isHHMM(landing)){
+      out.innerHTML = "Please enter times in HHMM format (0000–2359).";
+      return;
+    }
 
-  // if the brief offset editor exists (from a previous render), honor it on every calculate
-  const existingBrief = document.getElementById("briefOffsetEdit");
-  if(existingBrief){
-    const v = parseHPlusMM(existingBrief.value);
-    if(v != null) briefOffsetMin = v;
-  }
+    // if the brief offset editor exists (from a previous render), honor it on every calculate
+    const existingBrief = document.getElementById("briefOffsetEdit");
+    if(existingBrief){
+      const v = parseHPlusMM(existingBrief.value);
+      if(v != null) briefOffsetMin = v;
+    }
 
-  const takeoffMin = hhmmToMinutes(takeoff);
-  const landingMin = hhmmToMinutes(landing);
+    const takeoffMin = hhmmToMinutes(takeoff);
+    const landingMin = hhmmToMinutes(landing);
 
-// NEW (Phase 1 output local)
-  const tkIcao = (takeoffICAO.value || "").trim().toUpperCase();
+    // For local-time output rows (crew timing uses takeoff ICAO)
+    const tkIcao = normICAO(takeoffICAO.value);
 
-  const showTime   = takeoffMin - 195;
-  const crewRest   = takeoffMin - 855;
-  const lastBeer   = takeoffMin - 720;
-  const legalAlert = takeoffMin - 255;
+    const showTime   = takeoffMin - 195;
+    const crewRest   = takeoffMin - 855;
+    const lastBeer   = takeoffMin - 720;
+    const legalAlert = takeoffMin - 255;
 
-  const briefTime  = takeoffMin - briefOffsetMin;
+    const briefTime  = takeoffMin - briefOffsetMin;
 
-  const stepTime   = takeoffMin - 120;
-  const engine     = takeoffMin - 30;
+    const stepTime   = takeoffMin - 120;
+    const engine     = takeoffMin - 30;
 
-  const flightMin = diffMinutes(takeoffMin, landingMin);
-  const flightHrs = (flightMin/60).toFixed(1);
+    const flightMin = diffMinutes(takeoffMin, landingMin);
+    const flightHrs = (flightMin/60).toFixed(1);
 
-  const fdp = augmented ? 1440 : 960;
-  const cdp = augmented ? 1485 : 1080;
-  const tdp = 720;
-  const apu = augmented ? 1080 : 720;
+    const fdp = augmented ? 1440 : 960;
+    const cdp = augmented ? 1485 : 1080;
+    const tdp = 720;
+    const apu = augmented ? 1080 : 720;
 
-  const landingFromShow = diffMinutes(showTime, landingMin);
+    const landingFromShow = diffMinutes(showTime, landingMin);
 
-// FDP = KING (includes "exceed" behavior)
-function ormClassFdp(limitMinutes){
-  if(limitMinutes <= 0) return "";
+    // FDP = KING (includes "exceed" behavior)
+    function ormClassFdp(limitMinutes){
+      if(limitMinutes <= 0) return "";
+      if(landingFromShow > limitMinutes) return "orm-exceed";
+      const ratio = landingFromShow / limitMinutes;
+      if(ratio >= 0.95) return "orm-severe";
+      if(ratio >= 0.90) return "orm-high";
+      if(ratio >= 0.75) return "orm-mod";
+      return "orm-low";
+    }
 
-  if(landingFromShow > limitMinutes) return "orm-exceed"; // keep exceed only for FDP
+    // CDT/TDD/APU = muted colors only (NO exceed behavior)
+    function ormClassMuted(limitMinutes){
+      if(limitMinutes <= 0) return "";
+      const ratio = landingFromShow / limitMinutes;
+      if(ratio >= 0.95) return "ormm-severe";
+      if(ratio >= 0.90) return "ormm-high";
+      if(ratio >= 0.75) return "ormm-mod";
+      return "ormm-low";
+    }
 
-  const ratio = landingFromShow / limitMinutes;
-  if(ratio >= 0.95) return "orm-severe";
-  if(ratio >= 0.90) return "orm-high";
-  if(ratio >= 0.75) return "orm-mod";
-  return "orm-low";
-}
+    // FDP-only message
+    function ormMessageFdp(limitMinutes){
+      if(limitMinutes <= 0) return "";
+      if(landingFromShow > limitMinutes){
+        return "Mission NO-GO. Maximum Duty Day Exceeded";
+      }
+      const ratio = landingFromShow / limitMinutes;
+      if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
+      if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
+      if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
+      return "ORM Low: <75% of Maximum Duty Day";
+    }
 
-// CDT/TDD/APU = muted colors only (NO exceed behavior)
-function ormClassMuted(limitMinutes){
-  if(limitMinutes <= 0) return "";
+    out.innerHTML = `
+      <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
 
-  const ratio = landingFromShow / limitMinutes;
-  if(ratio >= 0.95) return "ormm-severe";
-  if(ratio >= 0.90) return "ormm-high";
-  if(ratio >= 0.75) return "ormm-mod";
-  return "ormm-low";
-}
+      ${row3Html("Enter Crew Rest", crewRest, tkIcao, true)}
+      <div class="subtext">T/O − 14+15</div>
 
-// FDP-only message
-function ormMessageFdp(limitMinutes){
-  if(limitMinutes <= 0) return "";
+      ${row3Html("Last Beer", lastBeer, tkIcao, true)}
+      <div class="subtext">T/O − 12+00</div>
 
-  if(landingFromShow > limitMinutes){
-    return "Mission NO-GO. Maximum Duty Day Exceeded";
-  }
+      ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
+      <div class="subtext">T/O − 4+15</div>
 
-  const ratio = landingFromShow / limitMinutes;
-  if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
-  if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
-  if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
-  return "ORM Low: <75% of Maximum Duty Day";
-}
-  
-function ormClass(limitMinutes){
-  if(limitMinutes <= 0) return "";
+      ${row3Html("Show Time", showTime, tkIcao, true)}
+      <div class="subtext">T/O − 3+15</div>
 
-  // Exceed limit: highlight
-  if(landingFromShow > limitMinutes) return "orm-exceed";
+      ${row3Html("Brief Time", briefTime, tkIcao, true)}
+      <div class="subtext">
+        T/O − <input id="briefOffsetEdit" class="inline-mini"
+          value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5"
+          title="H+MM (e.g., 2+30)">
+      </div>
 
-  const ratio = landingFromShow / limitMinutes;
+      ${row3Html("Step Time", stepTime, tkIcao, true)}
+      <div class="subtext">T/O − 2+00</div>
 
-  if(ratio >= 0.95) return "orm-severe";  // Red (>95%)
-  if(ratio >= 0.90) return "orm-high";    // Orange (90–95%)
-  if(ratio >= 0.75) return "orm-mod";     // Yellow (75–90%)
-  return "orm-low";                       // Green (<75%)
-}
+      ${row3Html("Engine Start", engine, tkIcao, true)}
+      <div class="subtext">T/O − 0+30</div>
 
-function ormMessage(limitMinutes){
-  if(limitMinutes <= 0) return "";
+      ${row3Html("Takeoff", takeoffMin, tkIcao, true)}
+      <div class="subtext">T/O − 0+00</div>
 
-  if(landingFromShow > limitMinutes){
-    return "Mission NO-GO. Maximum Duty Day Exceeded";
-  }
+      <hr>
 
-  const ratio = landingFromShow / limitMinutes;
+      <div class="row"><span>Flight Time</span><span>${flightHrs} hrs</span></div>
 
-  if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
-  if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
-  if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
-  return "ORM Low: <75% of Maximum Duty Day";
+      <hr>
+
+      <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Duty Limitations</div>
+
+      ${row3Html(
+        "Flight Duty Period",
+        showTime + fdp,
+        "",
+        false,
+        ormClassFdp(fdp),
+        `<span class="orm-note">${ormMessageFdp(fdp)}</span>`
+      )}
+      <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
+
+      ${row3Html("Crew Duty Time", showTime + cdp, "", false, ormClassMuted(cdp))}
+      <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
+
+      ${row3Html("Transition Duty Day", showTime + tdp, "", false, ormClassMuted(tdp))}
+      <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
+
+      ${row3Html("Autopilot INOP FDP", showTime + apu, "", false, ormClassMuted(apu))}
+      <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
+    `;
+
+    // live-update brief time after first Calculate, without needing to click again
+    const offInp = document.getElementById("briefOffsetEdit");
+    offInp?.addEventListener("input", (e) => {
+      const v = parseHPlusMM(e.target.value);
+      if(v == null) return;
+      briefOffsetMin = v;
+      if(hasCalculated) calculate();
+    });
+
   }catch(err){
     showRuntimeError(err);
   }
-}
-
-  out.innerHTML = `
-  <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
-
-  ${row3Html("Enter Crew Rest", crewRest, tkIcao, true)}
-  <div class="subtext">T/O − 14+15</div>
-
-  ${row3Html("Last Beer", lastBeer, tkIcao, true)}
-  <div class="subtext">T/O − 12+00</div>
-
-  ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
-  <div class="subtext">T/O − 4+15</div>
-
-  ${row3Html("Show Time", showTime, tkIcao, true)}
-  <div class="subtext">T/O − 3+15</div>
-
-  ${row3Html("Brief Time", briefTime, tkIcao, true)}
-  <div class="subtext">
-    T/O − <input id="briefOffsetEdit" class="inline-mini"
-      value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5"
-      title="H+MM (e.g., 2+30)">
-  </div>
-
-  ${row3Html("Step Time", stepTime, tkIcao, true)}
-  <div class="subtext">T/O − 2+00</div>
-
-  ${row3Html("Engine Start", engine, tkIcao, true)}
-  <div class="subtext">T/O − 0+30</div>
-
-  ${row3Html("Takeoff", takeoffMin, tkIcao, true)}
-  <div class="subtext">T/O − 0+00</div>
-
-  <hr>
-
-  <div class="row"><span>Flight Time</span><span>${flightHrs} hrs</span></div>
-
-  <hr>
-
-<div style="font-weight:bold;font-size:18px;text-align:center;">Crew Duty Limitations</div>
-
-${row3Html(
-  "Flight Duty Period",
-  showTime + fdp,
-  "",
-  false,
-  ormClassFdp(fdp),
-  `<span class="orm-note">${ormMessageFdp(fdp)}</span>`
-)}
-<div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
-
-${row3Html("Crew Duty Time", showTime + cdp, "", false, ormClassMuted(cdp))}
-<div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
-
-${row3Html("Transition Duty Day", showTime + tdp, "", false, ormClassMuted(tdp))}
-<div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
-
-${row3Html("Autopilot INOP FDP", showTime + apu, "", false, ormClassMuted(apu))}
-<div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
-  
-`;
- 
-  // live-update brief time after first Calculate, without needing to click again
-  const offInp = document.getElementById("briefOffsetEdit");
-  offInp?.addEventListener("input", (e) => {
-    const v = parseHPlusMM(e.target.value);
-    if(v == null) return;
-    briefOffsetMin = v;
-    if(hasCalculated) calculate();
-  });
 }
 
 /* ----------------- local time sync ----------------- */
