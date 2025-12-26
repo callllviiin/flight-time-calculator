@@ -16,7 +16,7 @@ body{
 
 .app{
   width:100%;
-  max-width:620px;
+  max-width:548px;
   margin:0 auto;
   padding:10px;
 }
@@ -36,22 +36,6 @@ h1{
   color:#555;
 }
 .topbar input{ transform:translateY(1px); }
-
-/* ---------- DEBUG BORDERS (toggle) ---------- */
-.debug .app{ outline:2px dashed rgba(0,0,0,0.35); outline-offset:6px; }
-.debug .label,
-.debug .at,
-.debug .floating-wrap,
-.debug .icao-wrap,
-.debug .local-wrap,
-.debug .third-row-wrap{
-  outline:1px solid rgba(0,0,0,0.25);
-  outline-offset:2px;
-}
-.debug .third-content > *{
-  outline:1px solid rgba(0,0,0,0.15);
-  outline-offset:2px;
-}
 
 /* ---------- TOP FORM (SINGLE GRID) ---------- */
 .form-grid{
@@ -121,7 +105,6 @@ h1{
 }
 
 /* ---------- ROW 3 ---------- */
-/* ---------- ROW 3 CLEAN LAYOUT ---------- */
 .aircraft-crew-label{
   font-weight:bold;
 }
@@ -363,7 +346,7 @@ button{
 
       <!-- Row 3 -->
 <div class="form-row">
-  <div class="label aircraft-crew-label">Aircraft / Crew</div>
+  <div class="label aircraft-crew-label">Aircraft / Crew:</div>
 
   <!-- Use columns 2 through 5 for the 3 evenly-spaced items -->
   <div class="third-content-wide">
@@ -537,7 +520,6 @@ function calculate(){
     <div class="row"><span>Brief Time</span><span>${minutesToHHMMZ(briefTime)}</span></div>
     <div class="subtext">
       T/O − <input id="briefOffsetEdit" class="inline-mini" value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5" title="H+MM (e.g., 2+30)">
-      (editable)
     </div>
 
     <div class="row"><span>Step Time</span><span>${minutesToHHMMZ(stepTime)}</span></div>
