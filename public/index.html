@@ -30,7 +30,7 @@ h1{
 .form-grid{
   display:grid;
 
-  /* KEY CHANGE: label column hugs the text width (removes the “inset” look) */
+  /* label column hugs the text width */
   grid-template-columns: max-content 92px 34px 92px 1fr;
 
   column-gap:8px;
@@ -75,9 +75,9 @@ h1{
 /* small "at" (CENTERED BETWEEN BOXES) */
 .at{
   font-weight:bold;
-  display:flex;              /* <-- added */
-  align-items:center;        /* <-- added */
-  justify-content:center;    /* <-- added */
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* ICAO input */
@@ -90,37 +90,41 @@ h1{
   box-sizing:border-box;
 }
 
-/* ---------- ROW 3 ---------- */
-/* span full width so dropdown + toggle sit on one line */
+/* ---------- ROW 3 (3 equal chunks) ---------- */
 .third-content{
   grid-column: 1 / -1;
-  display:flex;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;   /* evenly distributed */
   align-items:center;
-  justify-content:space-between;
   gap:12px;
   font-weight:normal;
   width:100%;
 }
 
-/* aircraft select */
+.accrew{
+  justify-self:start;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.aircraft-wrap{
+  justify-self:center;
+}
+
 #aircraft{
+  width:120px;
   padding:6px;
   font-size:16px;
   box-sizing:border-box;
-
-  /* don’t collapse skinny */
-  flex: 1 1 120px;
-  min-width: 120px;
-  max-width: 120px;
 }
 
 /* toggle */
 .crew-toggle{
+  justify-self:end;
   display:flex;
   align-items:center;
   justify-content:flex-end;
   gap:10px;
-  flex: 0 0 auto;
   white-space:nowrap;
 }
 
@@ -236,12 +240,11 @@ button{
 /* ---------- MOBILE ---------- */
 @media (max-width:520px){
   .third-content{
-    flex-wrap:wrap;
+    grid-template-columns: 1fr;
     gap:10px;
   }
-  #aircraft{
-    max-width:none;
-    min-width: 180px;
+  .accrew, .aircraft-wrap, .crew-toggle{
+    justify-self:start;
   }
 }
 </style>
@@ -289,23 +292,26 @@ button{
   <!-- Row 3 -->
   <div class="form-row">
     <div class="third-content">
-      <select id="aircraft">
-        <option selected>KC-135</option>
-        <option>KC-46</option>
-        <option>C-5</option>
-        <option>C-17</option>
-        <option>C-130</option>
-        <option>C-21</option>
-        <option>C-32</option>
-        <option>C-37</option>
-        <option>C-40</option>
-        <option>VC-25</option>
-      </select>
+      <div class="accrew">Aircraft / Crew</div>
+
+      <div class="aircraft-wrap">
+        <select id="aircraft">
+          <option selected>KC-135</option>
+          <option>KC-46</option>
+          <option>C-5</option>
+          <option>C-17</option>
+          <option>C-130</option>
+          <option>C-21</option>
+          <option>C-32</option>
+          <option>C-37</option>
+          <option>C-40</option>
+          <option>VC-25</option>
+        </select>
+      </div>
 
       <div class="crew-toggle">
         <span id="basicLbl" class="crew-label active">Basic</span>
         <label class="switch">
-          <!-- DEFAULT UNCHECKED = Basic -->
           <input type="checkbox" id="augmented">
           <span class="slider"></span>
         </label>
@@ -350,7 +356,6 @@ function diffMinutes(start, end){
   return d;
 }
 
-/* NEW: minutes -> H+MM (e.g., 1080 => 18+00, 1485 => 24+45) */
 function minutesToHPlusMM(mins){
   const h = Math.floor(mins / 60);
   const m = mins % 60;
@@ -382,11 +387,10 @@ function calculate(){
   const flightMin = diffMinutes(takeoffMin, landingMin);
   const flightHrs = (flightMin/60).toFixed(1);
 
-  // KC-135 rules (for now)
-  const fdp = augmented ? 1440 : 960;   // 24 vs 16
-  const cdp = augmented ? 1485 : 1080;  // 24:45 vs 18
-  const tdp = 720;                      // 12 (unchanged)
-  const apu = augmented ? 1080 : 720;   // 18 vs 12
+  const fdp = augmented ? 1440 : 960;
+  const cdp = augmented ? 1485 : 1080;
+  const tdp = 720;
+  const apu = augmented ? 1080 : 720;
 
   const landingFromShow = diffMinutes(showTime, landingMin);
 
@@ -459,7 +463,6 @@ augmentedBox.addEventListener("change", () => {
 
 document.getElementById("calcBtn").addEventListener("click", calculate);
 
-/* ensure default: Basic bold + arrow left */
 syncToggleLabels();
 </script>
 
