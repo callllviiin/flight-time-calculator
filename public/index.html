@@ -711,6 +711,12 @@ function normHHMM(s){
   return String(s || "").replace(/\D/g,"").slice(0,4);
 }
 
+function padHHMM(s){
+  const d = normHHMM(s);          // digits only, up to 4
+  if(d.length === 3) return "0" + d;  // 930 -> 0930
+  return d;                       // 0-2 digits: leave as-is, 4 digits: keep
+}
+  
 function normICAO(s){
   // keep only letters, max 4, uppercase
   return String(s || "").replace(/[^a-z]/gi,"").slice(0,4).toUpperCase();
@@ -985,8 +991,11 @@ let briefOffsetMin = 150; // default 2+30
 /* ----------------- main calc + render ----------------- */
 function calculate(){
   try{
-    const takeoff = takeoffTime.value.trim();
-    const landing = landingTime.value.trim();
+    const takeoff = padHHMM(takeoffTime.value);
+    const landing = padHHMM(landingTime.value);
+      // Snap the UI to normalized values (only if we can)
+      if(takeoffTime.value !== takeoff) takeoffTime.value = takeoff;
+      if(landingTime.value !== landing) landingTime.value = landing;
     const augmented = augmentedBox.checked;
     const out = document.getElementById("output");
 
@@ -1279,6 +1288,21 @@ const landingLocal = document.getElementById("landingLocal");
   inp.addEventListener("input", () => {
     const clean = normHHMM(inp.value);
     if(inp.value !== clean) inp.value = clean;
+  });
+});
+
+[takeoffTime, landingTime, takeoffLocal, landingLocal].forEach(inp => {
+  inp.addEventListener("blur", () => {
+    const padded = padHHMM(inp.value);
+    if(inp.value !== padded) inp.value = padded;
+
+    // After snapping, re-sync the paired fields
+    if(inp === takeoffTime) syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
+    if(inp === landingTime) syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
+    if(inp === takeoffLocal) syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
+    if(inp === landingLocal) syncZuluFromLocal(landingLocal, landingICAO, landingTime);
+
+    if(hasCalculated) calculate();
   });
 });
   
