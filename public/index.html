@@ -26,24 +26,23 @@ h1{
   margin:10px 0 18px;
 }
 
-/* ---------- TOP FORM (GRID) ---------- */
+/* ---------- TOP FORM (SINGLE GRID) ---------- */
 .form-grid{
   display:grid;
+  grid-template-columns: 190px 92px 34px 92px 1fr;
+  column-gap:8px;
   row-gap:14px;
+  align-items:center;
 }
 
-/* Each row shares the SAME columns so everything aligns */
+/* Rows are logical groups only; children align to the ONE grid */
 .form-row{
-  display:grid;
-  grid-template-columns: 190px 92px 34px 92px 1fr;
-  align-items:center;
-  column-gap:8px;
-  width:100%;
+  display:contents;
   font-weight:bold;
 }
 
 /* label column */
-.form-row .label{
+.form-grid .label{
   white-space:nowrap;
 }
 
@@ -87,22 +86,22 @@ h1{
 
 /* third row content spans the non-label columns */
 .third-content{
-  /* IMPORTANT: this is now a DIRECT child of .form-row (see Row 3 HTML) */
-  grid-column: 3 / 6; /* starts under the "at" column and spans to the end */
+  grid-column: 2 / 6; /* starts under the time column */
   display:flex;
   align-items:center;
-  justify-content:space-between;
   gap:12px;
   font-weight:normal;
+  width:100%;
 }
 
-/* aircraft select */
+/* aircraft select (don’t let it collapse) */
 #aircraft{
   padding:6px;
   font-size:16px;
-  width:48%;
-  max-width:240px;
   box-sizing:border-box;
+  flex: 1 1 260px;  /* grow/shrink with a sensible base */
+  min-width:160px;  /* prevents super skinny dropdown */
+  max-width:240px;  /* optional: keeps it from getting huge */
 }
 
 /* toggle */
@@ -111,8 +110,8 @@ h1{
   align-items:center;
   justify-content:flex-end;
   gap:10px;
-  width:52%;
-  min-width:230px;
+  flex: 0 0 auto;   /* don’t shrink into the dropdown */
+  white-space:nowrap;
 }
 
 .crew-label{
@@ -223,6 +222,20 @@ button{
   font-weight:normal;
   color:#666;
 }
+
+/* ---------- MOBILE TWEAK (optional but helpful) ---------- */
+@media (max-width:520px){
+  .form-grid{
+    grid-template-columns: 1fr 92px 34px 92px;
+  }
+  .third-content{
+    grid-column: 1 / -1; /* full width on small screens */
+    justify-content:space-between;
+  }
+  #aircraft{
+    max-width:none;
+  }
+}
 </style>
 </head>
 
@@ -265,11 +278,9 @@ button{
     <div></div>
   </div>
 
-  <!-- Row 3 (FIXED ALIGNMENT) -->
+  <!-- Row 3 -->
   <div class="form-row">
     <div class="label"></div>
-
-    <div></div> <!-- spacer for the time column so the grid stays consistent -->
 
     <div class="third-content">
       <select id="aircraft">
