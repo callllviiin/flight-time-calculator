@@ -305,9 +305,8 @@ button{
 }
 
 /* ORM bands for duty limits */
-.orm-low{   /* Green (<75%) */
+.orm-low{
   background:#d4edda;
-  color:#155724;
   padding:4px 6px;
   border-radius:4px;
 }
@@ -602,11 +601,11 @@ function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
   return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
 }
 
-function row3Html(label, zuluMinutes, localIcao, showLocal){
+function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass=""){
   const z = zuluHtml(zuluMinutes);
   const l = showLocal ? localHtmlFromZuluSimple(zuluMinutes, localIcao) : "";
   return `
-    <div class="row3">
+    <div class="row3 ${extraClass}">
       <span>${label}</span>
       <span class="lcol">${l}</span>
       <span class="zcol">${z}</span>
@@ -868,19 +867,20 @@ function ormClass(limitMinutes){
 
   <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
 
-  ${row3Html("Flight Duty Period", showTime+fdp, "", false)}
+    ${row3Html("Flight Duty Period", showTime+fdp, "", false, ormClass(fdp))}
   <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
-  ${row3Html("Crew Duty Time", showTime+cdp, "", false)}
+   ${row3Html("Crew Duty Time", showTime+cdp, "", false, ormClass(cdp))}
   <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
-  ${row3Html("Transition Duty Day", showTime+tdp, "", false)}
+    ${row3Html("Transition Duty Day", showTime+tdp, "", false, ormClass(tdp))}
   <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
-  ${row3Html("Autopilot INOP FDP", showTime+apu, "", false)}
+    ${row3Html("Autopilot INOP FDP", showTime+apu, "", false, ormClass(apu))}
   <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
+  
 `;
-
+ 
   // live-update brief time after first Calculate, without needing to click again
   const offInp = document.getElementById("briefOffsetEdit");
   offInp?.addEventListener("input", (e) => {
