@@ -447,16 +447,88 @@ function isICAO(s){
   return typeof s === "string" && /^[A-Z]{4}$/.test(s.trim().toUpperCase());
 }
 
-/* ----------------- ICAO offset (stub for now) ----------------- */
-function getUtcOffsetMinutesFromICAO(_icao){ return 0; } // placeholder: Local == Zulu
-function zuluToLocalMinutes(zuluMins, icao){
-  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase());
+/* ----------------- ICAO -> Time Zone (Phase 1 / Step 1) ----------------- */
+const ICAO_TIMEZONE = {
+  EGLL: "Europe/London",
+  EGGW: "Europe/London",
+  EGKK: "Europe/London",
+  EGUN: "Europe/London",
+
+  KJFK: "America/New_York",
+  KLGA: "America/New_York",
+  KEWR: "America/New_York",
+
+  KORD: "America/Chicago",
+  KDFW: "America/Chicago",
+  KDEN: "America/Denver",
+
+  KLAX: "America/Los_Angeles",
+  KSFO: "America/Los_Angeles",
+  KSEA: "America/Los_Angeles",
+};
+
+function getTimeZoneFromICAO(icao){
+  const key = (icao || "").trim().toUpperCase();
+  return ICAO_TIMEZONE[key] || null;
+}
+
+function getOffsetMinutesForTimeZone(timeZone, dateUtc){
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = fmt.formatToParts(dateUtc);
+  const get = (type) => parts.find(p => p.type === type)?.value;
+
+  const y  = Number(get("year"));
+  const mo = Number(get("month"));
+  const d  = Number(get("day"));
+  const h  = Number(get("hour"));
+  const mi = Number(get("minute"));
+  const s  = Number(get("second"));
+
+  const asUtc = Date.UTC(y, mo - 1, d, h, mi, s);
+  return Math.round((asUtc - dateUtc.getTime()) / 60000);
+}
+
+function getUtcOffsetMinutesFromICAO(icao, hhmm){
+  const tz = getTimeZoneFromICAO(icao);
+  if(!tz) return null;
+
+  const now = new Date();
+  const y = now.getUTCFullYear();
+  const m = now.getUTCMonth();
+  const d = now.getUTCDate();
+
+  let h = 0, mi = 0;
+  if(typeof hhmm === "string" && /^\d{4}$/.test(hhmm)){
+    h  = parseInt(hhmm.slice(0,2),10);
+    mi = parseInt(hhmm.slice(2,4),10);
+  }
+
+  const dateUtc = new Date(Date.UTC(y, m, d, h, mi, 0));
+  return getOffsetMinutesForTimeZone(tz, dateUtc);
+}
+
+function zuluToLocalMinutes(zuluMins, icao, zuluHHMM){
+  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase(), zuluHHMM);
+  if(off == null) return null;
   return zuluMins + off;
 }
-function localToZuluMinutes(localMins, icao){
-  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase());
+
+function localToZuluMinutes(localMins, icao, anchorZuluHHMM){
+  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase(), anchorZuluHHMM);
+  if(off == null) return null;
   return localMins - off;
 }
+
 
 /* ----------------- state ----------------- */
 let hasCalculated = false;
@@ -578,8 +650,8 @@ function syncLocalFromZulu(zuluInput, icaoInput, localInput){
 
   const icao = (icaoInput.value || "").trim().toUpperCase();
 
-  // Don’t populate Local unless ICAO looks valid (matches your intent + future TZ logic)
-  if(!isICAO(icao)){
+  // Don’t populate Local unless ICAO is valid AND mapped to a timezone
+  if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
     suppressSync = true;
     localInput.value = "";
     suppressSync = false;
@@ -590,9 +662,9 @@ function syncLocalFromZulu(zuluInput, icaoInput, localInput){
   if(!isHHMM(z)) return;
 
   const zM = hhmmToMinutes(z);
-  const locM = zuluToLocalMinutes(zM, icao);
+  const locM = zuluToLocalMinutes(zM, icao, z); // <-- pass HHMM for offset anchoring
   suppressSync = true;
-  localInput.value = minutesToHHMM(locM);
+  localInput.value = (locM == null) ? "" : minutesToHHMM(locM);
   suppressSync = false;
 }
 
@@ -600,13 +672,19 @@ function syncZuluFromLocal(localInput, icaoInput, zuluInput){
   if(suppressSync) return;
 
   const icao = (icaoInput.value || "").trim().toUpperCase();
-  if(!isICAO(icao)) return; // need ICAO to interpret Local
+  if(!isICAO(icao) || !getTimeZoneFromICAO(icao)) return; // need ICAO + mapping
 
   const l = localInput.value.trim();
   if(!isHHMM(l)) return;
 
   const lM = hhmmToMinutes(l);
-  const zM = localToZuluMinutes(lM, icao);
+
+  // Anchor offset to what's currently in the Zulu box if valid, else "0000"
+  const zAnchor = (zuluInput.value && isHHMM(zuluInput.value.trim())) ? zuluInput.value.trim() : "0000";
+
+  const zM = localToZuluMinutes(lM, icao, zAnchor);
+  if(zM == null) return;
+
   suppressSync = true;
   zuluInput.value = minutesToHHMM(zM);
   suppressSync = false;
