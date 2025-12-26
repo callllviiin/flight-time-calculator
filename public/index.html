@@ -449,22 +449,93 @@ function isICAO(s){
 
 /* ----------------- ICAO -> Time Zone (Phase 1 / Step 1) ----------------- */
 const ICAO_TIMEZONE = {
-  EGLL: "Europe/London",
-  EGGW: "Europe/London",
-  EGKK: "Europe/London",
-  EGUN: "Europe/London",
-
+  /* ===================== CONUS ===================== */
+  KADW: "America/New_York",     // Andrews AFB
+  KDOV: "America/New_York",     // Dover AFB
+  KCHS: "America/New_York",     // Charleston AFB
   KJFK: "America/New_York",
   KLGA: "America/New_York",
   KEWR: "America/New_York",
+  KIAD: "America/New_York",
+  KDCA: "America/New_York",
 
   KORD: "America/Chicago",
   KDFW: "America/Chicago",
   KDEN: "America/Denver",
 
+  KTCM: "America/Los_Angeles", // McChord
+  KSEA: "America/Los_Angeles",
   KLAX: "America/Los_Angeles",
   KSFO: "America/Los_Angeles",
-  KSEA: "America/Los_Angeles",
+  KSUU: "America/Los_Angeles", // Travis AFB
+
+  KPHX: "America/Phoenix",     // no DST
+  KDMA: "America/Phoenix",     // Davis-Monthan
+
+  PHNL: "Pacific/Honolulu",   // Hickam / JBPHH
+
+  /* ===================== EUROPE / EUCOM ===================== */
+  EGLL: "Europe/London",       // Heathrow
+  EGGW: "Europe/London",       // Luton
+  EGKK: "Europe/London",       // Gatwick
+  EGUN: "Europe/London",       // Mildenhall
+  EGUL: "Europe/London",       // Lakenheath
+
+  ETAR: "Europe/Berlin",       // Ramstein
+  ETSN: "Europe/Berlin",
+  EDDM: "Europe/Berlin",       // Munich
+  EDDF: "Europe/Berlin",       // Frankfurt
+
+  LERT: "Europe/Madrid",       // Rota
+  LEZG: "Europe/Madrid",
+
+  LIRF: "Europe/Rome",         // Rome
+  LIMC: "Europe/Rome",         // Milan
+
+  EHAM: "Europe/Amsterdam",    // AMS
+  LFPG: "Europe/Paris",        // CDG
+  LOWW: "Europe/Vienna",       // Vienna
+
+  /* ===================== CENTCOM ===================== */
+  OTBH: "Asia/Qatar",           // Doha
+  ORBI: "Asia/Baghdad",
+  OKBK: "Asia/Kuwait",
+  OAKN: "Asia/Kabul",
+
+  OMDB: "Asia/Dubai",
+  OMAA: "Asia/Dubai",           // Abu Dhabi
+
+  OEJN: "Asia/Riyadh",          // Jeddah
+  OERK: "Asia/Riyadh",          // Riyadh
+
+  /* ===================== PACOM ===================== */
+  RJTY: "Asia/Tokyo",           // Yokota
+  RJTT: "Asia/Tokyo",           // Haneda
+  RJAA: "Asia/Tokyo",           // Narita
+
+  RKSO: "Asia/Seoul",           // Osan
+  RKSI: "Asia/Seoul",           // Incheon
+
+  ZSPD: "Asia/Shanghai",
+  ZBAA: "Asia/Shanghai",        // Beijing
+
+  RPLL: "Asia/Manila",
+
+  WSSS: "Asia/Singapore",
+
+  YSSY: "Australia/Sydney",
+  YMML: "Australia/Melbourne",
+
+  /* ===================== OTHER COMMON TDY ===================== */
+  CYYZ: "America/Toronto",      // Toronto
+  CYVR: "America/Vancouver",
+
+  FAOR: "Africa/Johannesburg",
+  FQMA: "Africa/Maputo",
+
+  SBGR: "America/Sao_Paulo",    // São Paulo
+};
+
 };
 
 function getTimeZoneFromICAO(icao){
