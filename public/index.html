@@ -306,13 +306,14 @@ input{
   inset:0;
   background:#d0d0d0;
   border-radius:26px;
-
-/* Show a visible focus ring when tabbing to the hidden checkbox */
-.switch input:focus-visible + .slider{
-  outline: 3px solid #2b5fb8;
-  outline-offset: 2px;
-  
 }
+  
+/* Visible focus ring when tabbing to the switch (robust) */
+.switch:focus-within .slider{
+  outline: 3px solid #2b5fb8;
+  outline-offset: 2px; 
+}
+  
 .slider:before{
   content:"◀";
   position:absolute;
@@ -1351,7 +1352,8 @@ document.getElementById("calcBtn").addEventListener("click", () => {
   calculate();
 
   // smooth scroll to results
-  document.getElementById("output")?.scrollIntoView({ behavior:"smooth", block:"start" });
+  const outEl = document.getElementById("output");
+if(outEl) outEl.scrollIntoView({ behavior:"smooth", block:"start" });
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
