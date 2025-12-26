@@ -77,6 +77,20 @@ body{
 .icon-btn:active{ transform:translateY(1px); 
 }
 
+/* Small hint under ICAO boxes (only shows when ICAO is valid-format but unmapped) */
+.icao-hint{
+  font-size:10px;
+  font-weight:600;
+  line-height:1.1;
+  margin-top:2px;
+  color:#666;
+  min-height:12px;     /* keeps layout stable even when empty */
+}
+
+.icao-hint.bad{
+  color:#8b0000;       /* subtle dark red */
+}
+  
 /* ---------- TOP FORM (SINGLE GRID) ---------- */
 .form-grid{
   display:grid;
@@ -532,9 +546,10 @@ button:active{
 
         <div class="at">at</div>
 
-        <div class="icao-wrap">
-          <input id="takeoffICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
-        </div>
+      <div class="icao-wrap">
+        <input id="takeoffICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
+        <div id="takeoffIcaoHint" class="icao-hint"></div>
+      </div>
 
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
@@ -554,9 +569,11 @@ button:active{
 
         <div class="at">at</div>
 
-        <div class="icao-wrap">
-          <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
-        </div>
+      <div class="icao-wrap">
+        <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;">
+      <div id="landingIcaoHint" class="icao-hint"></div>
+    </div>
+
 
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
@@ -690,7 +707,31 @@ function normICAO(s){
   // keep only letters, max 4, uppercase
   return String(s || "").replace(/[^a-z]/gi,"").slice(0,4).toUpperCase();
 }
-  
+
+function updateIcaoHint(icao, hintEl){
+  if(!hintEl) return;
+
+  const key = normICAO(icao);
+
+  // Only show something once it's truly "ICAO shaped"
+  if(key.length !== 4){
+    hintEl.textContent = "";
+    hintEl.classList.remove("bad");
+    return;
+  }
+
+  // ICAO looks valid, but isn't mapped
+  if(!getTimeZoneFromICAO(key)){
+    hintEl.textContent = "Unknown ICAO (no timezone data)";
+    hintEl.classList.add("bad");
+    return;
+  }
+
+  // Mapped — clear
+  hintEl.textContent = "";
+  hintEl.classList.remove("bad");
+}
+
 function formatDayShift(n){
   if(!n) return "";
   return n > 0 ? `+${n}` : `${n}`;   // +1, -1, +2, etc.
@@ -1095,8 +1136,14 @@ function syncLocalFromZulu(zuluInput, icaoInput, localInput, dayElId){
   const dayEl = document.getElementById(dayElId);
   const icao = normICAO(icaoInput.value);
 
-  // Don't populate unless ICAO is valid AND mapped
-  if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
+// update the hint (takeoff or landing)
+updateIcaoHint(icao, document.getElementById(
+  icaoInput.id === "takeoffICAO" ? "takeoffIcaoHint" : "landingIcaoHint"
+));
+
+// Don't populate unless ICAO is valid AND mapped
+if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
+
     suppressSync = true;
     localInput.value = "";
     if(dayEl) dayEl.textContent = "";
@@ -1194,6 +1241,18 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   augmentedBox.checked = false;
   syncToggleLabels();
 
+// clear ICAO hints
+const tHint = document.getElementById("takeoffIcaoHint");
+const lHint = document.getElementById("landingIcaoHint");
+if(tHint){
+  tHint.textContent = "";
+  tHint.classList.remove("bad");
+}
+if(lHint){
+  lHint.textContent = "";
+  lHint.classList.remove("bad");
+}
+  
   // put cursor back at first box
   takeoffTime.focus();
 });
@@ -1214,11 +1273,15 @@ const landingLocal = document.getElementById("landingLocal");
     if(inp.value !== clean) inp.value = clean;
   });
 });
-
+  
 [takeoffICAO, landingICAO].forEach(inp => {
   inp.addEventListener("input", () => {
     const clean = normICAO(inp.value);
     if(inp.value !== clean) inp.value = clean;
+
+    // update hint live as they type
+    const hintId = (inp.id === "takeoffICAO") ? "takeoffIcaoHint" : "landingIcaoHint";
+    updateIcaoHint(clean, document.getElementById(hintId));
   });
 });
   
