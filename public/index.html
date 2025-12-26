@@ -16,7 +16,7 @@ body{
 
 .app{
   width:100%;
-  max-width:620px; /* a touch wider now that we use the right-side column */
+  max-width:620px;
   margin:0 auto;
   padding:10px;
 }
@@ -29,10 +29,7 @@ h1{
 /* ---------- TOP FORM (SINGLE GRID) ---------- */
 .form-grid{
   display:grid;
-
-  /* label hugs, then Z time, "at", ICAO, then right-side local time */
-  grid-template-columns: max-content 92px 34px 92px 120px;
-
+  grid-template-columns: max-content 120px 34px 92px 120px;
   column-gap:8px;
   row-gap:14px;
   align-items:center;
@@ -47,43 +44,20 @@ h1{
   white-space:nowrap;
 }
 
-/* HHMM + corner badge */
-.time-wrap{
-  position:relative;
-  display:inline-block;
-  width:92px;
-}
-.time-input{
-  width:92px;
-  padding:6px;
-  font-size:16px;
-  text-align:center;
-  box-sizing:border-box;
-}
-.badge{
-  position:absolute;
-  right:6px;
-  bottom:3px;
-  font-size:10px;
-  font-weight:normal;
-  color:#666;
-  pointer-events:none;
-}
-
-/* local time wider */
-.local-wrap{
+/* Floating-label input wrapper (used for Zulu + Local) */
+.floating-wrap{
   position:relative;
   display:inline-block;
   width:120px;
 }
-.local-input{
+.floating-input{
   width:120px;
   padding:6px;
   font-size:16px;
   text-align:center;
   box-sizing:border-box;
 }
-.local-label{
+.floating-label{
   position:absolute;
   left:8px;
   top:-9px;
@@ -132,22 +106,10 @@ h1{
   box-sizing:border-box;
 }
 
-.brief-wrap{
+.spacer{
   justify-self:center;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  white-space:nowrap;
-}
-.brief-wrap label{
-  font-weight:bold;
-}
-#briefOffset{
-  width:74px;
-  padding:6px;
-  font-size:14px;
-  text-align:center;
-  box-sizing:border-box;
+  color:#666;
+  font-size:12px;
 }
 
 .crew-toggle{
@@ -248,20 +210,29 @@ button{
   border-radius:4px;
 }
 
-.small-btn{
-  width:auto;
-  margin-top:10px;
-  padding:8px 10px;
-  font-size:13px;
-}
-
 .inline-input{
-  width:74px;
+  width:92px;
   padding:6px;
   font-size:14px;
   text-align:center;
   box-sizing:border-box;
 }
+
+.mini-plus{
+  border:none;
+  background:transparent;
+  font-weight:bold;
+  font-size:16px;
+  line-height:1;
+  padding:0 6px;
+  margin:0;
+  width:auto;
+  cursor:pointer;
+  color:#333;
+  opacity:0.7;
+}
+.mini-plus:hover{ opacity:1; }
+.mini-plus:disabled{ opacity:0.25; cursor:not-allowed; }
 
 .event-grid{
   display:grid;
@@ -301,9 +272,9 @@ button{
 /* ---------- MOBILE ---------- */
 @media (max-width:620px){
   .form-grid{
-    grid-template-columns: max-content 92px 34px 92px 1fr;
+    grid-template-columns: max-content 1fr 34px 92px 1fr;
   }
-  .local-wrap, .local-input{
+  .floating-wrap, .floating-input{
     width:100%;
   }
 
@@ -311,7 +282,7 @@ button{
     grid-template-columns: 1fr;
     gap:10px;
   }
-  .aircraft-wrap, .brief-wrap, .crew-toggle{
+  .aircraft-wrap, .spacer, .crew-toggle{
     justify-self:start;
   }
 }
@@ -329,19 +300,18 @@ button{
   <div class="form-row">
     <div class="label">Scheduled Takeoff Time:</div>
 
-    <div class="time-wrap">
-      <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
-      <span class="badge">Z</span>
+    <div class="floating-wrap">
+      <div class="floating-label">Zulu</div>
+      <input id="takeoffTime" class="floating-input" placeholder="HHMM" maxlength="4">
     </div>
 
     <div class="at">at</div>
 
     <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
 
-    <div class="local-wrap">
-      <div class="local-label">Local</div>
-      <input id="takeoffLocal" class="local-input" placeholder="HHMM" maxlength="4">
-      <span class="badge">L</span>
+    <div class="floating-wrap">
+      <div class="floating-label">Local</div>
+      <input id="takeoffLocal" class="floating-input" placeholder="HHMM" maxlength="4">
     </div>
   </div>
 
@@ -349,19 +319,18 @@ button{
   <div class="form-row">
     <div class="label">Scheduled Land Time:</div>
 
-    <div class="time-wrap">
-      <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
-      <span class="badge">Z</span>
+    <div class="floating-wrap">
+      <div class="floating-label">Zulu</div>
+      <input id="landingTime" class="floating-input" placeholder="HHMM" maxlength="4">
     </div>
 
     <div class="at">at</div>
 
     <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
 
-    <div class="local-wrap">
-      <div class="local-label">Local</div>
-      <input id="landingLocal" class="local-input" placeholder="HHMM" maxlength="4">
-      <span class="badge">L</span>
+    <div class="floating-wrap">
+      <div class="floating-label">Local</div>
+      <input id="landingLocal" class="floating-input" placeholder="HHMM" maxlength="4">
     </div>
   </div>
 
@@ -383,10 +352,7 @@ button{
         </select>
       </div>
 
-      <div class="brief-wrap">
-        <label for="briefOffset">Brief Offset</label>
-        <input id="briefOffset" value="2+30" title="H+MM before takeoff (e.g., 2+30)">
-      </div>
+      <div class="spacer"></div>
 
       <div class="crew-toggle">
         <span id="basicLbl" class="crew-label active">Basic</span>
@@ -452,7 +418,6 @@ function minutesToHPlusMM(mins){
 }
 
 function parseHPlusMM(s){
-  // accepts "2+30" or "2:30"
   if(typeof s !== "string") return null;
   const t = s.trim();
   let m = t.match(/^(\d+)\+([0-5]\d)$/);
@@ -462,12 +427,17 @@ function parseHPlusMM(s){
   return null;
 }
 
-/* ----------------- ICAO offset (stub for now) -----------------
-   Replace this later with real ICAO -> timezone/DST logic.
-*/
+function parseBriefTime(s){
+  // accept "HHMM" or "HHMMZ"
+  if(typeof s !== "string") return null;
+  const t = s.trim().toUpperCase().replace("Z","");
+  if(!isHHMM(t)) return null;
+  return hhmmToMinutes(t);
+}
+
+/* ----------------- ICAO offset (stub for now) ----------------- */
 function getUtcOffsetMinutesFromICAO(_icao){
-  // placeholder: "Local == Zulu"
-  return 0;
+  return 0; // placeholder: Local == Zulu
 }
 
 function zuluToLocalMinutes(zuluMins, icao){
@@ -481,6 +451,10 @@ function localToZuluMinutes(localMins, icao){
 
 /* ----------------- extra events ----------------- */
 const extraEvents = []; // { label: string, offsetMin: number }
+
+/* ----------------- brief override ----------------- */
+let briefOffsetMin = 150;          // default 2+30
+let briefTimeOverrideMin = null;   // if user edits the output box, we store minutes here
 
 /* ----------------- main calc + render ----------------- */
 function calculate(){
@@ -502,8 +476,13 @@ function calculate(){
   const lastBeer   = takeoffMin - 720;
   const legalAlert = takeoffMin - 255;
 
-  const briefOffsetMin = parseHPlusMM(document.getElementById("briefOffset").value) ?? 150;
-  const briefTime  = takeoffMin - briefOffsetMin;
+  // brief time is either override (user-edited) or default offset
+  let briefTimeMin = (briefTimeOverrideMin != null) ? briefTimeOverrideMin : (takeoffMin - briefOffsetMin);
+
+  // if override is set, recompute offset so subtext stays truthful
+  if(briefTimeOverrideMin != null){
+    briefOffsetMin = diffMinutes(briefTimeMin, takeoffMin);
+  }
 
   const stepTime   = takeoffMin - 120;
   const engine     = takeoffMin - 30;
@@ -514,7 +493,7 @@ function calculate(){
   const fdp = augmented ? 1440 : 960;
   const cdp = augmented ? 1485 : 1080;
   const tdp = 720;
-  const apu = augmented ? 1080 : 720; // 18:00 augmented, 12:00 basic
+  const apu = augmented ? 1080 : 720;
 
   const landingFromShow = diffMinutes(showTime, landingMin);
 
@@ -547,12 +526,16 @@ function calculate(){
     <div class="row"><span>Legal for Alert</span><span>${minutesToHHMMZ(legalAlert)}</span></div>
     <div class="subtext">T/O − 4+15</div>
 
-    <div class="row"><span>Show Time</span><span>${minutesToHHMMZ(showTime)}</span></div>
+    <div class="row">
+      <span>
+        Show Time
+        <button class="mini-plus" id="addEventBtn" title="Add custom event" ${extraEvents.length>=3 ? "disabled" : ""}>+</button>
+      </span>
+      <span>${minutesToHHMMZ(showTime)}</span>
+    </div>
     <div class="subtext">T/O − 3+15</div>
 
-    <button class="small-btn" id="addEventBtn" ${extraEvents.length>=3 ? "disabled" : ""}>+ Add event</button>
-
-    <div id="eventEditor" style="margin-top:10px;">
+    <div id="eventEditor" style="margin-top:6px;">
       ${renderEventEditorHtml()}
     </div>
 
@@ -560,9 +543,12 @@ function calculate(){
 
     <div class="row">
       <span>Brief Time</span>
-      <span>${minutesToHHMMZ(briefTime)}</span>
+      <span>
+        <input id="briefTimeEdit" class="inline-input" value="${minutesToHHMM(briefTimeMin)}" maxlength="5" title="Edit HHMM (Zulu)">
+        <span style="font-size:12px;color:#666;">Z</span>
+      </span>
     </div>
-    <div class="subtext">T/O − ${minutesToHPlusMM(briefOffsetMin)} (editable above)</div>
+    <div class="subtext">T/O − ${minutesToHPlusMM(briefOffsetMin)} (edit time above)</div>
 
     <div class="row"><span>Step Time</span><span>${minutesToHHMMZ(stepTime)}</span></div>
     <div class="subtext">T/O − 2+00</div>
@@ -595,10 +581,19 @@ function calculate(){
   `;
 
   wireEventEditorHandlers();
-  const addBtn = document.getElementById("addEventBtn");
-  addBtn?.addEventListener("click", () => {
+
+  // subtle plus next to show time
+  document.getElementById("addEventBtn")?.addEventListener("click", () => {
     if(extraEvents.length >= 3) return;
     extraEvents.push({ label: `Event ${extraEvents.length+1}`, offsetMin: 165 }); // default 2+45
+    calculate();
+  });
+
+  // brief time editable in output
+  document.getElementById("briefTimeEdit")?.addEventListener("input", (e) => {
+    const val = parseBriefTime(e.target.value);
+    if(val == null) return;
+    briefTimeOverrideMin = val;
     calculate();
   });
 }
@@ -611,18 +606,15 @@ function escapeHtml(s){
 
 function renderEventEditorHtml(){
   if(extraEvents.length === 0){
-    return `<div style="font-size:12px;color:#666;">Add up to 3 custom events (placed between Show and Step).</div>`;
+    return ``; // keep it subtle until they add an event
   }
 
   return `
-    <div class="event-grid" style="font-weight:bold;">
-      <div>Event label</div><div>Offset</div><div></div>
-    </div>
     ${extraEvents.map((ev, idx) => `
       <div class="event-grid">
-        <input data-ev-idx="${idx}" data-ev-field="label" value="${escapeHtml(ev.label)}" maxlength="24">
+        <input data-ev-idx="${idx}" data-ev-field="label" value="${escapeHtml(ev.label)}" maxlength="24" placeholder="Label">
         <input data-ev-idx="${idx}" data-ev-field="offset" value="${minutesToHPlusMM(ev.offsetMin)}" title="H+MM before takeoff">
-        <button class="small-btn" data-ev-idx="${idx}" data-ev-field="remove" style="margin-top:0;">Remove</button>
+        <button data-ev-idx="${idx}" data-ev-field="remove" style="padding:6px 8px;font-size:12px; width:auto; margin:0;">✕</button>
       </div>
     `).join("")}
   `;
@@ -633,7 +625,6 @@ function wireEventEditorHandlers(){
     inp.addEventListener("input", (e) => {
       const idx = parseInt(e.target.dataset.evIdx,10);
       extraEvents[idx].label = e.target.value;
-      // no need to full recalc; but keep it simple:
       calculate();
     });
   });
@@ -695,8 +686,6 @@ augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
   calculate();
 });
-
-document.getElementById("briefOffset").addEventListener("input", calculate);
 
 document.getElementById("calcBtn").addEventListener("click", calculate);
 
