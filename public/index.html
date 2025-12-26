@@ -572,6 +572,7 @@ button:active{
 
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
+          <div id="takeoffTimeHint" class="icao-hint bad"></div>
           <input id="takeoffTime" class="box" placeholder="HHMM" maxlength="4">
         </div>
 
@@ -595,6 +596,7 @@ button:active{
 
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
+          <div id="landingTimeHint" class="icao-hint bad"></div>
           <input id="landingTime" class="box" placeholder="HHMM" maxlength="4">
         </div>
 
@@ -685,6 +687,20 @@ function showRuntimeError(err){
       </div>
     </div>
   `;
+}
+
+function updateTimeHint(timeInput, hintEl){
+  if(!hintEl) return;
+
+  const t = padHHMM(timeInput.value);
+
+  // show nothing while typing fewer than 4 digits
+  if(t.length !== 4){
+    hintEl.textContent = "";
+    return;
+  }
+
+  hintEl.textContent = isHHMM(t) ? "" : "Invalid time";
 }
   
 function isHHMM(s){
@@ -1328,6 +1344,9 @@ const landingLocal = document.getElementById("landingLocal");
   inp.addEventListener("input", () => {
     const clean = normHHMM(inp.value);
     if(inp.value !== clean) inp.value = clean;
+
+    if(inp === takeoffTime) updateTimeHint(takeoffTime, document.getElementById("takeoffTimeHint"));
+    if(inp === landingTime) updateTimeHint(landingTime, document.getElementById("landingTimeHint"));
   });
 });
 
