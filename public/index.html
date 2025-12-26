@@ -120,6 +120,12 @@ body{
   line-height:1.1;
 }
 
+/* Top form labels: small-caps / “manual” look */
+.form-label{
+  font-variant: small-caps;
+  letter-spacing: 0.8px;
+}
+  
 /* all three boxes same size */
 .box{
   width:104px;
@@ -593,7 +599,7 @@ button:active{
 
       <!-- Row 1 -->
       <div class="form-row">
-        <div class="label">Scheduled Takeoff Time:</div>
+        <div class="label form-label">Scheduled Takeoff Time:</div>
 
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
@@ -617,7 +623,7 @@ button:active{
 
       <!-- Row 2 -->
       <div class="form-row">
-        <div class="label">Scheduled Land Time:</div>
+        <div class="label form-label">Scheduled Land Time:</div>
 
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
@@ -642,7 +648,7 @@ button:active{
 
       <!-- Row 3 -->
 <div class="form-row">
-  <div class="label aircraft-crew-label">Aircraft / Crew:</div>
+  <div class="label aircraft-crew-label form-label">Aircraft / Crew:</div>
 
   <!-- Use columns 2 through 5 for the 3 evenly-spaced items -->
   <div class="third-content-wide">
@@ -664,12 +670,12 @@ button:active{
     <div></div>
 
     <div class="crew-toggle">
-      <span id="basicLbl" class="crew-label active">Basic</span>
+      <span id="basicLbl" class="crew-label form-label active">Basic</span>
       <label class="switch">
         <input type="checkbox" id="augmented">
         <span class="slider"></span>
       </label>
-      <span id="augLbl" class="crew-label">Augmented</span>
+      <span id="augLbl" class="crew-label form-label">Augmented</span>
     </div>
   </div>
 </div>
