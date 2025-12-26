@@ -876,9 +876,14 @@ function formatShiftSup(dayShift){
 }
   
 function zuluHtml(mins){
+  // day shift based on the absolute minute value (can be -1, 0, +1, ...)
+  const dayShift = Math.floor(mins / 1440);
+
   // normalize to 0..1439 for display
   const m = ((mins % 1440) + 1440) % 1440;
-return `<span class="mono">${minutesToHHMM(m)}<span class="tz-sfx">Z</span></span>`;
+
+  const sh = formatShiftSup(dayShift);
+  return `<span class="mono">${minutesToHHMM(m)}<span class="tz-sfx">Z</span>${sh ? `<span class="shift-sup">${sh}</span>` : ""}</span>`;
 }
 
 function localHtmlFromZuluSimple(zuluMins, icao){
@@ -886,7 +891,8 @@ function localHtmlFromZuluSimple(zuluMins, icao){
   const zHHMM = minutesToHHMM(((zuluMins % 1440) + 1440) % 1440);
   const res = zuluToLocalWithDay(hhmmToMinutes(zHHMM), icao, zHHMM);
   if(!res) return "";
-return `<span class="mono">${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span></span>`;
+  const sh = formatShiftSup(res.dayShift);
+  return `<span class="mono">${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span>${sh ? `<span class="shift-sup">${sh}</span>` : ""}</span>`;
 }
 
 function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
@@ -1136,15 +1142,20 @@ function calculate(){
     const stepTime   = takeoffMin - 120;
     const engine     = takeoffMin - 30;
 
-    const flightMin = diffMinutes(takeoffMin, landingMin);
-    const flightHrs = (flightMin/60).toFixed(1);
+    // Treat landing as "next day" if it’s earlier than takeoff on the clock
+    const landingAbs = landingMin + (landingMin < takeoffMin ? 1440 : 0);
+    
+    // Use absolute timeline for flight time
+    const flightMin = landingAbs - takeoffMin;
+    const flightHrs = (flightMin / 60).toFixed(1);
 
     const fdp = augmented ? 1440 : 960;
     const cdp = augmented ? 1485 : 1080;
     const tdp = 720;
     const apu = augmented ? 1080 : 720;
 
-    const landingFromShow = diffMinutes(showTime, landingMin);
+    // Use the SAME absolute landing for duty/ORM math
+    const landingFromShow = landingAbs - showTime;
 
     // FDP = KING (includes "exceed" behavior)
     function ormClassFdp(limitMinutes){
@@ -1211,7 +1222,7 @@ function calculate(){
       ${row3Html("Takeoff", takeoffMin, tkIcao, true)}
       <div class="subtext">T/O − 0+00</div>
 
-      ${row3Html("Landing", landingMin, ldIcao, true)}
+      ${row3Html("Landing", landingAbs, ldIcao, true)}
       <div class="subtext">LND − 0+00</div>
 
       <hr>
