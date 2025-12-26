@@ -1341,11 +1341,20 @@ const landingLocal = document.getElementById("landingLocal");
 [takeoffICAO, landingICAO].forEach(inp => {
   inp.addEventListener("input", () => {
     const clean = normICAO(inp.value);
-    if(inp.value !== clean) inp.value = clean;
+    if (inp.value !== clean) inp.value = clean;
 
     // update hint live as they type
     const hintId = (inp.id === "takeoffICAO") ? "takeoffIcaoHint" : "landingIcaoHint";
     updateIcaoHint(clean, document.getElementById(hintId));
+
+    // NEW: re-sync local any time ICAO changes (including deleting it)
+    const zuluInput  = (inp.id === "takeoffICAO") ? takeoffTime  : landingTime;
+    const localInput = (inp.id === "takeoffICAO") ? takeoffLocal : landingLocal;
+    const dayId      = (inp.id === "takeoffICAO") ? "takeoffLocalDay" : "landingLocalDay";
+
+    syncLocalFromZulu(zuluInput, inp, localInput, dayId);
+
+    if (hasCalculated) calculate();
   });
 });
   
