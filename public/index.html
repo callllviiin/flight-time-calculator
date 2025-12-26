@@ -1147,7 +1147,8 @@ function localToZuluMinutes(localMins, icao, anchorZuluHHMM){
 /* ----------------- state ----------------- */
 let hasCalculated = false;
 let briefOffsetMin = 150; // default 2+30
-
+let isEditingZulu = false;
+  
 /* ----------------- main calc + render ----------------- */
 function calculate(){
   try{
@@ -1312,7 +1313,7 @@ function calculate(){
       const v = parseHPlusMM(e.target.value);
       if(v == null) return;
       briefOffsetMin = v;
-      if(hasCalculated) calculate();
+      if(hasCalculated && !isEditingZulu) calculate();
     });
 
   }catch(err){
@@ -1324,6 +1325,7 @@ function calculate(){
 let suppressSync = false;
 
 function syncLocalFromZulu(zuluInput, icaoInput, localInput, dayElId){
+  if(isEditingZulu) return;
   if(suppressSync) return;
 
   const dayEl = document.getElementById(dayElId);
@@ -1409,7 +1411,7 @@ function syncToggleLabels(){
 }
 augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
-  if(hasCalculated) calculate();
+  if(hasCalculated && !isEditingZulu) calculate();
 });
 syncToggleLabels();
 
@@ -1476,6 +1478,16 @@ const landingTime = document.getElementById("landingTime");
 const landingICAO = document.getElementById("landingICAO");
 const landingLocal = document.getElementById("landingLocal");
 
+[takeoffTime, landingTime].forEach(inp => {
+  inp.addEventListener("focus", () => {
+    isEditingZulu = true;
+  });
+
+  inp.addEventListener("blur", () => {
+    isEditingZulu = false;
+  });
+});
+  
 // Auto-normalize inputs (prevents invisible spaces / weird chars from breaking logic)
 [takeoffTime, landingTime, takeoffLocal, landingLocal].forEach(inp => {
   inp.addEventListener("input", () => {
@@ -1499,7 +1511,7 @@ const landingLocal = document.getElementById("landingLocal");
     if(inp === takeoffLocal) syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
     if(inp === landingLocal) syncZuluFromLocal(landingLocal, landingICAO, landingTime);
 
-    if(hasCalculated) calculate();
+    if(hasCalculated && !isEditingZulu) calculate();
   });
 });
   
@@ -1525,20 +1537,20 @@ const landingLocal = document.getElementById("landingLocal");
   
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
-  if(hasCalculated) calculate();
+  if(hasCalculated && !isEditingZulu) calculate();
 }));
 takeoffLocal.addEventListener("input", () => {
   syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
-  if(hasCalculated) calculate();
+  if(hasCalculated && !isEditingZulu) calculate();
 });
 
 [landingTime, landingICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
-  if(hasCalculated) calculate();
+  if(hasCalculated && !isEditingZulu) calculate();
 }));
 landingLocal.addEventListener("input", () => {
   syncZuluFromLocal(landingLocal, landingICAO, landingTime);
-  if(hasCalculated) calculate();
+  if(hasCalculated && !isEditingZulu) calculate();
 });
   setCalcEnabled();
 </script>
