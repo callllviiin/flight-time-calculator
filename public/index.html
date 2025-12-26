@@ -315,39 +315,41 @@ button{
   border-radius:4px;
 }
 
-/* ORM bands for duty limits */
+/* ================= ORM bands (FDP = KING) ================= */
+/* FDP: same strong fills, now with a darker border for definition */
 .orm-low{
   background:#d4edda;
-  padding:4px 6px;
-  border-radius:4px;
-}
-  
-.orm-mod{   /* Yellow (75–90%) */
-  background:#fff3cd;   /* brighter yellow */
+  border:1px solid #7bbf8b;     /* darker green border */
   padding:4px 6px;
   border-radius:4px;
 }
 
-.orm-high{  /* Orange (90–95%) */
-  background:#ffb74d;          /* strong amber/orange */
+.orm-mod{
+  background:#fff3cd;
+  border:1px solid #d6b656;     /* darker yellow border */
   padding:4px 6px;
   border-radius:4px;
 }
 
-.orm-severe{ /* Red (>95%) */
-  background:#f44336;   /* strong red */
-  color:#000;           /* black text */
+.orm-high{
+  background:#ffb74d;           /* strong amber/orange */
+  border:1px solid #c77a16;     /* darker orange border */
   padding:4px 6px;
   border-radius:4px;
 }
 
-.orm-severe .tz-sfx{
-  color:#000;
+.orm-severe{
+  background:#f44336;           /* strong red */
+  border:1px solid #a10000;     /* darker red border */
+  color:#000;                   /* keep black text */
+  padding:4px 6px;
+  border-radius:4px;
 }
+.orm-severe .tz-sfx{ color:#000; }
 
-/* Exceeds limit: BRIGHT emergency red */
+/* Exceeds limit: keep unchanged (your "emergency red" look) */
 .orm-exceed{
-  background:#c62828;          /* vivid emergency red */
+  background:#c62828;
   color:#fff;
   padding:4px 6px;
   border-radius:4px;
@@ -358,6 +360,38 @@ button{
   color:#fff;
   opacity:1;
 }
+
+/* ================= Muted ORM bands (CDT/TDD/APU) ================= */
+/* Softer fills, still readable, still scan-friendly */
+.ormm-low{
+  background:#eaf6ee;           /* muted green */
+  border:1px solid #c7e7d0;
+  padding:4px 6px;
+  border-radius:4px;
+}
+
+.ormm-mod{
+  background:#fff8e3;           /* muted yellow */
+  border:1px solid #f1e0b6;
+  padding:4px 6px;
+  border-radius:4px;
+}
+
+.ormm-high{
+  background:#ffe2bf;           /* muted orange */
+  border:1px solid #f3c08a;
+  padding:4px 6px;
+  border-radius:4px;
+}
+
+.ormm-severe{
+  background:#ffd1d1;           /* muted red */
+  border:1px solid #f1a0a0;
+  color:#000;
+  padding:4px 6px;
+  border-radius:4px;
+}
+.ormm-severe .tz-sfx{ color:#000; }
 
 /* tiny offset editor for brief */
 .inline-mini{
@@ -836,6 +870,45 @@ function calculate(){
 
   const landingFromShow = diffMinutes(showTime, landingMin);
 
+// FDP = KING (includes "exceed" behavior)
+function ormClassFdp(limitMinutes){
+  if(limitMinutes <= 0) return "";
+
+  if(landingFromShow > limitMinutes) return "orm-exceed"; // keep exceed only for FDP
+
+  const ratio = landingFromShow / limitMinutes;
+  if(ratio >= 0.95) return "orm-severe";
+  if(ratio >= 0.90) return "orm-high";
+  if(ratio >= 0.75) return "orm-mod";
+  return "orm-low";
+}
+
+// CDT/TDD/APU = muted colors only (NO exceed behavior)
+function ormClassMuted(limitMinutes){
+  if(limitMinutes <= 0) return "";
+
+  const ratio = landingFromShow / limitMinutes;
+  if(ratio >= 0.95) return "ormm-severe";
+  if(ratio >= 0.90) return "ormm-high";
+  if(ratio >= 0.75) return "ormm-mod";
+  return "ormm-low";
+}
+
+// FDP-only message
+function ormMessageFdp(limitMinutes){
+  if(limitMinutes <= 0) return "";
+
+  if(landingFromShow > limitMinutes){
+    return "Mission NO-GO. Maximum Duty Day Exceeded";
+  }
+
+  const ratio = landingFromShow / limitMinutes;
+  if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
+  if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
+  if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
+  return "ORM Low: <75% of Maximum Duty Day";
+}
+  
 function ormClass(limitMinutes){
   if(limitMinutes <= 0) return "";
 
@@ -909,18 +982,18 @@ ${row3Html(
   showTime + fdp,
   "",
   false,
-  ormClass(fdp),
-  `<span class="orm-note">${ormMessage(fdp)}</span>`
+  ormClassFdp(fdp),
+  `<span class="orm-note">${ormMessageFdp(fdp)}</span>`
 )}
 <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
-${row3Html("Crew Duty Time", showTime + cdp, "", false, ormClass(cdp))}
+${row3Html("Crew Duty Time", showTime + cdp, "", false, ormClassMuted(cdp))}
 <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
-${row3Html("Transition Duty Day", showTime + tdp, "", false, ormClass(tdp))}
+${row3Html("Transition Duty Day", showTime + tdp, "", false, ormClassMuted(tdp))}
 <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
-${row3Html("Autopilot INOP FDP", showTime + apu, "", false, ormClass(apu))}
+${row3Html("Autopilot INOP FDP", showTime + apu, "", false, ormClassMuted(apu))}
 <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
   
 `;
