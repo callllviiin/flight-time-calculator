@@ -803,7 +803,44 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
   const middle = showLocal
     ? localHtmlFromZuluSimple(zuluMinutes, localIcao)
     : (midHtml || "");
+}
 
+function isReadyToCalculate(){
+  const tk = padHHMM(takeoffTime.value);
+  const ld = padHHMM(landingTime.value);
+  const tkIcao = normICAO(takeoffICAO.value);
+
+  return isHHMM(tk) &&
+         isHHMM(ld) &&
+         isICAO(tkIcao) &&
+         !!getTimeZoneFromICAO(tkIcao);
+}
+
+  function isReadyToCalculate(){
+  const tk = padHHMM(takeoffTime.value);
+  const ld = padHHMM(landingTime.value);
+  const tkIcao = normICAO(takeoffICAO.value);
+
+  return isHHMM(tk) &&
+         isHHMM(ld) &&
+         isICAO(tkIcao) &&
+         !!getTimeZoneFromICAO(tkIcao);
+}
+
+function updateCalcBtnState(){
+  const btn = document.getElementById("calcBtn");
+  const ready = isReadyToCalculate();
+
+  btn.disabled = !ready;
+
+  // simple disabled styling without new CSS rules
+  btn.style.opacity = ready ? "1" : "0.55";
+  btn.style.cursor = ready ? "pointer" : "not-allowed";
+
+  // label communicates state
+  btn.textContent = hasCalculated ? "Recalculate" : "Calculate";
+}
+  
   return `
     <div class="row3 ${extraClass}">
       <span>${label}</span>
@@ -812,7 +849,7 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
     </div>
   `;
 }
-
+  
 // ---------- Phase 1.5: ICAO lookup wrapper (preps for big DB later) ----------
 let ICAO_TZ_DB = null; // optional external DB (Phase 2-ready)
 
@@ -1230,6 +1267,7 @@ augmentedBox.addEventListener("change", () => {
 syncToggleLabels();
 
 document.getElementById("calcBtn").addEventListener("click", () => {
+  if(!isReadyToCalculate()) return;   // 👈 new guard
   hasCalculated = true;
   calculate();
 });
@@ -1272,7 +1310,12 @@ if(lHint){
   
   // put cursor back at first box
   takeoffTime.focus();
+
+  hasCalculated = false;
+
 });
+
+  
 
 /* Local time listeners (sync only; calculate only after first button press) */
 const takeoffTime = document.getElementById("takeoffTime");
