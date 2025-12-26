@@ -95,13 +95,11 @@ body{
 .form-grid{
   display:grid;
   width: 100%;
- 
   /* Fixed label column so inputs don’t get shoved right */
   grid-template-columns: 200px 104px 26px 104px 1fr;
-
   column-gap:4px;
   row-gap:14px;
-  align-items:center;
+  align-items:flex-start;
   margin-top: 24px;
 }
 
@@ -744,7 +742,7 @@ function updateIcaoHint(icao, hintEl){
 
   // ICAO looks valid, but isn't mapped
   if(!getTimeZoneFromICAO(key)){
-    hintEl.textContent = "Unknown ICAO (no timezone data)";
+    hintEl.textContent = "Unknown ICAO";
     hintEl.classList.add("bad");
     return;
   }
