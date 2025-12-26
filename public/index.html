@@ -16,7 +16,7 @@ body{
 
 .app{
   width:100%;
-  max-width:560px;
+  max-width:620px; /* a touch wider now that we use the right-side column */
   margin:0 auto;
   padding:10px;
 }
@@ -30,26 +30,24 @@ h1{
 .form-grid{
   display:grid;
 
-  /* label column hugs the text width */
-  grid-template-columns: max-content 92px 34px 92px 1fr;
+  /* label hugs, then Z time, "at", ICAO, then right-side local time */
+  grid-template-columns: max-content 92px 34px 92px 120px;
 
   column-gap:8px;
   row-gap:14px;
   align-items:center;
 }
 
-/* rows are logical only; children align to the ONE grid */
 .form-row{
   display:contents;
   font-weight:bold;
 }
 
-/* label column */
 .label{
   white-space:nowrap;
 }
 
-/* HHMM + corner Z */
+/* HHMM + corner badge */
 .time-wrap{
   position:relative;
   display:inline-block;
@@ -62,7 +60,7 @@ h1{
   text-align:center;
   box-sizing:border-box;
 }
-.z-badge{
+.badge{
   position:absolute;
   right:6px;
   bottom:3px;
@@ -72,7 +70,30 @@ h1{
   pointer-events:none;
 }
 
-/* small "at" (CENTERED BETWEEN BOXES) */
+/* local time wider */
+.local-wrap{
+  position:relative;
+  display:inline-block;
+  width:120px;
+}
+.local-input{
+  width:120px;
+  padding:6px;
+  font-size:16px;
+  text-align:center;
+  box-sizing:border-box;
+}
+.local-label{
+  position:absolute;
+  left:8px;
+  top:-9px;
+  font-size:10px;
+  color:#666;
+  background:#f5f7fa;
+  padding:0 4px;
+}
+
+/* small "at" */
 .at{
   font-weight:bold;
   display:flex;
@@ -80,7 +101,6 @@ h1{
   justify-content:center;
 }
 
-/* ICAO input */
 .icao-input{
   width:92px;
   padding:6px;
@@ -94,21 +114,15 @@ h1{
 .third-content{
   grid-column: 1 / -1;
   display:grid;
-  grid-template-columns: 1fr 1fr 1fr;   /* evenly distributed */
+  grid-template-columns: 1fr 1fr 1fr;
   align-items:center;
   gap:12px;
   font-weight:normal;
   width:100%;
 }
 
-.accrew{
-  justify-self:start;
-  font-weight:bold;
-  white-space:nowrap;
-}
-
 .aircraft-wrap{
-  justify-self:center;
+  justify-self:start;
 }
 
 #aircraft{
@@ -118,7 +132,24 @@ h1{
   box-sizing:border-box;
 }
 
-/* toggle */
+.brief-wrap{
+  justify-self:center;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+}
+.brief-wrap label{
+  font-weight:bold;
+}
+#briefOffset{
+  width:74px;
+  padding:6px;
+  font-size:14px;
+  text-align:center;
+  box-sizing:border-box;
+}
+
 .crew-toggle{
   justify-self:end;
   display:flex;
@@ -152,7 +183,7 @@ h1{
   border-radius:26px;
 }
 .slider:before{
-  content:"◀";              /* DEFAULT: Basic */
+  content:"◀";
   position:absolute;
   height:22px;
   width:22px;
@@ -169,7 +200,7 @@ h1{
 }
 input:checked + .slider:before{
   transform:translateX(26px);
-  content:"▶";              /* Augmented */
+  content:"▶";
 }
 
 /* ---------- BUTTON ---------- */
@@ -192,6 +223,8 @@ button{
 .row{
   display:flex;
   justify-content:space-between;
+  align-items:center;
+  gap:10px;
   margin-top:12px;
   font-weight:bold;
 }
@@ -213,6 +246,34 @@ button{
   background-color:#f8d7da;
   padding:4px 6px;
   border-radius:4px;
+}
+
+.small-btn{
+  width:auto;
+  margin-top:10px;
+  padding:8px 10px;
+  font-size:13px;
+}
+
+.inline-input{
+  width:74px;
+  padding:6px;
+  font-size:14px;
+  text-align:center;
+  box-sizing:border-box;
+}
+
+.event-grid{
+  display:grid;
+  grid-template-columns: 1fr 84px 92px;
+  gap:8px;
+  margin-top:8px;
+}
+
+.event-grid input{
+  padding:6px;
+  font-size:14px;
+  box-sizing:border-box;
 }
 
 /* ---------- DISCLAIMER ---------- */
@@ -238,12 +299,19 @@ button{
 }
 
 /* ---------- MOBILE ---------- */
-@media (max-width:520px){
+@media (max-width:620px){
+  .form-grid{
+    grid-template-columns: max-content 92px 34px 92px 1fr;
+  }
+  .local-wrap, .local-input{
+    width:100%;
+  }
+
   .third-content{
     grid-template-columns: 1fr;
     gap:10px;
   }
-  .accrew, .aircraft-wrap, .crew-toggle{
+  .aircraft-wrap, .brief-wrap, .crew-toggle{
     justify-self:start;
   }
 }
@@ -263,14 +331,18 @@ button{
 
     <div class="time-wrap">
       <input id="takeoffTime" class="time-input" placeholder="HHMM" maxlength="4">
-      <span class="z-badge">Z</span>
+      <span class="badge">Z</span>
     </div>
 
     <div class="at">at</div>
 
     <input id="takeoffICAO" class="icao-input" placeholder="ICAO" maxlength="4">
 
-    <div></div>
+    <div class="local-wrap">
+      <div class="local-label">Local</div>
+      <input id="takeoffLocal" class="local-input" placeholder="HHMM" maxlength="4">
+      <span class="badge">L</span>
+    </div>
   </div>
 
   <!-- Row 2 -->
@@ -279,21 +351,23 @@ button{
 
     <div class="time-wrap">
       <input id="landingTime" class="time-input" placeholder="HHMM" maxlength="4">
-      <span class="z-badge">Z</span>
+      <span class="badge">Z</span>
     </div>
 
     <div class="at">at</div>
 
     <input id="landingICAO" class="icao-input" placeholder="ICAO" maxlength="4">
 
-    <div></div>
+    <div class="local-wrap">
+      <div class="local-label">Local</div>
+      <input id="landingLocal" class="local-input" placeholder="HHMM" maxlength="4">
+      <span class="badge">L</span>
+    </div>
   </div>
 
   <!-- Row 3 -->
   <div class="form-row">
     <div class="third-content">
-      <div class="accrew">Aircraft / Crew</div>
-
       <div class="aircraft-wrap">
         <select id="aircraft">
           <option selected>KC-135</option>
@@ -307,6 +381,11 @@ button{
           <option>C-40</option>
           <option>VC-25</option>
         </select>
+      </div>
+
+      <div class="brief-wrap">
+        <label for="briefOffset">Brief Offset</label>
+        <input id="briefOffset" value="2+30" title="H+MM before takeoff (e.g., 2+30)">
       </div>
 
       <div class="crew-toggle">
@@ -340,14 +419,24 @@ button{
 </div>
 
 <script>
+/* ----------------- helpers ----------------- */
+function isHHMM(s){
+  return typeof s === "string" && /^\d{4}$/.test(s) &&
+    parseInt(s.slice(0,2),10) <= 23 && parseInt(s.slice(2,4),10) <= 59;
+}
+
 function hhmmToMinutes(hhmm){
-  return parseInt(hhmm.slice(0,2))*60 + parseInt(hhmm.slice(2,4));
+  return parseInt(hhmm.slice(0,2),10)*60 + parseInt(hhmm.slice(2,4),10);
 }
 
 function minutesToHHMM(mins){
   mins = ((mins % 1440) + 1440) % 1440;
   return String(Math.floor(mins/60)).padStart(2,"0") +
-         String(mins%60).padStart(2,"0") + "Z";
+         String(mins%60).padStart(2,"0");
+}
+
+function minutesToHHMMZ(mins){
+  return minutesToHHMM(mins) + "Z";
 }
 
 function diffMinutes(start, end){
@@ -362,25 +451,60 @@ function minutesToHPlusMM(mins){
   return `${h}+${String(m).padStart(2,"0")}`;
 }
 
+function parseHPlusMM(s){
+  // accepts "2+30" or "2:30"
+  if(typeof s !== "string") return null;
+  const t = s.trim();
+  let m = t.match(/^(\d+)\+([0-5]\d)$/);
+  if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
+  m = t.match(/^(\d+):([0-5]\d)$/);
+  if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
+  return null;
+}
+
+/* ----------------- ICAO offset (stub for now) -----------------
+   Replace this later with real ICAO -> timezone/DST logic.
+*/
+function getUtcOffsetMinutesFromICAO(_icao){
+  // placeholder: "Local == Zulu"
+  return 0;
+}
+
+function zuluToLocalMinutes(zuluMins, icao){
+  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase());
+  return zuluMins + off;
+}
+function localToZuluMinutes(localMins, icao){
+  const off = getUtcOffsetMinutesFromICAO((icao||"").toUpperCase());
+  return localMins - off;
+}
+
+/* ----------------- extra events ----------------- */
+const extraEvents = []; // { label: string, offsetMin: number }
+
+/* ----------------- main calc + render ----------------- */
 function calculate(){
-  const takeoff = takeoffTime.value;
-  const landing = landingTime.value;
+  const takeoff = takeoffTime.value.trim();
+  const landing = landingTime.value.trim();
   const augmented = augmentedBox.checked;
   const out = document.getElementById("output");
 
-  if(takeoff.length !== 4 || landing.length !== 4){
-    out.innerHTML = "Please enter times in HHMM format.";
+  if(!isHHMM(takeoff) || !isHHMM(landing)){
+    out.innerHTML = "Please enter times in HHMM format (0000–2359).";
     return;
   }
 
   const takeoffMin = hhmmToMinutes(takeoff);
   const landingMin = hhmmToMinutes(landing);
-  const showTime = takeoffMin - 195;
 
+  const showTime   = takeoffMin - 195;
   const crewRest   = takeoffMin - 855;
   const lastBeer   = takeoffMin - 720;
   const legalAlert = takeoffMin - 255;
-  const briefTime  = takeoffMin - 150;
+
+  const briefOffsetMin = parseHPlusMM(document.getElementById("briefOffset").value) ?? 150;
+  const briefTime  = takeoffMin - briefOffsetMin;
+
   const stepTime   = takeoffMin - 120;
   const engine     = takeoffMin - 30;
 
@@ -390,7 +514,7 @@ function calculate(){
   const fdp = augmented ? 1440 : 960;
   const cdp = augmented ? 1485 : 1080;
   const tdp = 720;
-  const apu = augmented ? 1080 : 720;
+  const apu = augmented ? 1080 : 720; // 18:00 augmented, 12:00 basic
 
   const landingFromShow = diffMinutes(showTime, landingMin);
 
@@ -400,31 +524,53 @@ function calculate(){
     return "";
   }
 
+  const extraRowsHtml = extraEvents.map((ev, idx) => {
+    const t = takeoffMin - ev.offsetMin;
+    return `
+      <div class="row">
+        <span>${escapeHtml(ev.label || `Event ${idx+1}`)}</span>
+        <span>${minutesToHHMMZ(t)}</span>
+      </div>
+      <div class="subtext">T/O − ${minutesToHPlusMM(ev.offsetMin)}</div>
+    `;
+  }).join("");
+
   out.innerHTML = `
     <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
-  
-    <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMM(crewRest)}</span></div>
+
+    <div class="row"><span>Enter Crew Rest</span><span>${minutesToHHMMZ(crewRest)}</span></div>
     <div class="subtext">T/O − 14+15</div>
 
-    <div class="row"><span>Last Beer</span><span>${minutesToHHMM(lastBeer)}</span></div>
+    <div class="row"><span>Last Beer</span><span>${minutesToHHMMZ(lastBeer)}</span></div>
     <div class="subtext">T/O − 12+00</div>
 
-    <div class="row"><span>Legal for Alert</span><span>${minutesToHHMM(legalAlert)}</span></div>
+    <div class="row"><span>Legal for Alert</span><span>${minutesToHHMMZ(legalAlert)}</span></div>
     <div class="subtext">T/O − 4+15</div>
 
-    <div class="row"><span>Show Time</span><span>${minutesToHHMM(showTime)}</span></div>
+    <div class="row"><span>Show Time</span><span>${minutesToHHMMZ(showTime)}</span></div>
     <div class="subtext">T/O − 3+15</div>
 
-    <div class="row"><span>Brief Time</span><span>${minutesToHHMM(briefTime)}</span></div>
-    <div class="subtext">T/O − 2+30</div>
+    <button class="small-btn" id="addEventBtn" ${extraEvents.length>=3 ? "disabled" : ""}>+ Add event</button>
 
-    <div class="row"><span>Step Time</span><span>${minutesToHHMM(stepTime)}</span></div>
+    <div id="eventEditor" style="margin-top:10px;">
+      ${renderEventEditorHtml()}
+    </div>
+
+    ${extraRowsHtml}
+
+    <div class="row">
+      <span>Brief Time</span>
+      <span>${minutesToHHMMZ(briefTime)}</span>
+    </div>
+    <div class="subtext">T/O − ${minutesToHPlusMM(briefOffsetMin)} (editable above)</div>
+
+    <div class="row"><span>Step Time</span><span>${minutesToHHMMZ(stepTime)}</span></div>
     <div class="subtext">T/O − 2+00</div>
 
-    <div class="row"><span>Engine Start</span><span>${minutesToHHMM(engine)}</span></div>
+    <div class="row"><span>Engine Start</span><span>${minutesToHHMMZ(engine)}</span></div>
     <div class="subtext">T/O − 0+30</div>
 
-    <div class="row"><span>Takeoff</span><span>${minutesToHHMM(takeoffMin)}</span></div>
+    <div class="row"><span>Takeoff</span><span>${minutesToHHMMZ(takeoffMin)}</span></div>
     <div class="subtext">T/O − 0+00</div>
 
     <hr>
@@ -435,20 +581,107 @@ function calculate(){
 
     <div style="font-weight:bold;font-size:18px;text-align:center;">Duty Limitations</div>
 
-    <div class="row ${hl(fdp)}"><span>Flight Duty Period</span><span>${minutesToHHMM(showTime+fdp)}</span></div>
+    <div class="row ${hl(fdp)}"><span>Flight Duty Period</span><span>${minutesToHHMMZ(showTime+fdp)}</span></div>
     <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
-    <div class="row ${hl(cdp)}"><span>Crew Duty Time</span><span>${minutesToHHMM(showTime+cdp)}</span></div>
+    <div class="row ${hl(cdp)}"><span>Crew Duty Time</span><span>${minutesToHHMMZ(showTime+cdp)}</span></div>
     <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
-    <div class="row"><span>Transition Duty Day</span><span>${minutesToHHMM(showTime+tdp)}</span></div>
+    <div class="row"><span>Transition Duty Day</span><span>${minutesToHHMMZ(showTime+tdp)}</span></div>
     <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
-    <div class="row ${hl(apu)}"><span>Autopilot INOP FDP</span><span>${minutesToHHMM(showTime+apu)}</span></div>
+    <div class="row ${hl(apu)}"><span>Autopilot INOP FDP</span><span>${minutesToHHMMZ(showTime+apu)}</span></div>
     <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
+  `;
+
+  wireEventEditorHandlers();
+  const addBtn = document.getElementById("addEventBtn");
+  addBtn?.addEventListener("click", () => {
+    if(extraEvents.length >= 3) return;
+    extraEvents.push({ label: `Event ${extraEvents.length+1}`, offsetMin: 165 }); // default 2+45
+    calculate();
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function renderEventEditorHtml(){
+  if(extraEvents.length === 0){
+    return `<div style="font-size:12px;color:#666;">Add up to 3 custom events (placed between Show and Step).</div>`;
+  }
+
+  return `
+    <div class="event-grid" style="font-weight:bold;">
+      <div>Event label</div><div>Offset</div><div></div>
+    </div>
+    ${extraEvents.map((ev, idx) => `
+      <div class="event-grid">
+        <input data-ev-idx="${idx}" data-ev-field="label" value="${escapeHtml(ev.label)}" maxlength="24">
+        <input data-ev-idx="${idx}" data-ev-field="offset" value="${minutesToHPlusMM(ev.offsetMin)}" title="H+MM before takeoff">
+        <button class="small-btn" data-ev-idx="${idx}" data-ev-field="remove" style="margin-top:0;">Remove</button>
+      </div>
+    `).join("")}
   `;
 }
 
+function wireEventEditorHandlers(){
+  document.querySelectorAll('[data-ev-field="label"]').forEach(inp => {
+    inp.addEventListener("input", (e) => {
+      const idx = parseInt(e.target.dataset.evIdx,10);
+      extraEvents[idx].label = e.target.value;
+      // no need to full recalc; but keep it simple:
+      calculate();
+    });
+  });
+
+  document.querySelectorAll('[data-ev-field="offset"]').forEach(inp => {
+    inp.addEventListener("input", (e) => {
+      const idx = parseInt(e.target.dataset.evIdx,10);
+      const val = parseHPlusMM(e.target.value);
+      if(val != null) extraEvents[idx].offsetMin = val;
+      calculate();
+    });
+  });
+
+  document.querySelectorAll('[data-ev-field="remove"]').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const idx = parseInt(e.target.dataset.evIdx,10);
+      extraEvents.splice(idx,1);
+      calculate();
+    });
+  });
+}
+
+/* ----------------- local time sync ----------------- */
+let suppressSync = false;
+
+function syncLocalFromZulu(zuluInput, icaoInput, localInput){
+  if(suppressSync) return;
+  const z = zuluInput.value.trim();
+  if(!isHHMM(z)) return;
+  const zM = hhmmToMinutes(z);
+  const locM = zuluToLocalMinutes(zM, icaoInput.value.trim());
+  suppressSync = true;
+  localInput.value = minutesToHHMM(locM);
+  suppressSync = false;
+}
+
+function syncZuluFromLocal(localInput, icaoInput, zuluInput){
+  if(suppressSync) return;
+  const l = localInput.value.trim();
+  if(!isHHMM(l)) return;
+  const lM = hhmmToMinutes(l);
+  const zM = localToZuluMinutes(lM, icaoInput.value.trim());
+  suppressSync = true;
+  zuluInput.value = minutesToHHMM(zM);
+  suppressSync = false;
+}
+
+/* ----------------- bindings ----------------- */
 const augmentedBox = document.getElementById("augmented");
 const basicLbl = document.getElementById("basicLbl");
 const augLbl = document.getElementById("augLbl");
@@ -463,9 +696,38 @@ augmentedBox.addEventListener("change", () => {
   calculate();
 });
 
+document.getElementById("briefOffset").addEventListener("input", calculate);
+
 document.getElementById("calcBtn").addEventListener("click", calculate);
 
 syncToggleLabels();
+
+/* Local time listeners (both rows) */
+const takeoffTime = document.getElementById("takeoffTime");
+const takeoffICAO = document.getElementById("takeoffICAO");
+const takeoffLocal = document.getElementById("takeoffLocal");
+
+const landingTime = document.getElementById("landingTime");
+const landingICAO = document.getElementById("landingICAO");
+const landingLocal = document.getElementById("landingLocal");
+
+[takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
+  syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal);
+  calculate();
+}));
+takeoffLocal.addEventListener("input", () => {
+  syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
+  calculate();
+});
+
+[landingTime, landingICAO].forEach(el => el.addEventListener("input", () => {
+  syncLocalFromZulu(landingTime, landingICAO, landingLocal);
+  calculate();
+}));
+landingLocal.addEventListener("input", () => {
+  syncZuluFromLocal(landingLocal, landingICAO, landingTime);
+  calculate();
+});
 </script>
 
 </div>
