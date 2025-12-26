@@ -34,6 +34,12 @@ body{
   font-weight:800;    /* bolder */
   line-height:1.1;    /* tight, predictable baseline */
 }
+  
+/* Title: small-caps look */
+.app-title{
+  font-variant: small-caps;
+  letter-spacing: 1px;
+}
 
 /* Reset button aligned to title baseline */
 .headerbar .icon-btn{
@@ -52,7 +58,7 @@ body{
   color:#555;
 }
 
-  .topbar input{ transform:translateY(1px); 
+.topbar input{ transform:translateY(1px); 
 }
 
 .icon-btn{
@@ -314,7 +320,7 @@ input:checked + .slider:before{
 button{
   margin-top:20px;
   padding:14px 12px;
-  font-size:17px;
+  font-size:20px;
   font-weight:800;
   letter-spacing:0.3px;
   width:100%;
@@ -384,6 +390,19 @@ button:active{
 .sc-label{
   font-variant: small-caps;
   letter-spacing: 0.6px;
+}
+
+/* Section headers in output (Crew Timing, Crew Duty Limitations) */
+.sc-head{
+  font-variant: small-caps;
+  letter-spacing: 1px;
+}
+
+/* Output times should look like your inputs */
+.mono{
+  font-family: Consolas, Menlo, "Courier New", monospace;
+  letter-spacing: 1px;
+  font-weight: 700;
 }
   
 .tz-sfx{
@@ -564,7 +583,7 @@ button:active{
  <div class="app">
 
   <div class="headerbar">
-    <h1>Crew Dawg Calculator</h1>
+    <h1 class="app-title">Crew Dawg Calculator</h1>
     <button id="resetBtn" class="icon-btn" title="Reset">
       &#x21bb;
     </button>
@@ -821,7 +840,7 @@ function formatShiftSup(dayShift){
 function zuluHtml(mins){
   // normalize to 0..1439 for display
   const m = ((mins % 1440) + 1440) % 1440;
-  return `${minutesToHHMM(m)}<span class="tz-sfx">Z</span>`;
+return `<span class="mono">${minutesToHHMM(m)}<span class="tz-sfx">Z</span></span>`;
 }
 
 function localHtmlFromZuluSimple(zuluMins, icao){
@@ -829,7 +848,7 @@ function localHtmlFromZuluSimple(zuluMins, icao){
   const zHHMM = minutesToHHMM(((zuluMins % 1440) + 1440) % 1440);
   const res = zuluToLocalWithDay(hhmmToMinutes(zHHMM), icao, zHHMM);
   if(!res) return "";
-  return `${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span>`;
+return `<span class="mono">${minutesToHHMM(res.localMins)}<span class="tz-sfx">L</span></span>`;
 }
 
 function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
@@ -1122,7 +1141,7 @@ function calculate(){
     }
 
     out.innerHTML = `
-      <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Timing</div>
+      <div class="sc-head" style="font-weight:900;font-size:18px;text-align:center;">Crew Timing</div>
 
       ${row3Html("Enter Crew Rest", crewRest, tkIcao, true)}
       <div class="subtext">T/O − 14+15</div>
@@ -1158,7 +1177,7 @@ function calculate(){
 
       <hr>
 
-      <div style="font-weight:bold;font-size:18px;text-align:center;">Crew Duty Limitations</div>
+      <div class="sc-head" style="font-weight:900;font-size:18px;text-align:center;">Crew Duty Limitations</div>
 
       ${row3Html(
         "Flight Duty Period",
