@@ -754,9 +754,6 @@ function calculate(){
 
 // NEW (Phase 1 output local)
   const tkIcao = (takeoffICAO.value || "").trim().toUpperCase();
-  const ldIcao = (landingICAO.value || "").trim().toUpperCase();
-  const takeoffLocalHtml = localHtmlFromZulu(takeoffMin, tkIcao, takeoff);
-  const landingLocalHtml = localHtmlFromZulu(landingMin, ldIcao, landing);
 
   const showTime   = takeoffMin - 195;
   const crewRest   = takeoffMin - 855;
