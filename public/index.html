@@ -194,13 +194,19 @@ input{
 
 .icao-wrap{
   display:flex;
-  align-items:center;
+  flex-direction:column;   /* input on top, hint below */
+  align-items:stretch;
   width:104px;
 }
 .icao-wrap .box{
   width:100%;
 }
 
+.icao-hint{
+  width:100%;
+  text-align:center;
+}
+  
 /* slightly larger gap between ICAO and Local */
 .local-wrap{ 
   margin-left:10px;
