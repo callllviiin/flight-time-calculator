@@ -423,7 +423,7 @@ button:disabled{
 
 .output.collapsing{
   opacity:0;
-  max-height:0 !important;
+  max-height:0;
 }
 
 /* Output panel: idle (small) vs expanded (results) */
@@ -1626,35 +1626,30 @@ if(out){
   // set current height as max-height so transition has a start point
   out.style.maxHeight = out.scrollHeight + "px";
   out.style.opacity = "1";
-
+  out.style.overflow = "hidden";
+  
   // next frame: trigger collapse
   requestAnimationFrame(() => {
     out.classList.add("collapsing");
     out.style.maxHeight = "0px";
 
-    // scroll while the collapse is happening (feels smoother)
-    if(scrollToTop){
-      const root = document.getElementById("pageRoot");
-      if(root && root.scrollIntoView){
-        root.scrollIntoView({ behavior: "smooth", block: "start" });
-      }else{
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    }
-
 setTimeout(() => {
-  // 1) remove collapse state
   out.classList.remove("collapsing");
-
-  // 2) clear styles so output can expand later
   out.style.maxHeight = "";
   out.style.opacity = "";
   out.style.overflow = "";
 
-  // 3) return to the small “gentle message” box
   setOutputIdle("Enter inputs, then press Calculate.");
 
-  // 4) focus first box WITHOUT snapping the page
+  if(scrollToTop){
+    const root = document.getElementById("pageRoot");
+    if(root && root.scrollIntoView){
+      root.scrollIntoView({ behavior: "smooth", block: "start" });
+    }else{
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
   takeoffTime.focus({ preventScroll: true });
 }, 450);
 
