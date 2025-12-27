@@ -1735,6 +1735,19 @@ function resetAll({ scrollToTop = false } = {}){
   if(lDay) lDay.textContent = "";
 
   // reset state + output
+    // clear ALL hints immediately (must happen before any early-return)
+  [
+    "takeoffIcaoHint", "landingIcaoHint",
+    "takeoffTimeHint", "landingTimeHint",
+    "takeoffLocalHint", "landingLocalHint"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){
+      el.textContent = "";
+      el.classList.remove("bad");
+    }
+  });
+
   hasCalculated = false;
   isDirty = false;
   clearDirty();                 // puts button text back to "Calculate"
@@ -1850,13 +1863,6 @@ if(scrollToTop){
   augmentedBox.checked = false;
   syncToggleLabels();
 
-  // clear ALL hints (ICAO + time + local)
-  const tHint = document.getElementById("takeoffIcaoHint");
-  const lHint = document.getElementById("landingIcaoHint");
-  if(tHint){
-    tHint.textContent = "";
-    tHint.classList.remove("bad");
-  }
   if(lHint){
     lHint.textContent = "";
     lHint.classList.remove("bad");
