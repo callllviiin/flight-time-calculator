@@ -77,9 +77,19 @@ body{
   color:#1f2a44;
   padding:0;
 }
+
+.reset-symbol{
+  width:16px;
+  height:16px;
+  border:2px solid currentColor;
+  border-right-color: transparent;
+  border-radius:50%;
+  box-sizing:border-box;
+}
   
 .icon-btn:hover{ filter:brightness(0.98); 
 }
+  
 .icon-btn:active{ transform:translateY(1px); 
 }
 
@@ -753,9 +763,9 @@ button:disabled{
  <div class="app">
 
   <div class="headerbar">
-    <h1 class="app-title">Crew Dawg Calculator</h1>
+  <h1 class="app-title">Crew Dawg Calculator</h1>
     <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-      &#x21bb;
+      <span class="reset-symbol"></span>
     </button>
   </div>
 
