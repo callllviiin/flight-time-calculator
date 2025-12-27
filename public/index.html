@@ -78,6 +78,11 @@ body{
   padding:0;
 }
 
+.reset-icon{
+  display:block;
+  transform: translateY(1px);
+}
+  
 .icon-btn:hover{ filter:brightness(0.98); 
 }
 .icon-btn:active{ transform:translateY(1px); 
@@ -755,7 +760,7 @@ button:disabled{
   <div class="headerbar">
     <h1 class="app-title">Crew Dawg Calculator</h1>
     <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-      &#x21bb;
+      <span class="reset-icon">&#x21bb;</span>
     </button>
   </div>
 
