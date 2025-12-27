@@ -1850,7 +1850,7 @@ if(scrollToTop){
   augmentedBox.checked = false;
   syncToggleLabels();
 
-  // clear ICAO hints
+  // clear ALL hints (ICAO + time + local)
   const tHint = document.getElementById("takeoffIcaoHint");
   const lHint = document.getElementById("landingIcaoHint");
   if(tHint){
@@ -1862,10 +1862,21 @@ if(scrollToTop){
     lHint.classList.remove("bad");
   }
 
+  // Time hints (red "Invalid time" under Zulu)
+  const tkTimeHint = document.getElementById("takeoffTimeHint");
+  const ldTimeHint = document.getElementById("landingTimeHint");
+  if(tkTimeHint) tkTimeHint.textContent = "";
+  if(ldTimeHint) ldTimeHint.textContent = "";
+
+  // Local hints (red "Invalid time" under Local)
+  const tkLocalHint = document.getElementById("takeoffLocalHint");
+  const ldLocalHint = document.getElementById("landingLocalHint");
+  if(tkLocalHint) tkLocalHint.textContent = "";
+  if(ldLocalHint) ldLocalHint.textContent = "";
+
+
   // recalc button enabled/disabled correctly
   setCalcEnabled();
-
-
 }
 
 [takeoffTime, landingTime].forEach(inp => {
