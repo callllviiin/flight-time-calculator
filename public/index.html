@@ -62,22 +62,24 @@ body{
 }
 
 .icon-btn{
-  font-size:12px;
-  letter-spacing:0.5px;
-}
-
-.reset-svg{
-  width:18px;
-  height:18px;
-  display:block;
-
-  /* center visual weight */
-  transform: translate(-1px, 1.5px);
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  border:2px solid #cfcfcf;
+  background:#fff;
+  cursor:pointer;
+  font-size:28px;
+  font-weight:700;   /* adds authority */
+  line-height:0;
+  display:grid;
+  place-items:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  color:#1f2a44;
+  padding:0;
 }
   
 .icon-btn:hover{ filter:brightness(0.98); 
 }
-  
 .icon-btn:active{ transform:translateY(1px); 
 }
 
@@ -751,10 +753,10 @@ button:disabled{
  <div class="app">
 
   <div class="headerbar">
-  <h1 class="app-title">Crew Dawg Calculator</h1>
-   <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-  Reset
-</button>
+    <h1 class="app-title">Crew Dawg Calculator</h1>
+    <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
+      &#x21bb;
+    </button>
   </div>
 
     <div class="form-grid">
