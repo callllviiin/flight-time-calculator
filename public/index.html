@@ -425,6 +425,16 @@ button:disabled{
   opacity:0;
   max-height:0 !important;
 }
+
+/* Output panel: idle (small) vs expanded (results) */
+.output.idle{
+  padding:10px 12px;
+  border-color:#cfcfcf;
+  background:#fff;
+  font-size:12px;
+  color:#444;
+  line-height:1.4;
+}
   
 .row{
   display:flex;
@@ -841,9 +851,19 @@ function showRuntimeError(err){
   `;
 }
 
+function setOutputIdle(message){
+  const out = document.getElementById("output");
+  if(!out) return;
+
+  out.classList.add("idle");
+out.style.display = "block";
+out.style.opacity = "1";
+out.innerHTML = message || "Enter inputs, then press Calculate.";
+}
+  
 function markDirty(){
   if(!hasCalculated) return;
-  if(isCalculating) return;   // 👈 THIS is the key line
+  if(isCalculating) return;
 
   isDirty = true;
 
@@ -1253,6 +1273,9 @@ function calculate(){
       if(landingTime.value !== landing) landingTime.value = landing;
     const augmented = augmentedBox.checked;
     const out = document.getElementById("output");
+      out.classList.remove("idle");     // results mode
+      out.style.display = "block";
+  
       out.style.display = "block";
       out.classList.remove("collapsing");
 
@@ -1620,13 +1643,18 @@ if(out){
     }
 
 setTimeout(() => {
-  out.innerHTML = "";
-  out.style.display = "none";
+  // 1) remove collapse state
   out.classList.remove("collapsing");
+
+  // 2) clear styles so output can expand later
   out.style.maxHeight = "";
   out.style.opacity = "";
+  out.style.overflow = "";
 
-  // ✅ focus AFTER everything finishes, without scrolling
+  // 3) return to the small “gentle message” box
+  setOutputIdle("Enter inputs, then press Calculate.");
+
+  // 4) focus first box WITHOUT snapping the page
   takeoffTime.focus({ preventScroll: true });
 }, 450);
 
@@ -1736,6 +1764,8 @@ landingLocal.addEventListener("input", () => {
   setCalcEnabled(); // NEW
   if(hasCalculated) onUserEdit();   // or markDirty()
 });
+  
+setOutputIdle();
 
   setCalcEnabled();
 </script>
