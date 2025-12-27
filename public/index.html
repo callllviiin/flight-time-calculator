@@ -79,12 +79,34 @@ body{
 }
 
 .reset-symbol{
+  position:relative;
   width:16px;
   height:16px;
+  box-sizing:border-box;
+
   border:2px solid currentColor;
   border-right-color: transparent;
   border-radius:50%;
-  box-sizing:border-box;
+}
+
+/* arrowhead */
+.reset-symbol::after{
+  content:"";
+  position:absolute;
+
+  width:0;
+  height:0;
+
+  /* triangle */
+  border-left:6px solid currentColor;
+  border-top:4px solid transparent;
+  border-bottom:4px solid transparent;
+
+  /* position at the "open" end of the arc */
+  right:-2px;
+  top:3px;
+
+  transform: rotate(20deg);
 }
   
 .icon-btn:hover{ filter:brightness(0.98); 
