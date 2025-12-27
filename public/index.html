@@ -1254,6 +1254,13 @@ function calculate(){
     const augmented = augmentedBox.checked;
     const out = document.getElementById("output");
       out.style.display = "block";
+      out.classList.remove("collapsing");
+
+      // start collapsed
+      out.style.overflow = "hidden";
+      out.style.maxHeight = "0px";
+      out.style.opacity = "0";
+
 
     if(!isHHMM(takeoff) || !isHHMM(landing)){
       out.innerHTML = "Please enter times in HHMM format (0000–2359).";
@@ -1411,6 +1418,18 @@ function calculate(){
       
     `;
 
+// ✅ animate expansion after content is injected
+requestAnimationFrame(() => {
+  out.style.opacity = "1";
+  out.style.maxHeight = out.scrollHeight + "px";
+
+  // after the expand finishes, remove maxHeight so it can grow naturally later
+  setTimeout(() => {
+    out.style.maxHeight = "";
+    out.style.overflow = "";
+  }, 280);
+});
+    
 const reset2 = document.getElementById("resetBtn2");
 reset2?.addEventListener("click", () => {
   resetAll({ scrollToTop: true });
@@ -1600,14 +1619,17 @@ if(out){
       }
     }
 
-    // after the animation, actually clear and hide
-    setTimeout(() => {
-      out.innerHTML = "";
-      out.style.display = "none";
-      out.classList.remove("collapsing");
-      out.style.maxHeight = "";
-      out.style.opacity = "";
-    }, 280);
+setTimeout(() => {
+  out.innerHTML = "";
+  out.style.display = "none";
+  out.classList.remove("collapsing");
+  out.style.maxHeight = "";
+  out.style.opacity = "";
+
+  // ✅ focus AFTER everything finishes, without scrolling
+  takeoffTime.focus({ preventScroll: true });
+}, 280);
+
   });
 }
 
@@ -1630,8 +1652,6 @@ if(out){
   // recalc button enabled/disabled correctly
   setCalcEnabled();
 
-  // cursor back to first box
-  takeoffTime.focus();
 
 }
 
