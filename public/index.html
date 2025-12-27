@@ -1203,6 +1203,15 @@ let isDirty = false;
 let isCalculating = false;   // NEW
 let briefOffsetMin = 150;
 let isEditingZulu = false;
+
+  /* Local time listeners (sync only; calculate only after first button press) */
+const takeoffTime = document.getElementById("takeoffTime");
+const takeoffICAO = document.getElementById("takeoffICAO");
+const takeoffLocal = document.getElementById("takeoffLocal");
+
+const landingTime = document.getElementById("landingTime");
+const landingICAO = document.getElementById("landingICAO");
+const landingLocal = document.getElementById("landingLocal");
   
 /* ----------------- main calc + render ----------------- */
 function calculate(){
@@ -1388,11 +1397,14 @@ reset2?.addEventListener("click", () => {
       if(v == null) return;
       briefOffsetMin = v;
     });
+    
+    setCalcEnabled();
 
   }catch(err){
     showRuntimeError(err);
   }
 }
+
 
 /* ----------------- local time sync ----------------- */
 let suppressSync = false;
@@ -1558,29 +1570,6 @@ function resetAll({ scrollToTop = false } = {}){
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
-
-if(lHint){
-  lHint.textContent = "";
-  lHint.classList.remove("bad");
-}
-  
-  // put cursor back at first box
-  takeoffTime.focus();
-
-  hasCalculated = false;
-
-});
-
-  
-
-/* Local time listeners (sync only; calculate only after first button press) */
-const takeoffTime = document.getElementById("takeoffTime");
-const takeoffICAO = document.getElementById("takeoffICAO");
-const takeoffLocal = document.getElementById("takeoffLocal");
-
-const landingTime = document.getElementById("landingTime");
-const landingICAO = document.getElementById("landingICAO");
-const landingLocal = document.getElementById("landingLocal");
 
 [takeoffTime, landingTime].forEach(inp => {
   inp.addEventListener("focus", () => {
