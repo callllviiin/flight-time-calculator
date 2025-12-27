@@ -1290,11 +1290,10 @@ function calculate(){
       out.style.display = "block";
       out.classList.remove("collapsing");
 
-      // start collapsed
-      out.style.overflow = "hidden";
-      out.style.maxHeight = "0px";
-      out.style.opacity = "0";
-
+      // consistent expand animation (uses the same .collapsing transform system)
+      out.style.height = "";
+      out.style.overflow = "";
+      out.classList.add("collapsing");
 
     if(!isHHMM(takeoff) || !isHHMM(landing)){
       out.innerHTML = "Please enter times in HHMM format (0000–2359).";
@@ -1452,16 +1451,9 @@ function calculate(){
       
     `;
 
-// ✅ animate expansion after content is injected
+// ✅ animate expansion after content is injected (reliable every time)
 requestAnimationFrame(() => {
-  out.style.opacity = "1";
-  out.style.maxHeight = out.scrollHeight + "px";
-
-  // after the expand finishes, remove maxHeight so it can grow naturally later
-  setTimeout(() => {
-    out.style.maxHeight = "";
-    out.style.overflow = "";
-  }, 450);
+  out.classList.remove("collapsing"); // transitions to full size + opacity
 });
     
 const reset2 = document.getElementById("resetBtn2");
@@ -1646,7 +1638,16 @@ if(out){
 
   // Start visual-only collapse (doesn't change layout height)
   out.classList.add("collapsing");
-
+  
+// Start scroll-to-top immediately (so it happens during the collapse)
+if(scrollToTop){
+  const root = document.getElementById("pageRoot");
+  if(root && root.scrollIntoView){
+    root.scrollIntoView({ behavior: "smooth", block: "start" });
+  }else{
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
   const finish = () => {
     out.removeEventListener("transitionend", onEnd);
 
@@ -1664,16 +1665,6 @@ if(out){
 
       // Restore scroll position (counters any micro-adjust from DOM swap)
       window.scrollTo({ top: y, left: 0, behavior: "auto" });
-
-      // If this reset was the bottom reset, then scroll to top now
-      if(scrollToTop){
-        const root = document.getElementById("pageRoot");
-        if(root && root.scrollIntoView){
-          root.scrollIntoView({ behavior: "smooth", block: "start" });
-        }else{
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }
 
       // Focus without causing scroll jumps
       takeoffTime.focus({ preventScroll: true });
