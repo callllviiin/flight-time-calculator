@@ -78,35 +78,10 @@ body{
   padding:0;
 }
 
-.reset-symbol{
-  position:relative;
-  width:16px;
-  height:16px;
-  box-sizing:border-box;
-
-  border:2px solid currentColor;
-  border-left-color: transparent;   /* open arc on left */
-  border-bottom-color: transparent;
-  border-radius:50%;
-}
-
-/* arrowhead at end of arc */
-.reset-symbol::after{
-  content:"";
-  position:absolute;
-
-  width:0;
-  height:0;
-
-  border-left:5px solid currentColor;
-  border-top:4px solid transparent;
-  border-bottom:4px solid transparent;
-
-  /* position arrowhead ON the arc */
-  right:-1px;
-  top:-1px;
-
-  transform: rotate(35deg);
+.reset-svg{
+  width:18px;
+  height:18px;
+  display:block;
 }
   
 .icon-btn:hover{ filter:brightness(0.98); 
@@ -786,9 +761,12 @@ button:disabled{
 
   <div class="headerbar">
   <h1 class="app-title">Crew Dawg Calculator</h1>
-    <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-      <span class="reset-symbol"></span>
-    </button>
+   <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
+  <svg class="reset-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 12a8 8 0 1 1-2.34-5.66" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M20 4v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
   </div>
 
     <div class="form-grid">
