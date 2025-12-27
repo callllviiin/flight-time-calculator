@@ -813,10 +813,13 @@ function showRuntimeError(err){
 
 function markDirty(){
   if(!hasCalculated) return;
+
   isDirty = true;
 
   const btn = document.getElementById("calcBtn");
-  if(btn) btn.textContent = "Re-Calculate";
+  if(btn && btn.textContent !== "Re-Calculate"){
+    btn.textContent = "Re-Calculate";
+  }
 }
 
 function clearDirty(){
