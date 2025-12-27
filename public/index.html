@@ -1409,14 +1409,15 @@ if(!isICAO(icao) || !getTimeZoneFromICAO(icao)){
   return;
 }
 
-  const z = zuluInput.value.trim();
-  if(!isHHMM(z)){
-    suppressSync = true;
-    localInput.value = "";          // clear stale local while user edits zulu
-    if(dayEl) dayEl.textContent = "";
-    suppressSync = false;
-    return;
-  }
+const z = zuluInput.value.trim();
+if(!isHHMM(z)){
+  // If Zulu isn't valid yet, do NOT wipe Local.
+  // Local-first users may have typed Local already.
+  suppressSync = true;
+  if(dayEl) dayEl.textContent = "";
+  suppressSync = false;
+  return;
+}
 
   const zM = hhmmToMinutes(z);
   const res = zuluToLocalWithDay(zM, icao, z);
@@ -1591,6 +1592,12 @@ const landingLocal = document.getElementById("landingLocal");
     const dayId      = (inp.id === "takeoffICAO") ? "takeoffLocalDay" : "landingLocalDay";
 
     syncLocalFromZulu(zuluInput, inp, localInput, dayId);
+    // Local-first support:
+    // If user already typed Local, and ICAO just became valid/mapped, fill Zulu from Local.
+    if(isICAO(clean) && getTimeZoneFromICAO(clean) && isHHMM(localInput.value.trim())){
+      syncZuluFromLocal(localInput, inp, zuluInput);
+      setCalcEnabled(); // important: button enables when Zulu is auto-filled
+    }
 
     if (hasCalculated) onUserEdit();
   });
