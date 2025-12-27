@@ -1615,9 +1615,17 @@ function syncToggleLabels(){
   basicLbl.classList.toggle("active", !augmentedBox.checked);
   augLbl.classList.toggle("active", augmentedBox.checked);
 }
+  
 augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
+
+  // mark changes so Calculate -> Re-Calculate (but do NOT auto-run)
+  onUserEdit();
+
+  // keep button enabled/disabled based on time validity
+  setCalcEnabled();
 });
+
 syncToggleLabels();
 
 document.getElementById("calcBtn").addEventListener("click", () => {
