@@ -823,6 +823,11 @@ function markDirty(){
   }
 }
 
+function onUserEdit(){
+  if(!hasCalculated) return;
+  markDirty();
+}
+  
 function clearDirty(){
   isDirty = false;
 
@@ -1365,7 +1370,6 @@ function calculate(){
       const v = parseHPlusMM(e.target.value);
       if(v == null) return;
       briefOffsetMin = v;
-      if(hasCalculated && !isEditingZulu) markDirty();
     });
 
   }catch(err){
@@ -1463,7 +1467,6 @@ function syncToggleLabels(){
 }
 augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
-  if(hasCalculated && !isEditingZulu) markDirty();
 });
 syncToggleLabels();
 
@@ -1554,7 +1557,9 @@ const landingLocal = document.getElementById("landingLocal");
 
     if(inp === takeoffTime) updateTimeHint(takeoffTime, document.getElementById("takeoffTimeHint"));
     if(inp === landingTime) updateTimeHint(landingTime, document.getElementById("landingTimeHint"));
-  setCalcEnabled();
+
+    setCalcEnabled();
+    onUserEdit();   // 👈 THIS is the key line
   });
 });
 
@@ -1568,8 +1573,6 @@ const landingLocal = document.getElementById("landingLocal");
     if(inp === landingTime) syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
     if(inp === takeoffLocal) syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
     if(inp === landingLocal) syncZuluFromLocal(landingLocal, landingICAO, landingTime);
-
-    if(hasCalculated && !isEditingZulu) markDirty();
   });
 });
   
@@ -1589,26 +1592,26 @@ const landingLocal = document.getElementById("landingLocal");
 
     syncLocalFromZulu(zuluInput, inp, localInput, dayId);
 
-    if (hasCalculated) markDirty();
+    if (hasCalculated) onUserEdit();
   });
 });
   
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
-  if(hasCalculated && !isEditingZulu) markDirty();
+  
 }));
 takeoffLocal.addEventListener("input", () => {
   syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
-  if(hasCalculated && !isEditingZulu) markDirty();
+  
 });
 
 [landingTime, landingICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
-  if(hasCalculated && !isEditingZulu) markDirty();
+  
 }));
 landingLocal.addEventListener("input", () => {
   syncZuluFromLocal(landingLocal, landingICAO, landingTime);
-  if(hasCalculated && !isEditingZulu) markDirty();
+  
 });
   setCalcEnabled();
 </script>
