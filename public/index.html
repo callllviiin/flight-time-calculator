@@ -811,6 +811,21 @@ function showRuntimeError(err){
   `;
 }
 
+function markDirty(){
+  if(!hasCalculated) return;
+  isDirty = true;
+
+  const btn = document.getElementById("calcBtn");
+  if(btn) btn.textContent = "Re-Calculate";
+}
+
+function clearDirty(){
+  isDirty = false;
+
+  const btn = document.getElementById("calcBtn");
+  if(btn) btn.textContent = "Calculate";
+}
+  
 function updateTimeHint(timeInput, hintEl){
   if(!hintEl) return;
 
@@ -1175,7 +1190,8 @@ function localToZuluMinutes(localMins, icao, anchorZuluHHMM){
 
 /* ----------------- state ----------------- */
 let hasCalculated = false;
-let briefOffsetMin = 150; // default 2+30
+let isDirty = false;          // NEW: inputs changed since last calculate
+let briefOffsetMin = 150;     // default 2+30
 let isEditingZulu = false;
   
 /* ----------------- main calc + render ----------------- */
@@ -1344,7 +1360,7 @@ function calculate(){
       const v = parseHPlusMM(e.target.value);
       if(v == null) return;
       briefOffsetMin = v;
-      if(hasCalculated && !isEditingZulu) calculate();
+      if(hasCalculated && !isEditingZulu) markDirty();
     });
 
   }catch(err){
@@ -1442,17 +1458,18 @@ function syncToggleLabels(){
 }
 augmentedBox.addEventListener("change", () => {
   syncToggleLabels();
-  if(hasCalculated && !isEditingZulu) calculate();
+  if(hasCalculated && !isEditingZulu) markDirty();
 });
 syncToggleLabels();
 
 document.getElementById("calcBtn").addEventListener("click", () => {
   hasCalculated = true;
+  isDirty = false;
+  clearDirty();
   calculate();
 
-  // smooth scroll to results
   const outEl = document.getElementById("output");
-if(outEl) outEl.scrollIntoView({ behavior:"smooth", block:"start" });
+  if(outEl) outEl.scrollIntoView({ behavior:"smooth", block:"start" });
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
@@ -1485,7 +1502,10 @@ const lHint = document.getElementById("landingIcaoHint");
 if(tHint){
   tHint.textContent = "";
   tHint.classList.remove("bad");
+isDirty = false;
+clearDirty();
 }
+  
 if(lHint){
   lHint.textContent = "";
   lHint.classList.remove("bad");
@@ -1542,7 +1562,7 @@ const landingLocal = document.getElementById("landingLocal");
     if(inp === takeoffLocal) syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
     if(inp === landingLocal) syncZuluFromLocal(landingLocal, landingICAO, landingTime);
 
-    if(hasCalculated && !isEditingZulu) calculate();
+    if(hasCalculated && !isEditingZulu) markDirty();
   });
 });
   
@@ -1562,26 +1582,26 @@ const landingLocal = document.getElementById("landingLocal");
 
     syncLocalFromZulu(zuluInput, inp, localInput, dayId);
 
-    if (hasCalculated) calculate();
+    if (hasCalculated) markDirty();
   });
 });
   
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
-  if(hasCalculated && !isEditingZulu) calculate();
+  if(hasCalculated && !isEditingZulu) markDirty();
 }));
 takeoffLocal.addEventListener("input", () => {
   syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
-  if(hasCalculated && !isEditingZulu) calculate();
+  if(hasCalculated && !isEditingZulu) markDirty();
 });
 
 [landingTime, landingICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
-  if(hasCalculated && !isEditingZulu) calculate();
+  if(hasCalculated && !isEditingZulu) markDirty();
 }));
 landingLocal.addEventListener("input", () => {
   syncZuluFromLocal(landingLocal, landingICAO, landingTime);
-  if(hasCalculated && !isEditingZulu) calculate();
+  if(hasCalculated && !isEditingZulu) markDirty();
 });
   setCalcEnabled();
 </script>
