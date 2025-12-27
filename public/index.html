@@ -816,11 +816,13 @@ button:disabled{
         <div id="takeoffIcaoHint" class="icao-hint time-hint"></div>
       </div>
 
-        <div class="floating-wrap local-wrap">
-          <div class="floating-label">Local</div>
+      <div class="floating-wrap local-wrap">
+        <div class="floating-label">Local</div>
           <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
           <span id="takeoffLocalDay" class="day-shift"></span>
-        </div>
+         <div id="takeoffLocalHint" class="icao-hint bad time-hint"></div>
+      </div>
+
       </div>
 
       <!-- Row 2 -->
@@ -843,9 +845,11 @@ button:disabled{
 
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
-          <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
-          <span id="landingLocalDay" class="day-shift"></span>
-        </div>
+           <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
+            <span id="landingLocalDay" class="day-shift"></span>
+         <div id="landingLocalHint" class="icao-hint bad time-hint"></div>
+      </div>
+
       </div>
 
       <!-- Row 3 -->
@@ -1587,6 +1591,9 @@ function syncLocalFromZulu(zuluInput, icaoInput, localInput, dayElId){
   if(suppressSync) return;
 
   const dayEl = document.getElementById(dayElId);
+const localHintEl = document.getElementById(
+  localInput.id === "takeoffLocal" ? "takeoffLocalHint" : "landingLocalHint"
+);
   const icao = normICAO(icaoInput.value);
 
 // update the hint (takeoff or landing)
@@ -1599,6 +1606,7 @@ if(icao.length === 0){
   suppressSync = true;
   localInput.value = "";
   if(dayEl) dayEl.textContent = "";
+  if(localHintEl) updateTimeHint(localInput, localHintEl);
   suppressSync = false;
   return;
 }
@@ -1633,6 +1641,10 @@ if(!isHHMM(z)){
     localInput.value = minutesToHHMM(res.localMins);
     if(dayEl) dayEl.textContent = formatDayShift(res.dayShift);
   }
+
+  // NEW: keep Local hint in sync when we auto-write Local
+  if(localHintEl) updateTimeHint(localInput, localHintEl);
+
 
   suppressSync = false;
 }
@@ -1866,7 +1878,6 @@ if(scrollToTop){
   });
 });
   
-// Auto-normalize inputs (prevents invisible spaces / weird chars from breaking logic)
 [takeoffTime, landingTime, takeoffLocal, landingLocal].forEach(inp => {
   inp.addEventListener("input", () => {
     const clean = normHHMM(inp.value);
@@ -1874,6 +1885,10 @@ if(scrollToTop){
 
     if(inp === takeoffTime) updateTimeHint(takeoffTime, document.getElementById("takeoffTimeHint"));
     if(inp === landingTime) updateTimeHint(landingTime, document.getElementById("landingTimeHint"));
+
+    // NEW: Local time gentle validation (does not affect Calculate enable)
+    if(inp === takeoffLocal) updateTimeHint(takeoffLocal, document.getElementById("takeoffLocalHint"));
+    if(inp === landingLocal) updateTimeHint(landingLocal, document.getElementById("landingLocalHint"));
 
     setCalcEnabled();
     onUserEdit();
