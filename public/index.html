@@ -1273,13 +1273,16 @@ function calculate(){
       if(landingTime.value !== landing) landingTime.value = landing;
     const augmented = augmentedBox.checked;
     const out = document.getElementById("output");
-      // results mode
+     // results mode
       out.classList.remove("idle");
       out.style.display = "block";
 
-      // Start in collapsed visual state, and force the browser to commit it
-      out.classList.add("collapsing");
-      out.getBoundingClientRect();
+      // PRIME a collapsed start-state instantly (no transition), so expand always animates
+    const prevTransition = out.style.transition;
+      out.style.transition = "none";
+      out.classList.add("collapsing");     // transform: scaleY(0), opacity:0
+      out.getBoundingClientRect();         // force reflow to commit the collapsed state
+      out.style.transition = prevTransition;
 
     if(!isHHMM(takeoff) || !isHHMM(landing)){
       out.innerHTML = "Please enter times in HHMM format (0000–2359).";
@@ -1438,10 +1441,12 @@ function calculate(){
     `;
 
 requestAnimationFrame(() => {
-  // Force a reflow AFTER innerHTML is set, then expand
-  out.getBoundingClientRect();
-  out.classList.remove("collapsing");
+  // One more frame ensures the collapsed state is definitely painted
+  requestAnimationFrame(() => {
+    out.classList.remove("collapsing"); // expand animates every time
+  });
 });
+
     
 const reset2 = document.getElementById("resetBtn2");
 reset2?.addEventListener("click", () => {
