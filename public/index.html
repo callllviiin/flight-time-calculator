@@ -800,7 +800,7 @@ button:disabled{
 
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
-          <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="3">
+          <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
           <span id="takeoffLocalDay" class="day-shift"></span>
         </div>
       </div>
@@ -812,20 +812,20 @@ button:disabled{
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
           <div id="landingTimeHint" class="icao-hint bad"></div>
-          <input id="landingTime" class="box" placeholder="HHMM" maxlength="4" tabindex="4">
+          <input id="landingTime" class="box" placeholder="HHMM" maxlength="4" tabindex="3">
         </div>
 
         <div class="at">at</div>
 
       <div class="icao-wrap">
-        <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;" tabindex="5">
+        <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;" tabindex="4">
       <div id="landingIcaoHint" class="icao-hint"></div>
     </div>
 
 
         <div class="floating-wrap local-wrap">
           <div class="floating-label">Local</div>
-          <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="6">
+          <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
           <span id="landingLocalDay" class="day-shift"></span>
         </div>
       </div>
@@ -837,7 +837,7 @@ button:disabled{
   <!-- Use columns 2 through 5 for the 3 evenly-spaced items -->
   <div class="third-content-wide">
     <div class="aircraft-wrap">
-      <select id="aircraft" tabindex="7">
+      <select id="aircraft" tabindex="-1">
         <option selected>KC-135</option>
         <option>KC-46</option>
         <option>C-5</option>
@@ -856,7 +856,7 @@ button:disabled{
     <div class="crew-toggle">
       <span id="basicLbl" class="crew-label form-label active">Basic</span>
       <label class="switch">
-        <input type="checkbox" id="augmented" tabindex="8">
+        <input type="checkbox" id="augmented" tabindex="-1">
         <span class="slider"></span>
       </label>
       <span id="augLbl" class="crew-label form-label">Augmented</span>
@@ -866,7 +866,7 @@ button:disabled{
 
     </div>
 
-    <button id="calcBtn" tabindex="9">Calculate</button>
+    <button id="calcBtn" tabindex="5">Calculate</button>
 
     <div id="output" class="output"></div>
 
