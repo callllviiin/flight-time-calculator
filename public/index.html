@@ -813,6 +813,7 @@ function showRuntimeError(err){
 
 function markDirty(){
   if(!hasCalculated) return;
+  if(isCalculating) return;   // 👈 THIS is the key line
 
   isDirty = true;
 
@@ -1193,8 +1194,9 @@ function localToZuluMinutes(localMins, icao, anchorZuluHHMM){
 
 /* ----------------- state ----------------- */
 let hasCalculated = false;
-let isDirty = false;          // NEW: inputs changed since last calculate
-let briefOffsetMin = 150;     // default 2+30
+let isDirty = false;
+let isCalculating = false;   // NEW
+let briefOffsetMin = 150;
 let isEditingZulu = false;
   
 /* ----------------- main calc + render ----------------- */
@@ -1466,13 +1468,15 @@ augmentedBox.addEventListener("change", () => {
 syncToggleLabels();
 
 document.getElementById("calcBtn").addEventListener("click", () => {
+  isCalculating = true;
+
   hasCalculated = true;
   isDirty = false;
   clearDirty();
+
   calculate();
 
-  const outEl = document.getElementById("output");
-  if(outEl) outEl.scrollIntoView({ behavior:"smooth", block:"start" });
+  isCalculating = false;
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
