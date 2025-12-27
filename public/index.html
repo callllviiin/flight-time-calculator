@@ -446,14 +446,15 @@ button:disabled{
   letter-spacing:0.8px;
 
   font-size:14px;
-  font-weight:800;
-  color:rgba(31,42,68,0.70);   /* “background message” feel */
+  font-weight:600;                 /* less bold */
+  color:rgba(31,42,68,0.55);        /* lighter grey */
+  line-height:1;                   /* better visual centering */
+
 
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  line-height:1.2;
 }
   
 .row{
@@ -1652,25 +1653,15 @@ if(out){
   // Compute the target idle scale so we shrink directly to idle size (not to zero)
 const startHeight2 = out.getBoundingClientRect().height;
 
-// Measure what the idle panel height should be (offscreen clone)
-const clone = out.cloneNode(true);
-clone.classList.add("idle");
-clone.classList.remove("collapsing", "collapsing-to-idle");
-clone.style.position = "absolute";
-clone.style.visibility = "hidden";
-clone.style.pointerEvents = "none";
-clone.style.height = "";
-clone.style.maxHeight = "";
-clone.style.overflow = "visible";
-clone.innerHTML = "Enter inputs, then press Calculate";
-document.body.appendChild(clone);
-const idleHeight = clone.getBoundingClientRect().height || 52;
-clone.remove();
+  // --- shrink directly to fixed idle size (52px), no clone measurement ---
+out.classList.remove("collapsing");          // important: prevent "expand blip"
+out.classList.remove("collapsing-to-idle");  // clear any prior state
 
-const idleScale = Math.max(0.15, Math.min(1, idleHeight / Math.max(1, startHeight2)));
+const idleHeight = 52; // matches .output.idle height in CSS
+const startH = Math.max(1, out.getBoundingClientRect().height);
+const idleScale = Math.max(0.15, Math.min(1, idleHeight / startH));
+
 out.style.setProperty("--idleScale", String(idleScale));
-
-// Start visual-only shrink to idle size
 out.classList.add("collapsing-to-idle");
   
 // Start scroll-to-top immediately (so it happens during the collapse)
@@ -1686,7 +1677,11 @@ if(scrollToTop){
     out.removeEventListener("transitionend", onEnd);
 
     // Swap to idle content while still invisible (prevents “Crew Timing” flash)
-    setOutputIdle("Enter inputs, then press Calculate");
+    // Swap to idle content cleanly (no flash)
+    const prevTransition = out.style.transition;
+      out.style.transition = "none";
+        setOutputIdle("Enter inputs, then press Calculate");
+      out.style.transition = prevTransition;
 
     // Capture scroll position to prevent tiny jumps during DOM swap
     const y = window.scrollY;
