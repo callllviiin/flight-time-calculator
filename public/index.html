@@ -1659,6 +1659,28 @@ const out = document.getElementById("output");
 if(out){
   // Ensure output is measurable
   out.style.display = "block";
+// --- TOP RESET SAFETY: prevent "pop open then collapse" ---
+  out.classList.remove("collapsing");
+  out.classList.remove("collapsing-to-idle");
+  out.style.removeProperty("--idleScale");
+
+// If we're already idle, just stay idle (no animation, no flashes)
+if(out.classList.contains("idle")){
+  out.classList.remove("fixed-expanded");
+  out.style.height = "";
+  out.style.overflow = "";
+  setOutputIdle("Enter inputs, then press Calculate");
+  takeoffTime.focus({ preventScroll: true });
+  return;
+}
+
+// Clear fixed-expanded lock BEFORE collapsing so it can't re-expand first
+out.classList.remove("fixed-expanded");
+out.style.height = "";
+out.style.overflow = "";
+out.getBoundingClientRect(); // commit cleared state
+
+  
 // Ensure we're in a stable expanded layout height before collapsing
 if(out.dataset.expandedH){
     out.classList.add("fixed-expanded");
