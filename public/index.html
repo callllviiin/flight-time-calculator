@@ -392,6 +392,17 @@ button:disabled{
   border:1px solid #1f2a44;  /* same as button background */
 }
 
+/* Visual-only collapse (prevents scroll snap during reset) */
+.output{
+  transform-origin: top;
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.output.collapsing{
+  opacity: 0;
+  transform: scaleY(0);
+}
+  
 .output hr{
   margin:14px 0;
 }
@@ -415,15 +426,15 @@ button:disabled{
   opacity:0.55;
 }
 
-/* Smooth collapse for output on reset */
+/* Reset collapse uses visual-only animation (transform), not max-height */
 .output{
-  overflow:hidden;
-  transition: max-height 420ms ease, opacity 420ms ease;
+  transform-origin: top;
+  transition: opacity 260ms ease, transform 260ms ease;
 }
 
 .output.collapsing{
-  opacity:0;
-  max-height:0;
+  opacity: 0;
+  transform: scaleY(0);
 }
 
 /* Output panel: idle (small) vs expanded (results) */
@@ -1619,39 +1630,67 @@ function resetAll({ scrollToTop = false } = {}){
 
 const out = document.getElementById("output");
 if(out){
-  // animate collapse instead of instant hide
-  out.style.display = "block";                // ensure it's measurable
-  out.classList.remove("collapsing");
+  // Ensure output is measurable
+  out.style.display = "block";
 
-  // set current height as max-height so transition has a start point
-  out.style.maxHeight = out.scrollHeight + "px";
-  out.style.opacity = "1";
+  // Freeze layout height so collapsing does NOT yank the scroll position
+  const startHeight = out.getBoundingClientRect().height;
+  out.style.height = startHeight + "px";
   out.style.overflow = "hidden";
-  
-  // next frame: trigger collapse
-  requestAnimationFrame(() => {
-    out.classList.add("collapsing");
-    out.style.maxHeight = "0px";
 
-setTimeout(() => {
-  out.classList.remove("collapsing");
-  out.style.maxHeight = "";
-  out.style.opacity = "";
-  out.style.overflow = "";
+  // Ensure we're not in idle mode while collapsing (prevents style flicker)
+  out.classList.remove("idle");
 
-  setOutputIdle("Enter inputs, then press Calculate.");
+  // Force a style flush so the transition always fires
+  out.getBoundingClientRect();
 
-  if(scrollToTop){
-    const root = document.getElementById("pageRoot");
-    if(root && root.scrollIntoView){
-      root.scrollIntoView({ behavior: "smooth", block: "start" });
-    }else{
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }
+  // Start visual-only collapse (doesn't change layout height)
+  out.classList.add("collapsing");
 
-  takeoffTime.focus({ preventScroll: true });
-}, 450);
+  const finish = () => {
+    out.removeEventListener("transitionend", onEnd);
+
+    // Swap to idle content while still invisible (prevents “Crew Timing” flash)
+    setOutputIdle("Enter inputs, then press Calculate.");
+
+    // Capture scroll position to prevent tiny jumps during DOM swap
+    const y = window.scrollY;
+
+    requestAnimationFrame(() => {
+      // Remove collapse class and unfreeze height so idle box takes natural size
+      out.classList.remove("collapsing");
+      out.style.height = "";
+      out.style.overflow = "";
+
+      // Restore scroll position (counters any micro-adjust from DOM swap)
+      window.scrollTo({ top: y, left: 0, behavior: "auto" });
+
+      // If this reset was the bottom reset, then scroll to top now
+      if(scrollToTop){
+        const root = document.getElementById("pageRoot");
+        if(root && root.scrollIntoView){
+          root.scrollIntoView({ behavior: "smooth", block: "start" });
+        }else{
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+
+      // Focus without causing scroll jumps
+      takeoffTime.focus({ preventScroll: true });
+    });
+  };
+
+  const onEnd = (e) => {
+    // Fire only once, when the transform transition ends
+    if(e.propertyName === "transform") finish();
+  };
+
+  out.addEventListener("transitionend", onEnd);
+
+  // Safety fallback in case transitionend doesn't fire
+  setTimeout(finish, 350);
+}
+
 
   });
 }
