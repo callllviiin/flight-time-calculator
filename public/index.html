@@ -431,8 +431,9 @@ button:disabled{
   margin:14px 0;
 }
 
-/* Expanded output: lock height (desktop) to feel like a fixed panel */
+/* Expanded output: behave like a panel without hard pixel-locking */
 .output.fixed-expanded{
+  max-height: 70vh;
   overflow:auto;
 }
 
@@ -1511,15 +1512,11 @@ requestAnimationFrame(() => {
 }else{
   out.classList.remove("collapsing");
 }
-    // After the expand transition finishes, lock the expanded height (desktop only)
+    
 setTimeout(() => {
-      // Always re-measure (prevents stale height causing bottom whitespace)
-      out.dataset.expandedH = String(out.scrollHeight);
-
+      // No hard height lock — just turn on panel behavior
       out.classList.add("fixed-expanded");
-      out.style.height = out.dataset.expandedH + "px";
-      out.style.overflow = "auto";
-    }, 280);
+    }, 280); // slightly > 260ms transition
 
   });
 });
