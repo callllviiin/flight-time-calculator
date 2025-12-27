@@ -85,11 +85,12 @@ body{
   box-sizing:border-box;
 
   border:2px solid currentColor;
-  border-right-color: transparent;
+  border-left-color: transparent;   /* open arc on left */
+  border-bottom-color: transparent;
   border-radius:50%;
 }
 
-/* arrowhead */
+/* arrowhead at end of arc */
 .reset-symbol::after{
   content:"";
   position:absolute;
@@ -97,16 +98,15 @@ body{
   width:0;
   height:0;
 
-  /* triangle */
-  border-left:6px solid currentColor;
+  border-left:5px solid currentColor;
   border-top:4px solid transparent;
   border-bottom:4px solid transparent;
 
-  /* position at the "open" end of the arc */
-  right:-2px;
-  top:3px;
+  /* position arrowhead ON the arc */
+  right:-1px;
+  top:-1px;
 
-  transform: rotate(60deg);
+  transform: rotate(35deg);
 }
   
 .icon-btn:hover{ filter:brightness(0.98); 
