@@ -418,7 +418,7 @@ button:disabled{
 /* Smooth collapse for output on reset */
 .output{
   overflow:hidden;
-  transition: max-height 260ms ease, opacity 260ms ease;
+  transition: max-height 420ms ease, opacity 420ms ease;
 }
 
 .output.collapsing{
@@ -1427,7 +1427,7 @@ requestAnimationFrame(() => {
   setTimeout(() => {
     out.style.maxHeight = "";
     out.style.overflow = "";
-  }, 280);
+  }, 450);
 });
     
 const reset2 = document.getElementById("resetBtn2");
@@ -1628,7 +1628,7 @@ setTimeout(() => {
 
   // ✅ focus AFTER everything finishes, without scrolling
   takeoffTime.focus({ preventScroll: true });
-}, 280);
+}, 450);
 
   });
 }
