@@ -70,17 +70,12 @@ body{
   cursor:pointer;
   font-size:28px;
   font-weight:700;   /* adds authority */
-  line-height:1;
+  line-height:0;
   display:grid;
   place-items:center;
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
   color:#1f2a44;
   padding:0;
-}
-
-.reset-icon{
-  display:block;
-  transform: translateY(1px);
 }
   
 .icon-btn:hover{ filter:brightness(0.98); 
@@ -760,7 +755,7 @@ button:disabled{
   <div class="headerbar">
     <h1 class="app-title">Crew Dawg Calculator</h1>
     <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-      <span class="reset-icon">&#x21bb;</span>
+      &#x21bb;
     </button>
   </div>
 
