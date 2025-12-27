@@ -1309,19 +1309,20 @@ function calculate(){
      // results mode
       out.classList.remove("idle");
       out.style.display = "block";
+    
+// Only animate expand on first-time Calculate (idle -> expanded)
+// Re-Calculate should update in place without re-animating or scrolling
+const doExpandAnim = out.classList.contains("idle");
 
-      // PRIME a collapsed start-state instantly (no transition), so expand always animates
-    const prevTransition = out.style.transition;
-      out.style.transition = "none";
-      out.classList.add("collapsing");     // transform: scaleY(0), opacity:0
-      out.getBoundingClientRect();         // force reflow to commit the collapsed state
-      out.style.transition = prevTransition;
-
-    if(!isHHMM(takeoff) || !isHHMM(landing)){
-      out.innerHTML = "Please enter times in HHMM format (0000–2359).";
-      return;
-    }
-
+if(doExpandAnim){
+  const prevTransition = out.style.transition;
+  out.style.transition = "none";
+  out.classList.add("collapsing");
+  out.getBoundingClientRect();
+  out.style.transition = prevTransition;
+}else{
+  out.classList.remove("collapsing");
+}
     // if the brief offset editor exists (from a previous render), honor it on every calculate
     const existingBrief = document.getElementById("briefOffsetEdit");
     if(existingBrief){
@@ -1476,8 +1477,15 @@ function calculate(){
 requestAnimationFrame(() => {
   // One more frame ensures the collapsed state is definitely painted
   requestAnimationFrame(() => {
-    out.classList.remove("collapsing"); // expand animates every time
-
+   if(doExpandAnim){
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      out.classList.remove("collapsing");
+    });
+  });
+}else{
+  out.classList.remove("collapsing");
+}
     // After the expand transition finishes, lock the expanded height (desktop only)
     setTimeout(() => {
       if(!out.dataset.expandedH){
@@ -1623,8 +1631,11 @@ document.getElementById("calcBtn").addEventListener("click", () => {
 
   // smooth scroll to results (after DOM updates)
   requestAnimationFrame(() => {
-    const outEl = document.getElementById("output");
-    if(outEl) outEl.scrollIntoView({ behavior:"smooth", block:"start" });
+const outEl = document.getElementById("output");
+if(outEl && !isDirty){
+  outEl.scrollIntoView({ behavior:"smooth", block:"start" });
+}
+
   });
 
   isCalculating = false;
