@@ -395,6 +395,25 @@ button:disabled{
 .output hr{
   margin:14px 0;
 }
+
+/* ---------- OUTPUT ACTION BUTTONS (BOTTOM) ---------- */
+.output-actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+
+.output-actions button{
+  margin-top:0;            /* override global button margin */
+  width:100%;
+  padding:12px 12px;
+  font-size:16px;
+  border-radius:10px;
+}
+
+.output-actions button:disabled{
+  opacity:0.55;
+}
   
 .row{
   display:flex;
@@ -1374,13 +1393,9 @@ function calculate(){
       <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
 
 <hr>
-<div style="display:flex; justify-content:center; margin-top:14px;">
-  <button id="resetBtn2" class="icon-btn" title="Reset &amp; return to top" style="width:38px; height:38px; font-size:28px;">
-    &#x21bb;
-  </button>
-</div>
-<div class="subtext" style="text-align:center; margin-top:6px;">
-  Reset (and jump back to the top)
+<div class="output-actions">
+  <button id="resetBtn2" type="button">Reset</button>
+  <button id="crewTextBtn" type="button" disabled>Generate Crew Text</button>
 </div>
       
     `;
@@ -1388,6 +1403,12 @@ function calculate(){
 const reset2 = document.getElementById("resetBtn2");
 reset2?.addEventListener("click", () => {
   resetAll({ scrollToTop: true });
+});
+
+const crewTextBtn = document.getElementById("crewTextBtn");
+crewTextBtn?.addEventListener("click", () => {
+  // Placeholder for Phase 2/2.5
+  // Later: generate text + copy to clipboard
 });
     
     // live-update brief time after first Calculate, without needing to click again
@@ -1509,6 +1530,12 @@ document.getElementById("calcBtn").addEventListener("click", () => {
 
   calculate();
 
+  // smooth scroll to results (after DOM updates)
+  requestAnimationFrame(() => {
+    const outEl = document.getElementById("output");
+    if(outEl) outEl.scrollIntoView({ behavior:"smooth", block:"start" });
+  });
+
   isCalculating = false;
 });
 
@@ -1566,9 +1593,14 @@ function resetAll({ scrollToTop = false } = {}){
   takeoffTime.focus();
 
   // scroll if requested
-  if(scrollToTop){
+if(scrollToTop){
+  const root = document.getElementById("pageRoot");
+  if(root && root.scrollIntoView){
+    root.scrollIntoView({ behavior: "smooth", block: "start" });
+  }else{
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
 }
 
 [takeoffTime, landingTime].forEach(inp => {
