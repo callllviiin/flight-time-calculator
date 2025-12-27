@@ -92,7 +92,7 @@ body{
   font-size:10px;
   font-weight:600;
   line-height:1.1;
-  margin-top:6px;     /* pushes error down away from Zulu label */
+  margin-top:6px;    
   color:#666;
   min-height:14px;    /* ensures stable spacing */
 }
@@ -234,7 +234,7 @@ input{
   left:0;
   right:0;
   top:100%;
-  margin-top:6px;
+  margin-top:2px;
 
   font-size:10px;
   font-weight:600;
@@ -245,7 +245,16 @@ input{
   pointer-events:none;
   white-space:nowrap;
 }
+  
+/* Time-only hint: tuck it under the right side of the Zulu input to avoid overlap */
+.icao-hint.time-hint{
+  left:auto;           /* stop stretching full width */
+  right:0;             /* align to right edge of its input */
+  width:104px;         /* match the box width */
+  text-align:right;    /* text hugs the right edge */
+}
 
+  
 .icao-hint.bad{
   color:#8b0000;
 }
@@ -286,7 +295,8 @@ input{
   width:120px;
   padding:6px;
   font-size:16px;
-  font-weight:700;              /* bold dropdown text */
+  font-weight:700;
+  text-align:center;      /* center text inside dropdown */
   box-sizing:border-box;
 }
 
@@ -795,7 +805,7 @@ button:disabled{
 
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
-          <div id="takeoffTimeHint" class="icao-hint bad"></div>
+          <div id="takeoffTimeHint" class="icao-hint bad time-hint"></div>
           <input id="takeoffTime" class="box" placeholder="HHMM" maxlength="4" tabindex="1">
         </div>
 
@@ -819,7 +829,7 @@ button:disabled{
 
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
-          <div id="landingTimeHint" class="icao-hint bad"></div>
+          <div id="landingTimeHint" class="icao-hint bad time-hint"></div>
           <input id="landingTime" class="box" placeholder="HHMM" maxlength="4" tabindex="3">
         </div>
 
