@@ -1598,21 +1598,23 @@ const landingLocal = document.getElementById("landingLocal");
   
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
-  
 }));
+  
 takeoffLocal.addEventListener("input", () => {
   syncZuluFromLocal(takeoffLocal, takeoffICAO, takeoffTime);
-  
+  setCalcEnabled(); // NEW: enable button once Zulu is auto-filled
+  if(hasCalculated) onUserEdit();   // or markDirty(), whichever you're using
 });
 
 [landingTime, landingICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(landingTime, landingICAO, landingLocal, "landingLocalDay");
-  
 }));
 landingLocal.addEventListener("input", () => {
   syncZuluFromLocal(landingLocal, landingICAO, landingTime);
-  
+  setCalcEnabled(); // NEW
+  if(hasCalculated) onUserEdit();   // or markDirty()
 });
+
   setCalcEnabled();
 </script>
 
