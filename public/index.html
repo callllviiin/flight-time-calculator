@@ -1650,7 +1650,7 @@ if(out){
 
   // Start visual-only collapse (doesn't change layout height)
   // Compute the target idle scale so we shrink directly to idle size (not to zero)
-const startHeight = out.getBoundingClientRect().height;
+const startHeight2 = out.getBoundingClientRect().height;
 
 // Measure what the idle panel height should be (offscreen clone)
 const clone = out.cloneNode(true);
@@ -1667,7 +1667,7 @@ document.body.appendChild(clone);
 const idleHeight = clone.getBoundingClientRect().height || 52;
 clone.remove();
 
-const idleScale = Math.max(0.15, Math.min(1, idleHeight / Math.max(1, startHeight)));
+const idleScale = Math.max(0.15, Math.min(1, idleHeight / Math.max(1, startHeight2)));
 out.style.setProperty("--idleScale", String(idleScale));
 
 // Start visual-only shrink to idle size
