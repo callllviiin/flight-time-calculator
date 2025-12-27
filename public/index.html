@@ -433,8 +433,9 @@ button:disabled{
 
 /* Expanded output: behave like a panel without hard pixel-locking */
 .output.fixed-expanded{
-  max-height: 82vh;
-  overflow:auto;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Mobile: don't lock expanded height */
