@@ -402,6 +402,12 @@ button:disabled{
   opacity: 0;
   transform: scaleY(0);
 }
+
+/* Reset: shrink results down to the idle-size (NOT to zero) */
+.output.collapsing-to-idle{
+  opacity:1;
+  transform: scaleY(var(--idleScale, 0.35));
+}
   
 .output hr{
   margin:14px 0;
@@ -427,24 +433,27 @@ button:disabled{
 }
 
 /* Output panel: idle (pre-calc) */
+/* Output panel: idle (pre-calc) — same height as Calculate button */
 .output.idle{
-  padding:14px 12px;
-  min-height:52px;
+  height:52px;                 /* match Calculate button height */
+  padding:0 12px;              /* no vertical padding (prevents tall box) */
 
-  border:1px solid #1f2a44;
+  border:1px solid #1f2a44;    /* match expanded output + Calculate */
   border-radius:10px;
   background:#fff;
 
-  font-family: Arial, sans-serif;
+  font-variant: small-caps;
+  letter-spacing:0.8px;
+
   font-size:14px;
-  font-weight:600;
-  color:#1f2a44;
+  font-weight:800;
+  color:rgba(31,42,68,0.70);   /* “background message” feel */
 
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  line-height:1.35;
+  line-height:1.2;
 }
   
 .row{
@@ -1640,7 +1649,29 @@ if(out){
   out.getBoundingClientRect();
 
   // Start visual-only collapse (doesn't change layout height)
-  out.classList.add("collapsing");
+  // Compute the target idle scale so we shrink directly to idle size (not to zero)
+const startHeight = out.getBoundingClientRect().height;
+
+// Measure what the idle panel height should be (offscreen clone)
+const clone = out.cloneNode(true);
+clone.classList.add("idle");
+clone.classList.remove("collapsing", "collapsing-to-idle");
+clone.style.position = "absolute";
+clone.style.visibility = "hidden";
+clone.style.pointerEvents = "none";
+clone.style.height = "";
+clone.style.maxHeight = "";
+clone.style.overflow = "visible";
+clone.innerHTML = "Enter inputs, then press Calculate";
+document.body.appendChild(clone);
+const idleHeight = clone.getBoundingClientRect().height || 52;
+clone.remove();
+
+const idleScale = Math.max(0.15, Math.min(1, idleHeight / Math.max(1, startHeight)));
+out.style.setProperty("--idleScale", String(idleScale));
+
+// Start visual-only shrink to idle size
+out.classList.add("collapsing-to-idle");
   
 // Start scroll-to-top immediately (so it happens during the collapse)
 if(scrollToTop){
@@ -1662,7 +1693,9 @@ if(scrollToTop){
 
     requestAnimationFrame(() => {
       // Remove collapse class and unfreeze height so idle box takes natural size
-      out.classList.remove("collapsing");
+      out.classList.remove("collapsing-to-idle");
+      out.style.removeProperty("--idleScale");
+
       out.style.height = "";
       out.style.overflow = "";
 
