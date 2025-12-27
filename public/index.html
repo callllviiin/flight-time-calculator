@@ -813,7 +813,7 @@ button:disabled{
 
       <div class="icao-wrap">
         <input id="takeoffICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;" tabindex="2">
-        <div id="takeoffIcaoHint" class="icao-hint"></div>
+        <div id="takeoffIcaoHint" class="icao-hint time-hint"></div>
       </div>
 
         <div class="floating-wrap local-wrap">
@@ -837,7 +837,7 @@ button:disabled{
 
       <div class="icao-wrap">
         <input id="landingICAO" class="box" placeholder="ICAO" maxlength="4" style="text-transform:uppercase;" tabindex="4">
-      <div id="landingIcaoHint" class="icao-hint"></div>
+      <div id="landingIcaoHint" class="icao-hint time-hint"></div>
     </div>
 
 
@@ -1072,7 +1072,7 @@ function updateIcaoHint(icao, hintEl){
 
   // ICAO looks valid, but isn't mapped
   if(!getTimeZoneFromICAO(key)){
-    hintEl.textContent = "Unknown ICAO";
+    hintEl.textContent = "Invalid ICAO";
     hintEl.classList.add("bad");
     return;
   }
