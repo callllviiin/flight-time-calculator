@@ -426,17 +426,6 @@ button:disabled{
   opacity:0.55;
 }
 
-/* Reset collapse uses visual-only animation (transform), not max-height */
-.output{
-  transform-origin: top;
-  transition: opacity 260ms ease, transform 260ms ease;
-}
-
-.output.collapsing{
-  opacity: 0;
-  transform: scaleY(0);
-}
-
 /* Output panel: idle (small) vs expanded (results) */
 .output.idle{
   padding:10px 12px;
@@ -1284,16 +1273,13 @@ function calculate(){
       if(landingTime.value !== landing) landingTime.value = landing;
     const augmented = augmentedBox.checked;
     const out = document.getElementById("output");
-      out.classList.remove("idle");     // results mode
+      // results mode
+      out.classList.remove("idle");
       out.style.display = "block";
-  
-      out.style.display = "block";
-      out.classList.remove("collapsing");
 
-      // consistent expand animation (uses the same .collapsing transform system)
-      out.style.height = "";
-      out.style.overflow = "";
+      // Start in collapsed visual state, and force the browser to commit it
       out.classList.add("collapsing");
+      out.getBoundingClientRect();
 
     if(!isHHMM(takeoff) || !isHHMM(landing)){
       out.innerHTML = "Please enter times in HHMM format (0000–2359).";
@@ -1451,9 +1437,10 @@ function calculate(){
       
     `;
 
-// ✅ animate expansion after content is injected (reliable every time)
 requestAnimationFrame(() => {
-  out.classList.remove("collapsing"); // transitions to full size + opacity
+  // Force a reflow AFTER innerHTML is set, then expand
+  out.getBoundingClientRect();
+  out.classList.remove("collapsing");
 });
     
 const reset2 = document.getElementById("resetBtn2");
