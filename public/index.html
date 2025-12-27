@@ -426,14 +426,25 @@ button:disabled{
   opacity:0.55;
 }
 
-/* Output panel: idle (small) vs expanded (results) */
+/* Output panel: idle (pre-calc) */
 .output.idle{
-  padding:10px 12px;
-  border-color:#cfcfcf;
+  padding:14px 12px;
+  min-height:52px;
+
+  border:1px solid #1f2a44;
+  border-radius:10px;
   background:#fff;
-  font-size:12px;
-  color:#444;
-  line-height:1.4;
+
+  font-family: Arial, sans-serif;
+  font-size:14px;
+  font-weight:600;
+  color:#1f2a44;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  line-height:1.35;
 }
   
 .row{
@@ -1644,7 +1655,7 @@ if(scrollToTop){
     out.removeEventListener("transitionend", onEnd);
 
     // Swap to idle content while still invisible (prevents “Crew Timing” flash)
-    setOutputIdle("Enter inputs, then press Calculate.");
+    setOutputIdle("Enter inputs, then press Calculate");
 
     // Capture scroll position to prevent tiny jumps during DOM swap
     const y = window.scrollY;
