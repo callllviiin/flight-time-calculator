@@ -413,6 +413,19 @@ button:disabled{
   margin:14px 0;
 }
 
+/* Expanded output: lock height (desktop) to feel like a fixed panel */
+.output.fixed-expanded{
+  overflow:auto;
+}
+
+/* Mobile: don't lock expanded height */
+@media (max-width:620px){
+  .output.fixed-expanded{
+    height:auto !important;
+    overflow:visible !important;
+  }
+}
+  
 /* ---------- OUTPUT ACTION BUTTONS (BOTTOM) ---------- */
 .output-actions{
   display:flex;
@@ -1464,6 +1477,16 @@ requestAnimationFrame(() => {
   // One more frame ensures the collapsed state is definitely painted
   requestAnimationFrame(() => {
     out.classList.remove("collapsing"); // expand animates every time
+
+    // After the expand transition finishes, lock the expanded height (desktop only)
+    setTimeout(() => {
+      if(!out.dataset.expandedH){
+        out.dataset.expandedH = String(out.scrollHeight);
+      }
+      out.classList.add("fixed-expanded");
+      out.style.height = out.dataset.expandedH + "px";
+      out.style.overflow = "auto";
+    }, 280); // slightly > 260ms transition
   });
 });
 
@@ -1636,11 +1659,16 @@ const out = document.getElementById("output");
 if(out){
   // Ensure output is measurable
   out.style.display = "block";
-
-  // Freeze layout height so collapsing does NOT yank the scroll position
-  const startHeight = out.getBoundingClientRect().height;
-  out.style.height = startHeight + "px";
-  out.style.overflow = "hidden";
+// Ensure we're in a stable expanded layout height before collapsing
+if(out.dataset.expandedH){
+    out.classList.add("fixed-expanded");
+    out.style.height = out.dataset.expandedH + "px";
+    out.style.overflow = "hidden"; // page doesn't reflow during collapse
+  }
+  out.classList.remove("collapsing");
+  out.classList.remove("collapsing-to-idle");
+  out.style.removeProperty("--idleScale");
+  out.getBoundingClientRect(); // commit
 
   // Ensure we're not in idle mode while collapsing (prevents style flicker)
   out.classList.remove("idle");
@@ -1656,11 +1684,11 @@ const startHeight2 = out.getBoundingClientRect().height;
 out.classList.remove("collapsing");          // important: prevent "expand blip"
 out.classList.remove("collapsing-to-idle");  // clear any prior state
 
-const idleHeight = 52; // matches .output.idle height in CSS
 const startH = Math.max(1, out.getBoundingClientRect().height);
-const idleScale = Math.max(0.15, Math.min(1, idleHeight / startH));
-
+const idleH = 52; // must match .output.idle height in CSS
+const idleScale = Math.max(0.15, Math.min(1, idleH / startH));
 out.style.setProperty("--idleScale", String(idleScale));
+
 out.classList.add("collapsing-to-idle");
   
 // Start scroll-to-top immediately (so it happens during the collapse)
@@ -1679,26 +1707,24 @@ if(scrollToTop){
     // Swap to idle content cleanly (no flash)
     const prevTransition = out.style.transition;
       out.style.transition = "none";
-        setOutputIdle("Enter inputs, then press Calculate");
       out.style.transition = prevTransition;
 
-    // Capture scroll position to prevent tiny jumps during DOM swap
-    const y = window.scrollY;
-
     requestAnimationFrame(() => {
-      // Remove collapse class and unfreeze height so idle box takes natural size
-      out.classList.remove("collapsing-to-idle");
-      out.style.removeProperty("--idleScale");
+  // End the shrink animation state
+  out.classList.remove("collapsing-to-idle");
+  out.style.removeProperty("--idleScale");
 
-      out.style.height = "";
-      out.style.overflow = "";
+  // Release the fixed expanded panel so idle can be its fixed small size
+  out.classList.remove("fixed-expanded");
+  out.style.height = "";
+  out.style.overflow = "";
 
-      // Restore scroll position (counters any micro-adjust from DOM swap)
-      window.scrollTo({ top: y, left: 0, behavior: "auto" });
+  // Now snap to idle content (no animation / no flash)
+  setOutputIdle("Enter inputs, then press Calculate");
 
-      // Focus without causing scroll jumps
-      takeoffTime.focus({ preventScroll: true });
-    });
+  // Focus without causing scroll jumps
+  takeoffTime.focus({ preventScroll: true });
+});
   };
 
   const onEnd = (e) => {
@@ -1754,7 +1780,7 @@ if(scrollToTop){
     if(inp === landingTime) updateTimeHint(landingTime, document.getElementById("landingTimeHint"));
 
     setCalcEnabled();
-    onUserEdit();   // 👈 THIS is the key line
+    onUserEdit();
   });
 });
 
