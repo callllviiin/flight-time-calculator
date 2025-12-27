@@ -1626,13 +1626,14 @@ document.getElementById("calcBtn").addEventListener("click", () => {
   hasCalculated = true;
   isDirty = false;
   clearDirty();
-
+  
+const shouldScroll = document.getElementById("output")?.classList.contains("idle");
   calculate();
 
   // smooth scroll to results (after DOM updates)
   requestAnimationFrame(() => {
 const outEl = document.getElementById("output");
-if(outEl && !isDirty){
+if(outEl && shouldScroll){
   outEl.scrollIntoView({ behavior:"smooth", block:"start" });
 }
 
