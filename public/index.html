@@ -1512,14 +1512,15 @@ requestAnimationFrame(() => {
   out.classList.remove("collapsing");
 }
     // After the expand transition finishes, lock the expanded height (desktop only)
-    setTimeout(() => {
-      if(!out.dataset.expandedH){
-        out.dataset.expandedH = String(out.scrollHeight);
-      }
+setTimeout(() => {
+      // Always re-measure (prevents stale height causing bottom whitespace)
+      out.dataset.expandedH = String(out.scrollHeight);
+
       out.classList.add("fixed-expanded");
       out.style.height = out.dataset.expandedH + "px";
       out.style.overflow = "auto";
-    }, 280); // slightly > 260ms transition
+    }, 280);
+
   });
 });
 
@@ -1702,6 +1703,7 @@ function resetAll({ scrollToTop = false } = {}){
 
 const out = document.getElementById("output");
 if(out){
+    delete out.dataset.expandedH; // force fresh measure next time
   // Ensure output is measurable
   out.style.display = "block";
 // --- TOP RESET SAFETY: prevent "pop open then collapse" ---
