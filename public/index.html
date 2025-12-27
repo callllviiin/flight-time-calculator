@@ -414,6 +414,17 @@ button:disabled{
 .output-actions button:disabled{
   opacity:0.55;
 }
+
+/* Smooth collapse for output on reset */
+.output{
+  overflow:hidden;
+  transition: max-height 260ms ease, opacity 260ms ease;
+}
+
+.output.collapsing{
+  opacity:0;
+  max-height:0 !important;
+}
   
 .row{
   display:flex;
@@ -1564,11 +1575,41 @@ function resetAll({ scrollToTop = false } = {}){
   clearDirty();                 // puts button text back to "Calculate"
   briefOffsetMin = 150;
 
-  const out = document.getElementById("output");
-  if(out){
-    out.innerHTML = "";
-    out.style.display = "none"; // collapse output section
-  }
+const out = document.getElementById("output");
+if(out){
+  // animate collapse instead of instant hide
+  out.style.display = "block";                // ensure it's measurable
+  out.classList.remove("collapsing");
+
+  // set current height as max-height so transition has a start point
+  out.style.maxHeight = out.scrollHeight + "px";
+  out.style.opacity = "1";
+
+  // next frame: trigger collapse
+  requestAnimationFrame(() => {
+    out.classList.add("collapsing");
+    out.style.maxHeight = "0px";
+
+    // scroll while the collapse is happening (feels smoother)
+    if(scrollToTop){
+      const root = document.getElementById("pageRoot");
+      if(root && root.scrollIntoView){
+        root.scrollIntoView({ behavior: "smooth", block: "start" });
+      }else{
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    // after the animation, actually clear and hide
+    setTimeout(() => {
+      out.innerHTML = "";
+      out.style.display = "none";
+      out.classList.remove("collapsing");
+      out.style.maxHeight = "";
+      out.style.opacity = "";
+    }, 280);
+  });
+}
 
   // optional: reset crew toggle to Basic
   augmentedBox.checked = false;
@@ -1592,17 +1633,6 @@ function resetAll({ scrollToTop = false } = {}){
   // cursor back to first box
   takeoffTime.focus();
 
-  // scroll if requested
-if(scrollToTop){
-  const root = document.getElementById("pageRoot");
-  if(root && root.scrollIntoView){
-    root.scrollIntoView({ behavior: "smooth", block: "start" });
-  }else{
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-}
-
-// ✅ ADD THIS to close resetAll()
 }
 
 [takeoffTime, landingTime].forEach(inp => {
