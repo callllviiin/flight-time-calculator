@@ -965,9 +965,27 @@ function setCalcEnabled(){
   const ld = padHHMM(landingTime.value);
 
   const ok = isHHMM(tk) && isHHMM(ld);
+
   const btn = document.getElementById("calcBtn");
   if(btn) btn.disabled = !ok;
+
+  // Gentle idle guidance (pre-calculate only)
+  if(!hasCalculated){
+    const out = document.getElementById("output");
+    if(out && out.classList.contains("idle")){
+      const anyTyped =
+        takeoffTime.value.trim().length > 0 ||
+        landingTime.value.trim().length > 0;
+
+      if(anyTyped && !ok){
+        out.innerHTML = "Enter valid HHMM times (0000–2359), then press Calculate";
+      }else{
+        out.innerHTML = "Enter inputs, then press Calculate";
+      }
+    }
+  }
 }
+
 
 function isHHMM(s){
   return typeof s === "string" && /^\d{4}$/.test(s) &&
