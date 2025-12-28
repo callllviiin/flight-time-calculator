@@ -1038,7 +1038,8 @@ button:disabled{
   }
   .crew-toggle{ justify-self:end; }
 }
-  
+
+
   /* FINAL OVERRIDE: Row 3 Augmented control starts where Local column starts */
 .third-content-wide .crew-check{
   grid-column: 4 !important;
@@ -2097,8 +2098,7 @@ const augmentedBox = document.getElementById("augmented");
 const augLbl = document.getElementById("augLbl");
 
 function syncToggleLabels(){
-  if(!augLbl) return;
-  augLbl.style.fontWeight = augmentedBox.checked ? "800" : "600";
+  // CSS controls the visual state; no inline styles here.
 }
   
 augmentedBox.addEventListener("change", () => {
