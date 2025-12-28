@@ -397,6 +397,9 @@ input:checked + .slider:before{
   gap:6px;
   cursor:pointer;
   user-select:none;
+
+  width:150px;            /* lock geometry */
+  justify-content:flex-end;
 }
 
 .crew-check-label input{
@@ -407,19 +410,17 @@ input:checked + .slider:before{
 
 .crew-check-text{
   font-family: Arial, sans-serif;
-  font-variant: normal;
-  letter-spacing: normal;
+  font-variant: small-caps;     /* match old slider vibe */
+  letter-spacing:0.8px;
 
   font-size:14px;
-  font-weight:500;   /* toned down */
-  color:#444;
+  font-weight:600;
+  color:#555;
 }
 
 /* Bold feedback when checked */
-#augmented:checked + #augLbl,
 #augmented:checked + span{
-  font-weight:600;   /* was 800 */
-  color:#000;
+  color:#000;              /* emphasis without width change */
 }
   
 /* ---------- BUTTON ---------- */
