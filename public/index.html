@@ -468,7 +468,8 @@ button:disabled{
 
  :root{
   --row-label-w: 190px;
-  --row-gap: 10px;
+  --row-gap: 14px;
+  --time-col-w: 92px;
   --row-time-minw: 70px;
   --row-time-mr: 40px;     /* keeps the local/zulu spacing consistent */
   --row-pad-y: 4px;
@@ -602,12 +603,12 @@ button:disabled{
 
 /* 3-col rows: label | local(or msg) | zulu */
 .row3{
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr var(--time-col-w) var(--time-col-w);
 }
 
 /* 4-col rows (Show Time): label | msg | local | zulu */
 .row4{
-  grid-template-columns: var(--row-label-w) 1fr auto auto;
+  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w) var(--time-col-w);
 }
 
 /* times (shared) */
@@ -616,7 +617,7 @@ button:disabled{
   font-weight:700;
   color:inherit;
   min-width: var(--row-time-minw);
-  margin-right: var(--row-time-mr);
+  margin-right: 0;
 }
 .row3 .zcol, .row4 .zcol{
   text-align:right;
