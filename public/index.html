@@ -1543,10 +1543,11 @@ const homeShowHtml = (homeShowLocalMins == null)
   ? ""
   : localHtmlFromZuluSimple(showTime, homeKey);
 
-const homeShowLabel = showCircClass === "orm-low" ? "ORM Low"
-  : showCircClass === "orm-mod" ? "ORM Moderate"
-  : showCircClass === "orm-high" ? "ORM High"
-  : "";
+const homeShowOrmText =
+  showCircClass === "orm-low" ? "ORM Low" :
+  showCircClass === "orm-mod" ? "ORM Moderate" :
+  showCircClass === "orm-high" ? "ORM High" :
+  "";
     
     const crewRest   = takeoffMin - 855;
     const lastBeer   = takeoffMin - 720;
@@ -1619,11 +1620,19 @@ const homeShowLabel = showCircClass === "orm-low" ? "ORM Low"
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-     ${row3Html("Show Time", showTime, tkIcao, true, showCircClass)}
+    ${row3Html(
+  "Show Time",
+  showTime,
+  tkIcao,
+  true,
+  showCircClass,
+  homeShowOrmText
+    ? `<span class="orm-note">${homeShowOrmText}</span>`
+    : ""
+)}
 <div class="subtext">
   T/O − 3+15
-  ${homeShowLabel ? ` • ${homeShowLabel}` : ""}
-  ${homeShowHtml ? ` • <span class="home-mini">Home: ${homeShowHtml}</span>` : ""}
+  ${homeShowHtml ? ` • Circadian: ${homeShowHtml}` : ""}
 </div>
 
       ${row3Html("Brief Time", briefTime, tkIcao, true)}
