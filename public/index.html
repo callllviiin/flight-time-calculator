@@ -1329,7 +1329,7 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
   `;
 }
 
-/* 4-column row for Show Time: Label | ORM message | Local | Zulu */
+// 4-column row for Show Time: Label | ORM message | Local | Zulu
 function row4Html(label, zuluMinutes, localIcao, ormHtml="", extraClass=""){
   const z = zuluHtml(zuluMinutes);
   const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
@@ -1343,6 +1343,7 @@ function row4Html(label, zuluMinutes, localIcao, ormHtml="", extraClass=""){
     </div>
   `;
 }
+
   
 // If we're showing a message without local time, use the wider "midtext" layout like FDP
 const midClass = (!showLocal && midHtml) ? "midtext" : "";
