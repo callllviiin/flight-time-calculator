@@ -1596,7 +1596,6 @@ out.style.display = "block";
     
 // Only animate expand on first-time Calculate (idle -> expanded)
 // Re-Calculate should update in place without re-animating or scrolling
-const doExpandAnim = out.classList.contains("idle");
 
 if(doExpandAnim){
   const prevTransition = out.style.transition;
