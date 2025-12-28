@@ -294,6 +294,26 @@ input{
   box-sizing:border-box;
 }
 
+select#aircraft{
+  appearance: none;          /* kill native grey styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background:#fff;           /* match input boxes */
+  color:#222;
+
+  border:1px solid #cfcfcf;
+  border-radius:4px;
+
+  padding:6px;
+  font-size:16px;
+  font-family: Consolas, Menlo, "Courier New", monospace;
+  font-weight:600;
+  text-align:center;
+
+  cursor:pointer;
+}
+  
 /* Let #aircraft and .home-wrap sit in the Row 3 grid columns */
 .aircraft-home{
   display:contents;
