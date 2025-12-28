@@ -691,17 +691,18 @@ button:disabled{
   color:#222;
 }
 
-/* Show Time ORM note inline with label, never truncate */
+/* Show Time ORM message: match subtext styling */
 .show-orm-inline{
-  font-size:12px;
-  font-weight:500;
+  font-size:12px;        /* same as .subtext */
+  font-weight:600;      /* slightly stronger than subtext, still secondary */
   color:#666;
   margin-left:10px;
-  white-space:nowrap;   /* keep it inline */
+  white-space:nowrap;
 }
+  
 .show-orm-inline .showtime-circ{
-  font-weight:800;
-  color:#222;
+  font-weight:700;      /* was 800 */
+  color:#333;           /* slightly softer than pure black */
 }
 
 /* Only for Show Time label+note: keep on one line, never truncate */
