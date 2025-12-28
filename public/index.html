@@ -1305,18 +1305,31 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
   // Middle column content: either Local time OR an optional message OR blank
   let middle = "";
 
-if(showLocal){
-  const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
-  if(midHtml){
-    // stack Local time + ORM text in the same middle column
-    middle = `<span class="midstack">${local}${midHtml}</span>`;
+  if(showLocal){
+    const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
+    if(midHtml){
+      // stack Local time + ORM text in the same middle column
+      middle = `<span class="midstack">${local}${midHtml}</span>`;
+    }else{
+      middle = local;
+    }
   }else{
-    middle = local;
+    middle = (midHtml || "");
   }
-}else{
-  middle = (midHtml || "");
+
+  // If we're showing a message without local time, use the wider "midtext" layout like FDP
+  const midClass = (!showLocal && midHtml) ? "midtext" : "";
+
+  return `
+    <div class="row3 ${midClass} ${extraClass}">
+      <span class="sc-label">${label}</span>
+      <span class="lcol">${middle}</span>
+      <span class="zcol">${z}</span>
+    </div>
+  `;
 }
 
+/* 4-column row for Show Time: Label | ORM message | Local | Zulu */
 function row4Html(label, zuluMinutes, localIcao, ormHtml="", extraClass=""){
   const z = zuluHtml(zuluMinutes);
   const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
