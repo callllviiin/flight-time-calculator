@@ -1739,31 +1739,30 @@ ${row4Html(
   "Show Time",
   showTime,
   tkIcao,
-(() => {
-  if(homeShowLocalMins == null) return "";
+  (() => {
+    if(homeShowLocalMins == null) return "";
 
-  // Recompute local + day shift for Show Time using absolute context
-  const baseShift = Math.floor(showTime / 1440);
-  const zNorm = ((showTime % 1440) + 1440) % 1440;
-  const zHHMM = minutesToHHMM(zNorm);
-  const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
+    // Recompute local + day shift for Show Time using absolute context
+    const baseShift = Math.floor(showTime / 1440);
+    const zNorm = ((showTime % 1440) + 1440) % 1440;
+    const zHHMM = minutesToHHMM(zNorm);
+    const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
 
-  let circText = `${minutesToHHMM(homeShowLocalMins)}L`;
+    let circText = `${minutesToHHMM(homeShowLocalMins)}L`;
 
-  if(res){
-    const totalShift = baseShift + res.dayShift;
-    if(totalShift !== 0){
-      circText += (totalShift > 0 ? `+${totalShift}` : `${totalShift}`);
+    if(res){
+      const totalShift = baseShift + res.dayShift;
+      if(totalShift !== 0){
+        circText += (totalShift > 0 ? `+${totalShift}` : `${totalShift}`);
+      }
     }
-  }
 
-  const msg = homeShowOrmText
-    ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circText}</span>`
-    : `Circadian = <span class="showtime-circ">${circText}</span>`;
+    const msg = homeShowOrmText
+      ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circText}</span>`
+      : `Circadian = <span class="showtime-circ">${circText}</span>`;
 
-  return `<span class="orm-note show-orm">${msg}</span>`;
-})()
-
+    return `<span class="orm-note show-orm">${msg}</span>`;
+  })(),
   `${showCircClass} showtime-left`
 )}
 
