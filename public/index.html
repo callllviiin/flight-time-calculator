@@ -392,14 +392,13 @@ input:checked + .slider:before{
 }
 
 .crew-check-label{
-  display:flex;
+  display:grid;
+  grid-template-columns: 16px 92px;  /* checkbox | label text (fixed) */
+  column-gap:6px;
   align-items:center;
-  gap:6px;
+
   cursor:pointer;
   user-select:none;
-
-  width:150px;            /* lock geometry */
-  justify-content:flex-end;
 }
 
 .crew-check-label input{
@@ -411,7 +410,7 @@ input:checked + .slider:before{
 .crew-check-text{
   font-family: Arial, sans-serif;
   font-variant: small-caps;     /* match old slider vibe */
-  letter-spacing:0.8px;
+  letter-spacing:0.4px;
 
   font-size:14px;
   font-weight:600;
