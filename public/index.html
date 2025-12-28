@@ -601,9 +601,34 @@ button:disabled{
   box-sizing:border-box;
 }
 
-/* 3-col rows: label | local(or msg) | zulu */
-.row3{
-  grid-template-columns: var(--row-label-w) var(--time-col-w) var(--time-col-w);
+/* Row3 variants:
+   - Duty rows (FDP/CDT/TDD/APU): label | message/spacer | zulu
+   - Timing rows: label | spacer | local | zulu
+*/
+.row3.dutyrow{
+  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
+}
+
+.row3.timerow{
+  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w) var(--time-col-w);
+}
+
+/* spacer/message column (used in timerow, and visually similar to row4 mcol) */
+.row3.timerow .mcol{
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  text-align:left;
+  font-weight:500;
+}
+
+/* Duty rows: the middle column is text (or empty) */
+.row3.dutyrow .lcol{
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  text-align:left;
+  font-weight:500;
 }
 
 /* 4-col rows (Show Time): label | msg | local | zulu */
@@ -1329,28 +1354,29 @@ function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
 function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHtml=""){
   const z = zuluHtml(zuluMinutes);
 
-  // Middle column content: either Local time OR an optional message OR blank
-  let middle = "";
-
+  // TIMING rows: Label | spacer | Local | Zulu
   if(showLocal){
     const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
-    if(midHtml){
-      // stack Local time + ORM text in the same middle column
-      middle = `<span class="midstack">${local}${midHtml}</span>`;
-    }else{
-      middle = local;
-    }
-  }else{
-    middle = (midHtml || "");
+
+    // If you ever want “extra text” in the spacer column for timing rows, it can go here.
+    const spacer = midHtml || "";
+
+    return `
+      <div class="row3 timerow ${extraClass}">
+        <span class="sc-label">${label}</span>
+        <span class="mcol">${spacer}</span>
+        <span class="lcol">${local}</span>
+        <span class="zcol">${z}</span>
+      </div>
+    `;
   }
 
-  // If we're showing a message without local time, use the wider "midtext" layout like FDP
-  const midClass = (!showLocal && midHtml) ? "midtext" : "";
-
+  // DUTY rows: Label | message/spacer | Zulu
+  // (This matches Flight Duty Period “gold standard” layout.)
   return `
-    <div class="row3 ${midClass} ${extraClass}">
+    <div class="row3 dutyrow ${extraClass}">
       <span class="sc-label">${label}</span>
-      <span class="lcol">${middle}</span>
+      <span class="lcol">${midHtml || ""}</span>
       <span class="zcol">${z}</span>
     </div>
   `;
