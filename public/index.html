@@ -1019,6 +1019,9 @@ button:disabled{
 </div>
 
 <script>
+  console.log("✅ Script loaded");
+window.addEventListener("error", (e) => showRuntimeError(e.error || e.message));
+
 /* ----------------- helpers ----------------- */
 function showRuntimeError(err){
   const out = document.getElementById("output");
@@ -1343,22 +1346,6 @@ function row4Html(label, zuluMinutes, localIcao, ormHtml="", extraClass=""){
     </div>
   `;
 }
-
-  
-// If we're showing a message without local time, use the wider "midtext" layout like FDP
-const midClass = (!showLocal && midHtml) ? "midtext" : "";
-
-  return `
-    <div class="row3 ${midClass} ${extraClass}">
-      <span class="sc-label">${label}</span>
-      <span class="lcol">${middle}</span>
-      <span class="zcol">${z}</span>
-    </div>
-  `;
-}
-
-
-  
   
 // ---------- Phase 1.5: ICAO lookup wrapper (preps for big DB later) ----------
 let ICAO_TZ_DB = null; // optional external DB (Phase 2-ready)
