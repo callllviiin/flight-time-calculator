@@ -794,6 +794,19 @@ button:disabled{
   text-align:left;
 }
 
+  /* Subtext: create an empty label-column spacer so real content starts in column 2 */
+.subtext::before{
+  content:"";
+}
+
+/* Keep "T/O − [input]" as one inline unit in column 2 */
+.subtext-line{
+  grid-column: 2;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+  
 /* Small explanatory text in the "middle" column of Duty Limitations */
 .orm-note{
   display:block;
@@ -1830,11 +1843,14 @@ true,
 <div class="subtext">T/O − 3+15</div>
 
       ${row3Html("Brief Time", briefTime, tkIcao, true)}
-      <div class="subtext">
-        T/O − <input id="briefOffsetEdit" class="inline-mini"
-          value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5"
-          title="H+MM (e.g., 2+30)">
-      </div>
+       <div class="subtext">
+          <span class="subtext-line">
+            T/O − <input id="briefOffsetEdit" class="inline-mini"
+            value="${minutesToHPlusMM(briefOffsetMin)}" maxlength="5"
+            title="H+MM (e.g., 2+30)">
+           </span>
+        </div>
+
 
       ${row3Html("Step Time", stepTime, tkIcao, true)}
       <div class="subtext">T/O − 2+00</div>
