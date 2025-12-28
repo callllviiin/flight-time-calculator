@@ -802,6 +802,12 @@ button:disabled{
   white-space:nowrap;
   display:inline-block;
 }
+
+/* Duty section ORM messages (e.g., Flight Duty Period): keep on one line */
+.row3.dutyrow .orm-note{
+  display:inline-block;   /* stop acting like a full-width block */
+  white-space:nowrap;     /* never wrap to a second line */
+}
   
 .warn{
   background-color:#fff3cd;
