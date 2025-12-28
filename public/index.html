@@ -687,10 +687,21 @@ button:disabled{
   color:#666;
   white-space:nowrap;
 }
+  
+/* Circadian time inside Show Time ORM message:
+   same monospace structure, but smaller + quieter */
 .showtime-circ{
-  font-weight:800;
-  color:#222;
+  font-size:12px;        /* match subtext size */
+  font-weight:600;      /* calmer than main times */
+  color:#333;
 }
+
+/* Override mono sizing ONLY inside Show Time */
+.showtime-circ .mono{
+  font-size:12px;        /* cancel .mono's enlargement */
+  font-weight:600;
+}
+
 
 /* Show Time ORM message: plain Arial, no small-caps, no tracking */
 .show-orm-inline{
