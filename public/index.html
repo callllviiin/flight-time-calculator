@@ -395,7 +395,7 @@ input:checked + .slider:before{
 .crew-check-label{
   display:grid;
   grid-template-columns: 16px 92px;  /* checkbox | label text (fixed) */
-  column-gap:6px;
+  column-gap:10px;
   align-items:center;
 
   cursor:pointer;
@@ -420,7 +420,7 @@ input:checked + .slider:before{
 
 /* Bold feedback when checked */
 #augmented:checked + span{
-  font-weight:400
+  font-weight:500
   color:#000;              /* emphasis without width change */
 }
   
@@ -1037,15 +1037,6 @@ button:disabled{
     gap:10px;
   }
   .crew-toggle{ justify-self:end; }
-}
-
-/* FINAL OVERRIDE: Augmented text weights */
-.crew-check-text{
-  font-weight:500 !important;
-}
-
-#augmented:checked + span{
-  font-weight:600 !important;
 }
 
   /* FINAL OVERRIDE: Row 3 Augmented control starts where Local column starts */
