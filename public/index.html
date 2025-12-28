@@ -649,11 +649,17 @@ button:disabled{
 /* Show Time: left-align ORM/Circadian text so it doesn't float in empty space */
 .row4.showtime-left .mcol{
   justify-content:flex-start;
+  padding-left:6px;
 }
 
 .row4.showtime-left .orm-note.show-orm{
   text-align:left;
   white-space:nowrap;      /* keep it on one line */
+}
+
+  /* Show Time: tighten middle column so ORM text sits closer to label */
+.row4.showtime-left{
+  grid-template-columns: 190px auto auto auto;
 }
   
 /* Local time + ORM label stacked in the middle column (Show Time only) */
