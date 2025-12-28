@@ -603,7 +603,7 @@ button:disabled{
 
 /* 3-col rows: label | local(or msg) | zulu */
 .row3{
-  grid-template-columns: 1fr var(--time-col-w) var(--time-col-w);
+  grid-template-columns: var(--row-label-w) var(--time-col-w) var(--time-col-w);
 }
 
 /* 4-col rows (Show Time): label | msg | local | zulu */
@@ -635,7 +635,7 @@ button:disabled{
 
 /* message rows in duty section (row3.midtext) */
 .row3.midtext{
-  grid-template-columns: var(--row-label-w) 1fr auto;
+  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
 }
 .row3.midtext .lcol{
   display:flex;
@@ -1585,10 +1585,14 @@ function calculate(){
       if(takeoffTime.value !== takeoff) takeoffTime.value = takeoff;
       if(landingTime.value !== landing) landingTime.value = landing;
     const augmented = augmentedBox.checked;
-    const out = document.getElementById("output");
-     // results mode
-      out.classList.remove("idle");
-      out.style.display = "block";
+const out = document.getElementById("output");
+
+// Only animate expand on first-time Calculate (idle -> expanded)
+const doExpandAnim = out.classList.contains("idle");
+
+// results mode
+out.classList.remove("idle");
+out.style.display = "block";
     
 // Only animate expand on first-time Calculate (idle -> expanded)
 // Re-Calculate should update in place without re-animating or scrolling
@@ -1727,23 +1731,25 @@ ${row4Html(
     const zHHMM = minutesToHHMM(zNorm);
     const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
 
-    let circText = `${minutesToHHMM(homeShowLocalMins)}L`;
+    // Build circadian time using the SAME HTML pieces as your other times
+    let circHtml = `${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>`;
 
     if(res){
       const totalShift = baseShift + res.dayShift;
       if(totalShift !== 0){
-        circText += (totalShift > 0 ? `+${totalShift}` : `${totalShift}`);
+        circHtml += `<span class="shift-sup">${formatShiftSup(totalShift)}</span>`;
       }
     }
 
     const msg = homeShowOrmText
-      ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circText}</span>`
-      : `Circadian = <span class="showtime-circ">${circText}</span>`;
+      ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circHtml}</span>`
+      : `Circadian = <span class="showtime-circ">${circHtml}</span>`;
 
     return `<span class="orm-note show-orm">${msg}</span>`;
   })(),
   `${showCircClass} showtime-left`
 )}
+
 
 <div class="subtext">T/O − 3+15</div>
 
