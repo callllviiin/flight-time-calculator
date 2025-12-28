@@ -1746,6 +1746,11 @@ let isCalculating = false;   // NEW
 let briefOffsetMin = 150;
 let isEditingZulu = false;
 
+let homeTouched = false;
+let homeAutoFilled = false;
+let suppressHomeTouch = false;
+
+  
   /* Local time listeners (sync only; calculate only after first button press) */
 const takeoffTime = document.getElementById("takeoffTime");
 const homeICAO = document.getElementById("homeICAO");
@@ -2194,6 +2199,10 @@ function resetAll({ scrollToTop = false } = {}){
   takeoffLocal.value = "";
   landingLocal.value = "";
 
+  homeTouched = false;
+  homeAutoFilled = false;
+
+  
   // clear day shift badges
   const tDay = document.getElementById("takeoffLocalDay");
   const lDay = document.getElementById("landingLocalDay");
@@ -2401,6 +2410,40 @@ if(scrollToTop){
     const dayId      = (inp.id === "takeoffICAO") ? "takeoffLocalDay" : "landingLocalDay";
 
     syncLocalFromZulu(zuluInput, inp, localInput, dayId);
+
+// --- Autofill Home Station ICAO from Takeoff ICAO (UI default) ---
+if(inp.id === "takeoffICAO"){
+  const tk = clean; // already normalized takeoff ICAO
+
+  const tkMapped = (tk.length === 4 && getTimeZoneFromICAO(tk));
+  const homeNow = normICAO(homeICAO?.value || "");
+
+  // If Home is empty OR Home was previously auto-filled and user hasn't touched it,
+  // keep Home synced to Takeoff ICAO.
+  if(tkMapped && homeICAO && (!homeTouched) && (homeNow.length === 0 || homeAutoFilled)){
+    suppressHomeTouch = true;
+    homeICAO.value = tk;
+    suppressHomeTouch = false;
+
+    homeAutoFilled = true;
+
+    updateIcaoHint(tk, document.getElementById("homeIcaoHint"));
+    if(hasCalculated) onUserEdit();
+  }
+
+  // If user deletes Takeoff ICAO and Home was only auto-filled, clear Home too
+  if(tk.length === 0 && homeICAO && homeAutoFilled && !homeTouched){
+    suppressHomeTouch = true;
+    homeICAO.value = "";
+    suppressHomeTouch = false;
+
+    homeAutoFilled = false;
+
+    updateIcaoHint("", document.getElementById("homeIcaoHint"));
+    if(hasCalculated) onUserEdit();
+  }
+}
+    
     // Local-first support:
     // If user already typed Local, and ICAO just became valid/mapped, fill Zulu from Local.
     if(isICAO(clean) && getTimeZoneFromICAO(clean) && isHHMM(localInput.value.trim())){
@@ -2415,6 +2458,12 @@ if(scrollToTop){
 homeICAO?.addEventListener("input", () => {
   const clean = normICAO(homeICAO.value);
   if(homeICAO.value !== clean) homeICAO.value = clean;
+
+  // If this was a user action (not our autofill), mark as touched
+  if(!suppressHomeTouch){
+    homeTouched = clean.length > 0;   // once they type something, we stop auto-overwriting
+    homeAutoFilled = false;           // user took control
+  }
 
   updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
 
