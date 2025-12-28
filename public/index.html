@@ -1803,18 +1803,23 @@ ${row3Html(
       const zHHMM = minutesToHHMM(zNorm);
       const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
 
-      // Build circadian time HTML (same look as other times)
-      let circHtml = `${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>`;
-      if(res){
-        const totalShift = baseShift + res.dayShift;
-        if(totalShift !== 0){
-          circHtml += `<span class="shift-sup">${formatShiftSup(totalShift)}</span>`;
-        }
-      }
+      // Build circadian time using the SAME renderer as other Local times (monospace + correct +1/-1)
+      let circHtml = "";
+    if(res){
+      const totalShift = baseShift + res.dayShift;
+      const sh = formatShiftSup(totalShift);
+
+      circHtml = `<span class="mono timewrap">${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>${
+      sh ? `<span class="shift-sup">${sh}</span>` : ""
+      }</span>`;
+      }else{
+      // Fallback (should be rare)
+      circHtml = `<span class="mono timewrap">${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span></span>`;
+    }
 
       const msg = homeShowOrmText
-        ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circHtml}</span>`
-        : `Circadian = <span class="showtime-circ">${circHtml}</span>`;
+      ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circHtml}</span>`
+      : `Circadian = <span class="showtime-circ">${circHtml}</span>`;
 
       return ` <span class="show-orm-inline">${msg}</span>`;
 })()
