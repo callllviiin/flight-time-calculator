@@ -1606,7 +1606,7 @@ const homeShowMsg = homeShowOrmMessage(homeShowLocalMins);
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-      ${row3Html("Show Time", showTime, tkIcao, true)}
+     ${row3Html("Show Time", showTime, tkIcao, true)}
 <div class="subtext">T/O − 3+15</div>
 
 ${row3Html(
@@ -1615,11 +1615,10 @@ ${row3Html(
   "",
   false,
   homeShowOrmCls,
-  homeShowMsg ? `<span class="orm-note home-orm">${homeShowMsg}</span>` : `<span class="orm-note home-orm">Enter HOME ICAO to compute circadian ORM</span>`
+  homeShowMsg
+    ? `<span class="orm-note home-orm">${homeShowMsg}</span>`
+    : `<span class="orm-note home-orm">Enter HOME ICAO to compute circadian ORM</span>`
 )}
-
-      T/O − 3+15${homeShowHtml ? ` • Home: ${homeShowHtml}` : ""}
-      </div>
 
       ${row3Html("Brief Time", briefTime, tkIcao, true)}
       <div class="subtext">
