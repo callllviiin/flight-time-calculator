@@ -617,6 +617,21 @@ button:disabled{
   justify-content:center;   /* horizontal centering */
   align-items:center;       /* vertical centering */
 }
+
+/* Local time + ORM label stacked in the middle column (Show Time only) */
+.midstack{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;   /* keeps it lined up with the times */
+  gap:2px;
+}
+
+.midstack .orm-note{
+  font-size:10px;
+  font-weight:800;
+  line-height:1;
+  white-space:nowrap;
+}
   
 /* small-caps for left-column labels in output rows */
 .sc-label{
@@ -1260,10 +1275,22 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
   const z = zuluHtml(zuluMinutes);
 
   // Middle column content: either Local time OR an optional message OR blank
-  const middle = showLocal
-    ? localHtmlFromZuluSimple(zuluMinutes, localIcao)
-    : (midHtml || "");
-  const midClass = (!showLocal && midHtml) ? "midtext" : "";
+  let middle = "";
+
+if(showLocal){
+  const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
+  if(midHtml){
+    // stack Local time + ORM text in the same middle column
+    middle = `<span class="midstack">${local}${midHtml}</span>`;
+  }else{
+    middle = local;
+  }
+}else{
+  middle = (midHtml || "");
+}
+
+// If we're showing a message without local time, use the wider "midtext" layout like FDP
+const midClass = (!showLocal && midHtml) ? "midtext" : "";
 
   return `
     <div class="row3 ${midClass} ${extraClass}">
