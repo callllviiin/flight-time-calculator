@@ -645,6 +645,16 @@ button:disabled{
   text-align:right;
   min-width:70px;
 }
+
+/* Show Time: left-align ORM/Circadian text so it doesn't float in empty space */
+.row4.showtime-left .mcol{
+  justify-content:flex-start;
+}
+
+.row4.showtime-left .orm-note.show-orm{
+  text-align:left;
+  white-space:nowrap;      /* keep it on one line */
+}
   
 /* Local time + ORM label stacked in the middle column (Show Time only) */
 .midstack{
@@ -1694,13 +1704,16 @@ ${row4Html(
   "Show Time",
   showTime,
   tkIcao,
-  homeShowOrmText ? `<span class="orm-note">${homeShowOrmText}</span>` : "",
-  showCircClass
+  (() => {
+    const circText = (homeShowLocalMins == null) ? "" : `${minutesToHHMM(homeShowLocalMins)}L`;
+    const msg = homeShowOrmText
+      ? `${homeShowOrmText}${circText ? `: Circadian = ${circText}` : ""}`
+      : (circText ? `Circadian = ${circText}` : "");
+    return msg ? `<span class="orm-note show-orm">${msg}</span>` : "";
+  })(),
+  `${showCircClass} showtime-left`
 )}
-<div class="subtext">
-  T/O − 3+15
-  ${homeShowHtml ? ` • Circadian: ${homeShowHtml}` : ""}
-</div>
+<div class="subtext">T/O − 3+15</div>
 
       ${row3Html("Brief Time", briefTime, tkIcao, true)}
       <div class="subtext">
