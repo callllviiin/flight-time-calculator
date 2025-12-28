@@ -601,6 +601,12 @@ button:disabled{
   min-width:70px;
 }
 
+/* Make ORM message text not bold in both layouts */
+.row3.midtext .lcol,
+.row4 .mcol{
+  font-weight:500;
+}
+  
 /* Give ORM message column more space */
 .row3.midtext{
   grid-template-columns: 190px 1fr auto; /* fixed label width, message gets the rest */
