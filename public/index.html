@@ -716,10 +716,15 @@ button:disabled{
 }
   
 /* Crew Timing highlighted band uses consistent row padding */
-.crew-timing .row4.orm-low,
-.crew-timing .row4.orm-mod,
-.crew-timing .row4.orm-high,
-.crew-timing .row4.orm-severe{
+.crew-timing .row3.orm-low,
+.crew-timing .row3.orm-mod,
+.crew-timing .row3.orm-high,
+.crew-timing .row3.orm-severe{
+  /* padding/radius now come from .crew-timing .row3 base rule */
+}
+
+/* Crew Timing rows: always have the same inner frame as highlighted rows */
+.crew-timing .row3{
   padding: var(--row-pad-y) var(--row-pad-x);
   border-radius: var(--row-radius);
 }
