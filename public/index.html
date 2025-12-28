@@ -691,18 +691,22 @@ button:disabled{
   color:#222;
 }
 
-/* Show Time ORM note lives INSIDE the label cell (3-col row) */
+/* Show Time ORM note inline with label, never truncate */
 .show-orm-inline{
   font-size:12px;
   font-weight:500;
   color:#666;
   margin-left:10px;
-  white-space:nowrap;
+  white-space:nowrap;   /* keep it inline */
 }
-
 .show-orm-inline .showtime-circ{
   font-weight:800;
   color:#222;
+}
+
+/* Only for Show Time label+note: keep on one line, never truncate */
+.showtime-inline{
+  white-space:nowrap;
 }
   
 /* Crew Timing highlighted band uses consistent row padding */
@@ -733,13 +737,6 @@ button:disabled{
 .sc-label{
   font-variant: small-caps;
   letter-spacing: 0.6px;
-}
-
-/* Keep "Show Time + ORM note" inline like FDP (no wrapping) */
-.sc-label.tight-label{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
 }
   
 /* Section headers in output (Crew Timing, Crew Duty Limitations) */
@@ -1389,7 +1386,7 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
 
     return `
       <div class="row3 timerow ${extraClass}">
-        <span class="sc-label ${extraClass.includes("showtime") ? "tight-label" : ""}">${label}</span>
+        <span class="sc-label">${label}</span>
         <span class="mcol">${spacer}</span>
         <span class="lcol">${local}</span>
         <span class="zcol">${z}</span>
@@ -1770,7 +1767,7 @@ const homeShowOrmText =
       <div class="subtext">T/O − 4+15</div>
 
 ${row3Html(
-  `Show Time${
+  `<span class="showtime-inline">Show Time${
     (() => {
       if(homeShowLocalMins == null) return "";
 
@@ -1794,8 +1791,8 @@ ${row3Html(
         : `Circadian = <span class="showtime-circ">${circHtml}</span>`;
 
       return ` <span class="show-orm-inline">${msg}</span>`;
-    })()
-  }`,
+})()
+}</span>`,
   showTime,
   tkIcao,
 true,
