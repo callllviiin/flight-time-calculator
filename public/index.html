@@ -735,6 +735,13 @@ button:disabled{
   letter-spacing: 0.6px;
 }
 
+/* Keep "Show Time + ORM note" inline like FDP (no wrapping) */
+.sc-label.tight-label{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+  
 /* Section headers in output (Crew Timing, Crew Duty Limitations) */
 .sc-head{
   font-variant: small-caps;
@@ -1382,7 +1389,7 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
 
     return `
       <div class="row3 timerow ${extraClass}">
-        <span class="sc-label">${label}</span>
+        <span class="sc-label ${extraClass.includes("showtime") ? "tight-label" : ""}">${label}</span>
         <span class="mcol">${spacer}</span>
         <span class="lcol">${local}</span>
         <span class="zcol">${z}</span>
@@ -1791,8 +1798,8 @@ ${row3Html(
   }`,
   showTime,
   tkIcao,
-  true,
-  showCircClass
+true,
+`${showCircClass} showtime`
 )}
 
 <div class="subtext">T/O − 3+15</div>
