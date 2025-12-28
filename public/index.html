@@ -1280,7 +1280,23 @@ const ICAO_TIMEZONE = {
 
 function getTimeZoneFromICAO(icao){
   const key = (icao || "").trim().toUpperCase();
-  return (ICAO_TZ_DB && ICAO_TZ_DB[key]) || ICAO_TIMEZONE[key] || null;
+
+  // JSON DB first
+  if(ICAO_TZ_DB && ICAO_TZ_DB[key]){
+    const entry = ICAO_TZ_DB[key];
+
+    // Your dataset format: { ..., "tz": "America/New_York", ... }
+    if(entry && typeof entry === "object" && entry.tz) return entry.tz;
+
+    // Future-proofing (other datasets sometimes use these)
+    if(entry && typeof entry === "object" && entry.timezone) return entry.timezone;
+
+    // If we ever switch to a flattened JSON: "KADW": "America/New_York"
+    if(typeof entry === "string") return entry;
+  }
+
+  // Built-in fallback
+  return ICAO_TIMEZONE[key] || null;
 }
 
 function getOffsetMinutesForTimeZone(timeZone, dateUtc){
