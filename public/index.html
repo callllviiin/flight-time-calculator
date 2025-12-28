@@ -190,13 +190,14 @@ input{
   padding-left:18px;
 }
 
-/* Subtle +1/-1 marker in OUTPUT (superscript style) */
 .shift-sup{
   font-size:10px;
-  color:#666;
   font-weight:700;
   margin-left:2px;
   vertical-align:super;
+
+  color:#000;     /* force standard black */
+  opacity:1;
 }
 
 /* Float day-shift without affecting alignment */
@@ -773,7 +774,9 @@ button:disabled{
   font-size:10px;
   font-weight:700;
   margin-left:1px;
-  opacity:0.8;
+
+  color:#000;     /* force standard black */
+  opacity:1;      /* remove dimming */
 }
  
 .subtext{
@@ -922,7 +925,7 @@ button:disabled{
 .ormm-severe .shift-sup{
   font-weight:900;
   opacity:1;
-  color:inherit;
+  color:#000;
 }
   
 /* tiny offset editor for brief */
