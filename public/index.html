@@ -1740,13 +1740,13 @@ const homeShowOrmText =
     function ormMessageFdp(limitMinutes){
       if(limitMinutes <= 0) return "";
       if(landingFromShow > limitMinutes){
-        return "Mission NO-GO. Maximum Duty Day Exceeded";
+        return "Mission NO-GO. Max Duty Day Exceeded";
       }
       const ratio = landingFromShow / limitMinutes;
-      if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
-      if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
-      if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
-      return "ORM Low: <75% of Maximum Duty Day";
+      if(ratio >= 0.95) return "ORM Severe: >95% of Max Duty Day";
+      if(ratio >= 0.90) return "ORM High: 90-95% of Max Duty Day";
+      if(ratio >= 0.75) return "ORM Moderate: 75-90% of Max Duty Day";
+      return "ORM Low: <75% of Max Duty Day";
     }
 
     out.innerHTML = `
