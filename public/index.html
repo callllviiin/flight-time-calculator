@@ -782,29 +782,11 @@ button:disabled{
   margin-top:2px;
   margin-bottom:10px;
 
-  /* Force subtext to start under the label column (not centered) */
-  display:grid;
-  grid-template-columns: var(--row-label-w) 1fr;
-  column-gap: var(--row-gap);
-
-  /* Match row frame inset */
+  /* Match the row inset so subtext aligns with label text */
   padding-left: var(--row-pad-x);
   padding-right: var(--row-pad-x);
 
   text-align:left;
-}
-
-  /* Subtext: create an empty label-column spacer so real content starts in column 2 */
-.subtext::before{
-  content:"";
-}
-
-/* Keep "T/O − [input]" as one inline unit in column 2 */
-.subtext-line{
-  grid-column: 2;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
 }
   
 /* Small explanatory text in the "middle" column of Duty Limitations */
