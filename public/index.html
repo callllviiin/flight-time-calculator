@@ -782,8 +782,8 @@ button:disabled{
   margin-top:2px;
   margin-bottom:10px;
 
-  /* Align subtext with start of label text */
-  padding-left: var(--row-label-w);
+  /* Align subtext under label text (not panel edge) */
+  margin-left: calc(var(--row-label-w) + var(--row-pad-x));
 }
 
 /* Small explanatory text in the "middle" column of Duty Limitations */
