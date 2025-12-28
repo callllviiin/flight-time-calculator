@@ -300,6 +300,25 @@ input{
   box-sizing:border-box;
 }
 
+/* Row 3: Aircraft + Home ICAO side-by-side */
+.aircraft-home{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.home-wrap{
+  position:relative;
+  width:88px; /* slightly smaller than normal boxes */
+}
+
+.home-wrap .box{
+  width:100%;
+  padding:6px;
+  font-size:16px;
+  text-align:center;
+}
+  
 .crew-toggle{
   justify-self:end;
   display:flex;
@@ -386,6 +405,35 @@ button:hover{
   filter:brightness(1.05);
 }
 
+/* Circadian highlight for Home Station Show Time (subtle, scan-friendly) */
+.circ-low{
+  background:#eaf6ee;
+  border:1px solid #c7e7d0;
+  padding:2px 4px;
+  border-radius:4px;
+}
+
+.circ-mod{
+  background:#fff8e3;
+  border:1px solid #f1e0b6;
+  padding:2px 4px;
+  border-radius:4px;
+}
+
+.circ-high{
+  background:#ffe2bf;
+  border:1px solid #f3c08a;
+  padding:2px 4px;
+  border-radius:4px;
+}
+
+.circ-severe{
+  background:#ffd1d1;
+  border:1px solid #f1a0a0;
+  padding:2px 4px;
+  border-radius:4px;
+}
+  
 /* ---------- Global focus / accent color (force orange) ---------- */
 :focus-visible{
   outline: 2px solid #ff8a3d;
@@ -858,22 +906,27 @@ button:disabled{
 
   <!-- Use columns 2 through 5 for the 3 evenly-spaced items -->
   <div class="third-content-wide">
-    <div class="aircraft-wrap">
-      <select id="aircraft" tabindex="-1">
-        <option selected>KC-135</option>
-        <option>KC-46</option>
-        <option>C-5</option>
-        <option>C-17</option>
-        <option>C-130</option>
-        <option>C-21</option>
-        <option>C-32</option>
-        <option>C-37</option>
-        <option>C-40</option>
-        <option>VC-25</option>
-      </select>
-    </div>
+<div class="aircraft-wrap">
+  <div class="aircraft-home">
+    <select id="aircraft" tabindex="-1">
+      <option selected>KC-135</option>
+      <option>KC-46</option>
+      <option>C-5</option>
+      <option>C-17</option>
+      <option>C-130</option>
+      <option>C-21</option>
+      <option>C-32</option>
+      <option>C-37</option>
+      <option>C-40</option>
+      <option>VC-25</option>
+    </select>
 
-    <div></div>
+    <div class="home-wrap">
+      <input id="homeICAO" class="box" placeholder="HOME" maxlength="4" style="text-transform:uppercase;" tabindex="-1">
+      <div id="homeIcaoHint" class="icao-hint time-hint"></div>
+    </div>
+  </div>
+</div>
 
     <div class="crew-toggle">
       <span id="basicLbl" class="crew-label form-label active">Basic</span>
@@ -926,6 +979,23 @@ function showRuntimeError(err){
   `;
 }
 
+function circadianClassFromLocalMins(localMins){
+  if(localMins == null) return "";
+
+  // Simple, editable banding (tune these later if you want)
+  // Low: 0700–2159
+  // Mod: 2200–2359 and 0600–0659
+  // High: 0400–0559
+  // Severe: 0000–0359
+  const m = ((localMins % 1440) + 1440) % 1440;
+
+  if(m < 240) return "circ-severe";     // 0000–0359
+  if(m < 360) return "circ-high";       // 0400–0559
+  if(m < 420) return "circ-mod";        // 0600–0659
+  if(m < 1320) return "circ-low";       // 0700–2159
+  return "circ-mod";                    // 2200–2359
+}
+  
 function setOutputIdle(message){
   const out = document.getElementById("output");
   if(!out) return;
@@ -1366,6 +1436,7 @@ let isEditingZulu = false;
 
   /* Local time listeners (sync only; calculate only after first button press) */
 const takeoffTime = document.getElementById("takeoffTime");
+const homeICAO = document.getElementById("homeICAO");
 const takeoffICAO = document.getElementById("takeoffICAO");
 const takeoffLocal = document.getElementById("takeoffLocal");
 
@@ -1414,7 +1485,23 @@ if(doExpandAnim){
     const tkIcao = normICAO(takeoffICAO.value);
     const ldIcao = normICAO(landingICAO.value);
 
+const homeIcao = normICAO(document.getElementById("homeICAO")?.value || "");
+const homeKey = (homeIcao && getTimeZoneFromICAO(homeIcao)) ? homeIcao : tkIcao;
 
+// compute home-local minutes for SHOW (we want minutes only to classify)
+let homeShowLocalMins = null;
+if(isICAO(homeKey) && getTimeZoneFromICAO(homeKey)){
+  const baseShift = Math.floor(showTime / 1440);
+  const zNorm = ((showTime % 1440) + 1440) % 1440;
+  const zHHMM = minutesToHHMM(zNorm);
+  const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
+  if(res) homeShowLocalMins = res.localMins; // only for circadian banding
+}
+
+const showCircClass = circadianClassFromLocalMins(homeShowLocalMins);
+const homeShowHtml = (homeShowLocalMins == null) ? "" : localHtmlFromZuluSimple(showTime, homeKey);
+
+    
     const showTime   = takeoffMin - 195;
     const crewRest   = takeoffMin - 855;
     const lastBeer   = takeoffMin - 720;
@@ -1487,8 +1574,10 @@ if(doExpandAnim){
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-      ${row3Html("Show Time", showTime, tkIcao, true)}
-      <div class="subtext">T/O − 3+15</div>
+      ${row3Html("Show Time", showTime, tkIcao, true, showCircClass)}
+      <div class="subtext">
+      T/O − 3+15${homeShowHtml ? ` • Home: ${homeShowHtml}` : ""}
+      </div>
 
       ${row3Html("Brief Time", briefTime, tkIcao, true)}
       <div class="subtext">
@@ -1742,6 +1831,7 @@ function resetAll({ scrollToTop = false } = {}){
   landingTime.value = "";
   takeoffICAO.value = "";
   landingICAO.value = "";
+  homeICAO.value = "";
   takeoffLocal.value = "";
   landingLocal.value = "";
 
@@ -1753,10 +1843,10 @@ function resetAll({ scrollToTop = false } = {}){
 
   // reset state + output
     // clear ALL hints immediately (must happen before any early-return)
-  [
-    "takeoffIcaoHint", "landingIcaoHint",
-    "takeoffTimeHint", "landingTimeHint",
-    "takeoffLocalHint", "landingLocalHint"
+[
+  "takeoffIcaoHint", "landingIcaoHint", "homeIcaoHint",
+  "takeoffTimeHint", "landingTimeHint",
+  "takeoffLocalHint", "landingLocalHint"
   ].forEach(id => {
     const el = document.getElementById(id);
     if(el){
@@ -1961,6 +2051,16 @@ if(scrollToTop){
 
     if (hasCalculated) onUserEdit();
   });
+});
+
+homeICAO?.addEventListener("input", () => {
+  const clean = normICAO(homeICAO.value);
+  if(homeICAO.value !== clean) homeICAO.value = clean;
+
+  updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
+
+  // If results already exist, mark output stale (don’t auto-recalc)
+  if(hasCalculated) onUserEdit();
 });
   
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
