@@ -286,12 +286,29 @@ input{
 }
 
 #aircraft{
-  width:104px;            /* match .box */
-  padding:6px;            /* match .box */
-  font-size:16px;         /* match .box */
-  font-weight:700;
-  text-align:center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width:104px;
+  height:32px;               /* lock height */
   box-sizing:border-box;
+
+  border:1px solid #cfcfcf;
+  border-radius:4px;
+  background:#fff;
+  color:#222;
+
+  /* no vertical padding; center with line-height */
+  padding:0 26px 0 6px;      /* top right bottom left */
+  line-height:30px;          /* 32px height - 2px border */
+
+  font-size:16px;
+  font-family: Consolas, Menlo, "Courier New", monospace;
+  font-weight:600;
+  text-align:center;
+
+  cursor:pointer;
 }
 
 select#aircraft{
