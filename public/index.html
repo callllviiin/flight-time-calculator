@@ -650,6 +650,7 @@ button:disabled{
 .row4.showtime-left .mcol{
   justify-content:flex-start;
   padding-left:6px;
+  text-align:left;
 }
 
 .row4.showtime-left .orm-note.show-orm{
@@ -659,7 +660,7 @@ button:disabled{
 
   /* Show Time: tighten middle column so ORM text sits closer to label */
 .row4.showtime-left{
-  grid-template-columns: 190px auto auto auto;
+  grid-template-columns: 190px max-content auto auto;
 }
   
 /* Local time + ORM label stacked in the middle column (Show Time only) */
