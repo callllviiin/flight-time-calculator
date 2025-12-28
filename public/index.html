@@ -1039,13 +1039,14 @@ button:disabled{
   .crew-toggle{ justify-self:end; }
 }
 
-/* FINAL OVERRIDE: Augmented text weights */
+/* FINAL OVERRIDE: Augmented text weights (checked must win) */
 .crew-check-text{
-  font-weight:250 !important;
+  font-weight:250 !important;   /* unchecked */
 }
 
-#augmented:checked + span{
-  font-weight:500 !important;
+.crew-check-label input:checked + .crew-check-text{
+  font-weight:500 !important;   /* checked (subtle bump, minimal width change) */
+  color:#000 !important;
 }
   
   /* FINAL OVERRIDE: Row 3 Augmented control starts where Local column starts */
