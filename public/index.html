@@ -1480,18 +1480,19 @@ if(doExpandAnim){
 
     const takeoffMin = hhmmToMinutes(takeoff);
     const landingMin = hhmmToMinutes(landing);
-
     // For local-time output rows (crew timing uses takeoff ICAO)
     const tkIcao = normICAO(takeoffICAO.value);
     const ldIcao = normICAO(landingICAO.value);
+    
+    const showTime   = takeoffMin - 195;
+    
+const homeIcao = normICAO(homeICAO?.value || "");
+const homeTz = homeIcao ? getTimeZoneFromICAO(homeIcao) : null;
+const homeKey = homeTz ? homeIcao : tkIcao;
 
-const homeIcao = normICAO(document.getElementById("homeICAO")?.value || "");
-const homeKey = (homeIcao && getTimeZoneFromICAO(homeIcao)) ? homeIcao : tkIcao;
-
-// compute home-local minutes for SHOW (we want minutes only to classify)
 let homeShowLocalMins = null;
 if(isICAO(homeKey) && getTimeZoneFromICAO(homeKey)){
-  const baseShift = Math.floor(showTime / 1440);
+
   const zNorm = ((showTime % 1440) + 1440) % 1440;
   const zHHMM = minutesToHHMM(zNorm);
   const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
@@ -1502,7 +1503,6 @@ const showCircClass = circadianClassFromLocalMins(homeShowLocalMins);
 const homeShowHtml = (homeShowLocalMins == null) ? "" : localHtmlFromZuluSimple(showTime, homeKey);
 
     
-    const showTime   = takeoffMin - 195;
     const crewRest   = takeoffMin - 855;
     const lastBeer   = takeoffMin - 720;
     const legalAlert = takeoffMin - 255;
