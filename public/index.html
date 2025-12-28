@@ -384,6 +384,40 @@ input:checked + .slider:before{
   content:"▶";
 }
 
+/* Row 3: compact Augmented checkbox (replaces slider) */
+.crew-check{
+  justify-self:end;
+  display:flex;
+  align-items:center;
+  white-space:nowrap;
+}
+
+.crew-check-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+}
+
+.crew-check-label input{
+  width:18px;
+  height:18px;
+  transform: translateY(1px);
+}
+
+.crew-check-text{
+  font-weight:600;      /* normal-ish when off */
+  color:#333;
+}
+
+/* Bold feedback when checked */
+#augmented:checked + #augLbl,
+#augmented:checked + span{
+  font-weight:800;
+  color:#111;
+}
+  
 /* ---------- BUTTON ---------- */
 button{
   margin-top:20px;
@@ -1096,14 +1130,13 @@ button:disabled{
   </div>
 </div>
 
-    <div class="crew-toggle">
-      <span id="basicLbl" class="crew-label form-label active">Basic</span>
-      <label class="switch">
-        <input type="checkbox" id="augmented" tabindex="-1">
-        <span class="slider"></span>
-      </label>
-      <span id="augLbl" class="crew-label form-label">Augmented</span>
-    </div>
+<div class="crew-check">
+  <label class="crew-check-label">
+    <input type="checkbox" id="augmented" tabindex="-1">
+    <span id="augLbl" class="crew-check-text">Augmented</span>
+  </label>
+</div>
+    
   </div>
 </div>
 
@@ -2048,12 +2081,11 @@ function syncZuluFromLocal(localInput, icaoInput, zuluInput){
 
 /* ----------------- bindings ----------------- */
 const augmentedBox = document.getElementById("augmented");
-const basicLbl = document.getElementById("basicLbl");
 const augLbl = document.getElementById("augLbl");
 
 function syncToggleLabels(){
-  basicLbl.classList.toggle("active", !augmentedBox.checked);
-  augLbl.classList.toggle("active", augmentedBox.checked);
+  if(!augLbl) return;
+  augLbl.style.fontWeight = augmentedBox.checked ? "800" : "600";
 }
   
 augmentedBox.addEventListener("change", () => {
