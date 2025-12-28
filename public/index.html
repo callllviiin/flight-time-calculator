@@ -659,10 +659,20 @@ button:disabled{
   text-align:left;
 }
 
+/* Show Time middle text: more subtle, like subtext */
 .row4.showtime-left .orm-note.show-orm{
-  text-align:left;
-  white-space:nowrap;      /* keep it on one line */
+  font-size:12px;
+  font-weight:500;
+  opacity:0.85;
+  letter-spacing:0.2px;
 }
+
+  /* Only the circadian time gets emphasis */
+.showtime-circ{
+  font-weight:700;
+  opacity:1;
+}
+
 
 /* Show Time: narrower label col so the ORM/Circ text starts sooner */
 .row4.showtime-left{
@@ -685,16 +695,14 @@ button:disabled{
   font-size:17.5px;
 }
 
-/* Show Time band: remove the ORM padding that causes the “inset” look */
+/* Show Time band: add comfortable padding WITHOUT causing the inset look */
 .row4.showtime-left.orm-low,
 .row4.showtime-left.orm-mod,
 .row4.showtime-left.orm-high,
 .row4.showtime-left.orm-severe{
-  padding:0;              /* THIS is what removes the few-px indent */
-}
-
-.showtime-circ{
-  font-weight:800;
+  padding:4px 8px;         /* <- makes the band “bigger” */
+  border-radius:4px;       /* match your other bands */
+  box-sizing:border-box;
 }
   
 /* Local time + ORM label stacked in the middle column (Show Time only) */
