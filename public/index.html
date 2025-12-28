@@ -295,27 +295,27 @@ input{
 }
 
 select#aircraft{
-  appearance: none;          /* kill native grey styling */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  width:104px;               /* MATCH .box */
-  height:32px;               /* MATCH .box height */
-  box-sizing:border-box;     /* CRITICAL */
-  
-  background:#fff;           /* match input boxes */
+  width:104px;
+  height:32px;               /* outer height matches .box */
+  box-sizing:border-box;
+
+  background:#fff;
   color:#222;
 
   border:1px solid #cfcfcf;
   border-radius:4px;
 
-  padding:6px;
-  padding-right:26px;        /* arrow room */
-  
+  /* KEY: no vertical padding; center via line-height */
+  padding:0 26px 0 6px;      /* top right bottom left */
+  line-height:30px;          /* 32px height - 2px border = 30px inner */
+
   font-size:16px;
   font-family: Consolas, Menlo, "Courier New", monospace;
   font-weight:600;
-  line-height:1;             /* CRITICAL for vertical centering */
   text-align:center;
 
   cursor:pointer;
