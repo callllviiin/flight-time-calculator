@@ -280,7 +280,9 @@ input{
   width:100%;
 }
   
-.aircraft-wrap{ justify-self:start; 
+/* Flatten wrappers so #aircraft and .home-wrap can be grid items */
+.aircraft-wrap{
+  display:contents;
 }
 
 #aircraft{
