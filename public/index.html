@@ -1864,11 +1864,6 @@ if(scrollToTop){
   augmentedBox.checked = false;
   syncToggleLabels();
 
-  if(lHint){
-    lHint.textContent = "";
-    lHint.classList.remove("bad");
-  }
-
   // Time hints (red "Invalid time" under Zulu)
   const tkTimeHint = document.getElementById("takeoffTimeHint");
   const ldTimeHint = document.getElementById("landingTimeHint");
