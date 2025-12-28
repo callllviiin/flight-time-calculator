@@ -691,6 +691,20 @@ button:disabled{
   color:#222;
 }
 
+/* Show Time ORM note lives INSIDE the label cell (3-col row) */
+.show-orm-inline{
+  font-size:12px;
+  font-weight:500;
+  color:#666;
+  margin-left:10px;
+  white-space:nowrap;
+}
+
+.show-orm-inline .showtime-circ{
+  font-weight:800;
+  color:#222;
+}
+  
 /* Crew Timing highlighted band uses consistent row padding */
 .crew-timing .row4.orm-low,
 .crew-timing .row4.orm-mod,
@@ -1748,38 +1762,38 @@ const homeShowOrmText =
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-${row4Html(
-  "Show Time",
+${row3Html(
+  `Show Time${
+    (() => {
+      if(homeShowLocalMins == null) return "";
+
+      // Recompute local + day shift for Show Time using absolute context
+      const baseShift = Math.floor(showTime / 1440);
+      const zNorm = ((showTime % 1440) + 1440) % 1440;
+      const zHHMM = minutesToHHMM(zNorm);
+      const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
+
+      // Build circadian time HTML (same look as other times)
+      let circHtml = `${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>`;
+      if(res){
+        const totalShift = baseShift + res.dayShift;
+        if(totalShift !== 0){
+          circHtml += `<span class="shift-sup">${formatShiftSup(totalShift)}</span>`;
+        }
+      }
+
+      const msg = homeShowOrmText
+        ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circHtml}</span>`
+        : `Circadian = <span class="showtime-circ">${circHtml}</span>`;
+
+      return ` <span class="show-orm-inline">${msg}</span>`;
+    })()
+  }`,
   showTime,
   tkIcao,
-  (() => {
-    if(homeShowLocalMins == null) return "";
-
-    // Recompute local + day shift for Show Time using absolute context
-    const baseShift = Math.floor(showTime / 1440);
-    const zNorm = ((showTime % 1440) + 1440) % 1440;
-    const zHHMM = minutesToHHMM(zNorm);
-    const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
-
-    // Build circadian time using the SAME HTML pieces as your other times
-    let circHtml = `${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>`;
-
-    if(res){
-      const totalShift = baseShift + res.dayShift;
-      if(totalShift !== 0){
-        circHtml += `<span class="shift-sup">${formatShiftSup(totalShift)}</span>`;
-      }
-    }
-
-    const msg = homeShowOrmText
-      ? `${homeShowOrmText}: Circadian = <span class="showtime-circ">${circHtml}</span>`
-      : `Circadian = <span class="showtime-circ">${circHtml}</span>`;
-
-    return `<span class="orm-note show-orm">${msg}</span>`;
-  })(),
-  `${showCircClass} showtime-left`
+  true,
+  showCircClass
 )}
-
 
 <div class="subtext">T/O − 3+15</div>
 
