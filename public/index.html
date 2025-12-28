@@ -663,6 +663,15 @@ button:disabled{
   margin-right:0;
 }
 
+/* Home Station ORM message: slightly smaller, allow wrap if needed */
+.orm-note.home-orm{
+  font-size:10px;
+  font-weight:700;
+  white-space:normal;     /* allow wrapping */
+  text-align:center;
+  line-height:1.15;
+}
+  
 .row3.midtext .orm-note{
   white-space:nowrap;
   display:inline-block;
@@ -995,6 +1004,30 @@ function circadianClassFromLocalMins(localMins){
   if(m < 1320) return "circ-low";       // 0700–2159
   return "circ-mod";                    // 2200–2359
 }
+
+function homeShowOrmClass(localMins){
+  if(localMins == null) return "";
+  const m = ((localMins % 1440) + 1440) % 1440;
+
+  // Low: 0530–1400
+  if(m >= 330 && m <= 840) return "orm-low";
+
+  // Moderate: 1401–2000
+  if(m >= 841 && m <= 1200) return "orm-mod";
+
+  // High: 2001–0529 (wraps midnight)
+  return "orm-high";
+}
+
+function homeShowOrmMessage(localMins){
+  if(localMins == null) return "";
+  const cls = homeShowOrmClass(localMins);
+
+  if(cls === "orm-low")  return "ORM Low: Home Station Show Time 0530-1400L";
+  if(cls === "orm-mod")  return "ORM Moderate: Home Station Show Time 1401-2000L";
+  return "ORM High: Home Station Show Time 2001-0529L";
+}
+
   
 function setOutputIdle(message){
   const out = document.getElementById("output");
@@ -1499,9 +1532,8 @@ if(isICAO(homeKey) && getTimeZoneFromICAO(homeKey)){
   if(res) homeShowLocalMins = res.localMins; // only for circadian banding
 }
 
-const showCircClass = circadianClassFromLocalMins(homeShowLocalMins);
-const homeShowHtml = (homeShowLocalMins == null) ? "" : localHtmlFromZuluSimple(showTime, homeKey);
-
+const homeShowOrmCls = homeShowOrmClass(homeShowLocalMins);
+const homeShowMsg = homeShowOrmMessage(homeShowLocalMins);
     
     const crewRest   = takeoffMin - 855;
     const lastBeer   = takeoffMin - 720;
@@ -1574,8 +1606,18 @@ const homeShowHtml = (homeShowLocalMins == null) ? "" : localHtmlFromZuluSimple(
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-      ${row3Html("Show Time", showTime, tkIcao, true, showCircClass)}
-      <div class="subtext">
+      ${row3Html("Show Time", showTime, tkIcao, true)}
+<div class="subtext">T/O − 3+15</div>
+
+${row3Html(
+  "Home Station Show",
+  showTime,
+  "",
+  false,
+  homeShowOrmCls,
+  homeShowMsg ? `<span class="orm-note home-orm">${homeShowMsg}</span>` : `<span class="orm-note home-orm">Enter HOME ICAO to compute circadian ORM</span>`
+)}
+
       T/O − 3+15${homeShowHtml ? ` • Home: ${homeShowHtml}` : ""}
       </div>
 
