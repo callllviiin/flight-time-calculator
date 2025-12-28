@@ -1180,6 +1180,7 @@ async function loadIcaoDb(){
     const res = await fetch("icao_tz_db.json", { cache: "no-store" });
     if(!res.ok) return;
     ICAO_TZ_DB = await res.json();
+    console.log("[ICAO DB] Loaded entries:", Object.keys(ICAO_TZ_DB).length);
   }catch(_){
     // silent fail — we just fall back to the built-in map
   }
