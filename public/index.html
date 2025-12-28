@@ -618,6 +618,34 @@ button:disabled{
   align-items:center;       /* vertical centering */
 }
 
+/* 4-column row for Show Time: Label | ORM message | Local | Zulu */
+.row4{
+  display:grid;
+  grid-template-columns: 190px 1fr auto auto;
+  column-gap:10px;
+  align-items:center;
+  margin-top:12px;
+  font-weight:bold;
+}
+
+.row4 .mcol{
+  display:flex;
+  justify-content:center; /* center like FDP */
+  align-items:center;
+}
+
+.row4 .lcol{
+  text-align:right;
+  font-weight:700;
+  min-width:70px;
+  margin-right:40px;
+}
+
+.row4 .zcol{
+  text-align:right;
+  min-width:70px;
+}
+  
 /* Local time + ORM label stacked in the middle column (Show Time only) */
 .midstack{
   display:flex;
@@ -1289,6 +1317,20 @@ if(showLocal){
   middle = (midHtml || "");
 }
 
+function row4Html(label, zuluMinutes, localIcao, ormHtml="", extraClass=""){
+  const z = zuluHtml(zuluMinutes);
+  const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
+
+  return `
+    <div class="row4 ${extraClass}">
+      <span class="sc-label">${label}</span>
+      <span class="mcol">${ormHtml || ""}</span>
+      <span class="lcol">${local}</span>
+      <span class="zcol">${z}</span>
+    </div>
+  `;
+}
+  
 // If we're showing a message without local time, use the wider "midtext" layout like FDP
 const midClass = (!showLocal && midHtml) ? "midtext" : "";
 
@@ -1647,15 +1689,12 @@ const homeShowOrmText =
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-    ${row3Html(
+${row4Html(
   "Show Time",
   showTime,
   tkIcao,
-  true,
-  showCircClass,
-  homeShowOrmText
-    ? `<span class="orm-note">${homeShowOrmText}</span>`
-    : ""
+  homeShowOrmText ? `<span class="orm-note">${homeShowOrmText}</span>` : "",
+  showCircClass
 )}
 <div class="subtext">
   T/O − 3+15
