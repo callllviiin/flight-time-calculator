@@ -414,7 +414,7 @@ input:checked + .slider:before{
   letter-spacing:0.1px;
 
   font-size:14px;
-  font-weight:200;
+  font-weight:250;
   color:#555;
 }
 
@@ -1039,6 +1039,15 @@ button:disabled{
   .crew-toggle{ justify-self:end; }
 }
 
+/* FINAL OVERRIDE: Augmented text weights */
+.crew-check-text{
+  font-weight:250 !important;
+}
+
+#augmented:checked + span{
+  font-weight:500 !important;
+}
+  
   /* FINAL OVERRIDE: Row 3 Augmented control starts where Local column starts */
 .third-content-wide .crew-check{
   grid-column: 4 !important;
