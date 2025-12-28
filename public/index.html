@@ -272,12 +272,12 @@ input{
 }
 
 .third-content-wide{
-  grid-column: 2 / -1;
-  display:flex;
+  grid-column: 2 / -1;                 /* still spans Zulu → Local columns */
+  display:grid;
+  grid-template-columns: 104px 26px 104px 1fr;  /* match top-row columns */
+  column-gap:4px;
   align-items:center;
-  justify-content:space-between;  /* left cluster + right checkbox */
   width:100%;
-  gap:12px;                      /* small breathing room */
 }
   
 .aircraft-wrap{ justify-self:start; 
@@ -292,11 +292,9 @@ input{
   box-sizing:border-box;
 }
 
-/* Row 3: Aircraft + Home ICAO side-by-side */
+/* Let #aircraft and .home-wrap sit in the Row 3 grid columns */
 .aircraft-home{
-  display:flex;
-  align-items:center;
-  gap:8px;
+  display:contents;
 }
 
 .home-wrap{
@@ -309,6 +307,14 @@ input{
   padding:6px;
   font-size:16px;
   text-align:center;
+}
+
+/* Row 3 placement: Aircraft in col 1, Home in col 3, Augmented on the right */
+#aircraft{ grid-column:1; }
+.home-wrap{ grid-column:3; }
+.crew-check{
+  grid-column:4;
+  justify-self:end;
 }
   
 .crew-toggle{
