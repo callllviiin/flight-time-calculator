@@ -465,7 +465,18 @@ button:disabled{
 }
   
 /* ---------- OUTPUT ---------- */
-.output{
+
+ :root{
+  --row-label-w: 190px;
+  --row-gap: 10px;
+  --row-time-minw: 70px;
+  --row-time-mr: 40px;     /* keeps the local/zulu spacing consistent */
+  --row-pad-y: 4px;
+  --row-pad-x: 6px;
+  --row-radius: 4px;
+} 
+  
+  .output{
   margin-top:28px;
   padding:20px 20px 12px;
   background:white;
@@ -578,131 +589,84 @@ button:disabled{
   font-size:19px;
 }
   
-/* Output rows: label | local | zulu */
-.row3{
+/* ================= Unified output row system ================= */
+
+.row3, .row4{
   display:grid;
-  grid-template-columns: 1fr auto auto;
-  column-gap:10px;          /* tighter */
-  align-items:center;
   margin-top:12px;
   font-weight:bold;
+  align-items:center;
+  column-gap: var(--row-gap);
+  box-sizing:border-box;
 }
 
-.row3 .lcol{
+/* 3-col rows: label | local(or msg) | zulu */
+.row3{
+  grid-template-columns: 1fr auto auto;
+}
+
+/* 4-col rows (Show Time): label | msg | local | zulu */
+.row4{
+  grid-template-columns: var(--row-label-w) 1fr auto auto;
+}
+
+/* times (shared) */
+.row3 .lcol, .row4 .lcol{
   text-align:right;
   font-weight:700;
-  color:inherit;      /* same black as Zulu */
-  min-width:70px;
-  margin-right:40px;
+  color:inherit;
+  min-width: var(--row-time-minw);
+  margin-right: var(--row-time-mr);
 }
-
-.row3 .zcol{
+.row3 .zcol, .row4 .zcol{
   text-align:right;
-  min-width:70px;
+  min-width: var(--row-time-minw);
 }
 
-/* Make ORM message text not bold in both layouts */
-.row3.midtext .lcol,
+/* message col (Show Time) */
 .row4 .mcol{
-  font-weight:500;
-}
-  
-/* Give ORM message column more space */
-.row3.midtext{
-  grid-template-columns: 190px 1fr auto; /* fixed label width, message gets the rest */
-  column-gap:10px;
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  padding-left:0;
+  text-align:left;
 }
 
-.row3.midtext > span:first-child{
-  white-space:nowrap;
+/* message rows in duty section (row3.midtext) */
+.row3.midtext{
+  grid-template-columns: var(--row-label-w) 1fr auto;
 }
-  
-/* Center the ORM message within the middle column */
 .row3.midtext .lcol{
   display:flex;
-  justify-content:center;   /* horizontal centering */
-  align-items:center;       /* vertical centering */
-}
-
-/* 4-column row for Show Time: Label | ORM message | Local | Zulu */
-.row4{
-  display:grid;
-  grid-template-columns: 190px 1fr auto auto;
-  column-gap:10px;
-  align-items:center;
-  margin-top:12px;
-  font-weight:bold;
-}
-
-.row4 .mcol{
-  display:flex;
-  justify-content:center; /* center like FDP */
-  align-items:center;
-}
-
-.row4 .lcol{
-  text-align:right;
-  font-weight:700;
-  min-width:70px;
-  margin-right:40px;
-}
-
-.row4 .zcol{
-  text-align:right;
-  min-width:70px;
-}
-
-/* Show Time: left-align ORM/Circadian text so it doesn't float in empty space */
-.row4.showtime-left .mcol{
   justify-content:flex-start;
-  padding-left:6px;
-  text-align:left;
+  align-items:center;
+  font-weight:500;  /* message lighter */
 }
 
-/* Show Time middle text: more subtle, like subtext */
-.row4.showtime-left .orm-note.show-orm{
-  font-size:12px;
-  font-weight:500;
-  opacity:0.85;
-  letter-spacing:0.2px;
-}
-
-  /* Only the circadian time gets emphasis */
-.showtime-circ{
-  font-weight:700;
-  opacity:1;
-}
-
-
-/* Show Time: narrower label col so the ORM/Circ text starts sooner */
-.row4.showtime-left{
-  grid-template-columns: 120px 1fr auto auto;  /* was 190px ... */
-  column-gap:10px;
-}
-
-/* keep ORM/Circ text hugging left */
-.row4.showtime-left .mcol{
-  justify-content:flex-start;
-  padding-left:0;        /* kill the extra nudge */
-  text-align:left;
-  white-space:nowrap;    /* keep it one line */
-  overflow:hidden;       /* optional safety */
-  text-overflow:ellipsis;/* optional safety */
-}
-
-/* Crew Timing: keep Show Time same size as the other timing rows */
+/* Crew Timing: keep row4 same size as row3 */
 .crew-timing .row4{
   font-size:17.5px;
 }
 
-/* Show Time band: add comfortable padding WITHOUT causing the inset look */
-.row4.showtime-left.orm-low,
-.row4.showtime-left.orm-mod,
-.row4.showtime-left.orm-high,
-.row4.showtime-left.orm-severe{
-  padding:4px 8px;         /* <- makes the band “bigger” */
-  border-radius:4px;       /* match your other bands */
-  box-sizing:border-box;
+  /* Show Time: message feels like subtext, circadian time pops */
+.row4.showtime-left .orm-note.show-orm{
+  font-size:12px;
+  font-weight:500;
+  color:#666;
+  white-space:nowrap;
+}
+.showtime-circ{
+  font-weight:800;
+  color:#222;
+}
+
+/* Crew Timing highlighted band uses consistent row padding */
+.crew-timing .row4.orm-low,
+.crew-timing .row4.orm-mod,
+.crew-timing .row4.orm-high,
+.crew-timing .row4.orm-severe{
+  padding: var(--row-pad-y) var(--row-pad-x);
+  border-radius: var(--row-radius);
 }
   
 /* Local time + ORM label stacked in the middle column (Show Time only) */
