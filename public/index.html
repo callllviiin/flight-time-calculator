@@ -316,7 +316,8 @@ input{
 .home-wrap{ grid-column:3; }
 .crew-check{
   grid-column:4;
-  justify-self:end;
+  justify-self:start;    /* anchor from the left edge of column 4 */
+  margin-left:10px;      /* match the Local column gap above */
 }
   
 .crew-toggle{
