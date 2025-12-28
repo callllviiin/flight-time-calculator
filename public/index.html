@@ -658,9 +658,20 @@ button:disabled{
   white-space:nowrap;      /* keep it on one line */
 }
 
-  /* Show Time: tighten middle column so ORM text sits closer to label */
+/* Show Time: narrower label col so the ORM/Circ text starts sooner */
 .row4.showtime-left{
-  grid-template-columns: 190px max-content auto auto;
+  grid-template-columns: 120px 1fr auto auto;  /* was 190px ... */
+  column-gap:10px;
+}
+
+/* keep ORM/Circ text hugging left */
+.row4.showtime-left .mcol{
+  justify-content:flex-start;
+  padding-left:0;        /* kill the extra nudge */
+  text-align:left;
+  white-space:nowrap;    /* keep it one line */
+  overflow:hidden;       /* optional safety */
+  text-overflow:ellipsis;/* optional safety */
 }
   
 /* Local time + ORM label stacked in the middle column (Show Time only) */
