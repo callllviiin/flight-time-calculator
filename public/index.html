@@ -300,6 +300,7 @@ select#aircraft{
   -moz-appearance: none;
 
   width:104px;               /* MATCH .box */
+  height:32px;               /* MATCH .box height */
   box-sizing:border-box;     /* CRITICAL */
   
   background:#fff;           /* match input boxes */
@@ -309,9 +310,12 @@ select#aircraft{
   border-radius:4px;
 
   padding:6px;
+  padding-right:26px;        /* arrow room */
+  
   font-size:16px;
   font-family: Consolas, Menlo, "Courier New", monospace;
   font-weight:600;
+  line-height:1;             /* CRITICAL for vertical centering */
   text-align:center;
 
   cursor:pointer;
