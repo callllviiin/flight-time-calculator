@@ -272,25 +272,16 @@ input{
 }
 
 .third-content-wide{
-  grid-column: 2 / -1;    /* spans Zulu → Local columns */
-  display:grid;
-  grid-template-columns: auto 1fr auto;  /* left item, center space, right item */
+  grid-column: 2 / -1;
+  display:flex;
   align-items:center;
-  width: 100%;
-  justify-self: stretch;
+  justify-content:space-between;  /* left cluster + right checkbox */
+  width:100%;
+  gap:12px;                      /* small breathing room */
 }
   
-.third-content-wide > div:nth-child(1){
-  justify-self:start;
+.aircraft-wrap{ justify-self:start; 
 }
-.third-content-wide > div:nth-child(2){
-  justify-self:center;
-}
-.third-content-wide > div:nth-child(3){
-  justify-self:end;
-}
-
-.aircraft-wrap{ justify-self:start; }
 
 #aircraft{
   width:104px;            /* match .box */
@@ -395,19 +386,24 @@ input:checked + .slider:before{
 .crew-check-label{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:6px;
   cursor:pointer;
   user-select:none;
 }
 
 .crew-check-label input{
-  width:18px;
-  height:18px;
+  width:16px;
+  height:16px;
   transform: translateY(1px);
 }
 
 .crew-check-text{
-  font-weight:600;      /* normal-ish when off */
+  font-family: Arial, sans-serif;
+  font-variant: normal;
+  letter-spacing: normal;
+
+  font-size:14px;     /* slightly smaller so it feels “secondary” */
+  font-weight:600;
   color:#333;
 }
 
