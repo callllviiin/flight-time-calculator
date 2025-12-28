@@ -782,8 +782,16 @@ button:disabled{
   margin-top:2px;
   margin-bottom:10px;
 
-  /* Align subtext under label text (not panel edge) */
-  margin-left: calc(var(--row-label-w) + var(--row-pad-x));
+  /* Force subtext to start under the label column (not centered) */
+  display:grid;
+  grid-template-columns: var(--row-label-w) 1fr;
+  column-gap: var(--row-gap);
+
+  /* Match row frame inset */
+  padding-left: var(--row-pad-x);
+  padding-right: var(--row-pad-x);
+
+  text-align:left;
 }
 
 /* Small explanatory text in the "middle" column of Duty Limitations */
