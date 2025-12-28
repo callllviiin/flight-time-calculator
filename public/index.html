@@ -691,10 +691,15 @@ button:disabled{
   color:#222;
 }
 
-/* Show Time ORM message: match subtext styling */
+/* Show Time ORM message: plain Arial, no small-caps, no tracking */
 .show-orm-inline{
-  font-size:12px;        /* same as .subtext */
-  font-weight:600;      /* slightly stronger than subtext, still secondary */
+  font-family: Arial, sans-serif;   /* explicit, no inheritance */
+  font-variant: normal;             /* kill small-caps */
+  letter-spacing: normal;           /* kill tracking */
+  text-transform: none;
+
+  font-size:12px;
+  font-weight:600;
   color:#666;
   margin-left:10px;
   white-space:nowrap;
