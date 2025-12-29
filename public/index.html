@@ -1357,28 +1357,27 @@ function fmtLocalPlain(totalZuluMins, icao){
 }
 
 function buildCrewText(tkIcao, times){
-const lines = [
-  ["Crew Rest", times.crewRest],
-  ["Alert",     times.legalAlert],
-  ["Show",      times.showTime],
-  ["Brief",     times.briefTime],
-  ["Step",      times.stepTime],
-  ["Takeoff",   times.takeoffMin],
-];
+  const lines = [
+    ["Crew Rest", times.crewRest],
+    ["Alert",     times.legalAlert],
+    ["Show",      times.showTime],
+    ["Brief",     times.briefTime],
+    ["Step",      times.stepTime],
+    ["Takeoff",   times.takeoffMin],
+  ];
 
-
-return [
-  "Crew Timing",
-  "",
-  ...lines.map(([label, zuluMins]) => {
-    const local = fmtLocalPlain(zuluMins, tkIcao);
-    const zulu  = fmtZuluPlain(zuluMins);
-    return `${label}: ${local} (${zulu})`;
-  })
-].join("\n");
+  return [
+    "Crew Timing",
+    "",
+    ...lines.map(([label, zuluMins]) => {
+      const local = fmtLocalPlain(zuluMins, tkIcao);
+      const zulu  = fmtZuluPlain(zuluMins);
+      return `${label}: ${local} (${zulu})`;
+    })
+  ].join("\n");
+}
 
 async function copyTextToClipboard(text){
-  // Modern clipboard API
   try{
     if(navigator.clipboard && window.isSecureContext){
       await navigator.clipboard.writeText(text);
@@ -1386,7 +1385,6 @@ async function copyTextToClipboard(text){
     }
   }catch(_){}
 
-  // Fallback
   try{
     const ta = document.createElement("textarea");
     ta.value = text;
@@ -1407,7 +1405,6 @@ async function copyTextToClipboard(text){
 let crewToastEl = null;
 
 function showCrewTextCopied(ok){
-  // remove existing toast if present
   if(crewToastEl) crewToastEl.remove();
 
   const el = document.createElement("div");
