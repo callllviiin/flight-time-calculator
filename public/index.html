@@ -1356,13 +1356,15 @@ function fmtLocalPlain(totalZuluMins, icao){
   return minutesToHHMM(res.localMins) + "L";
 }
 
-function fmtOffsetFromMinutes(mins){
-  // mins can be negative (e.g., -300). Return "UTC-05" or "UTC+05:30"
-  const sign = mins >= 0 ? "+" : "-";
+function fmtLocalDelta(mins){
+  // mins = UTC offset minutes (e.g., -480 for Pacific)
+  // We want: "Local −08:00" or "Local +05:30"
+  const sign = mins <= 0 ? "−" : "+";
   const a = Math.abs(mins);
   const hh = String(Math.floor(a / 60)).padStart(2, "0");
   const mm = a % 60;
-  return mm ? `UTC${sign}${hh}:${String(mm).padStart(2, "0")}` : `UTC${sign}${hh}`;
+  return mm ? `Local ${sign}${hh}:${String(mm).padStart(2,"0")}`
+            : `Local ${sign}${hh}`;
 }
 
 function buildCrewText(tkIcao, times){
@@ -1375,7 +1377,7 @@ function buildCrewText(tkIcao, times){
     const zHHMM = minutesToHHMM(zNorm);
     const offMin = getUtcOffsetMinutesFromICAO(key, zHHMM);  // minutes offset from UTC at TKOF time
     if(offMin != null){
-      hdr = `Crew Timing (Zulu = ${fmtOffsetFromMinutes(offMin)})`;
+      hdr = `Crew Timing (Zulu = ${fmtLocalDelta(offMin)})`;
     }
   }
 
