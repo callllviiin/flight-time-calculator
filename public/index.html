@@ -1343,11 +1343,17 @@ function updateTimeHint(timeInput, hintEl){
   // show nothing while typing fewer than 4 digits
   if(raw.length !== 4){
     hintEl.textContent = "";
+    hintEl.classList.remove("bad");
     return;
   }
 
   // only validate once they truly have 4 digits
-  hintEl.textContent = isHHMM(raw) ? "" : "Invalid time";
+  const ok = isHHMM(raw);
+  hintEl.textContent = ok ? "" : "Invalid time";
+
+  // ensure invalid time is red, same as invalid ICAO
+  if(ok) hintEl.classList.remove("bad");
+  else hintEl.classList.add("bad");
 }
 
 function setCalcEnabled(){
