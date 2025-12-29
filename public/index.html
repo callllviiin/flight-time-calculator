@@ -88,7 +88,13 @@ body{
   color:#1f2a44;
 }
 
-
+button#resetBtn.icon-btn{
+  width:32px !important;
+  height:32px !important;
+  aspect-ratio:1 / 1 !important;
+  box-sizing:border-box !important;
+}
+  
 .reset-icon{
   width:20px;
   height:20px;
@@ -124,10 +130,10 @@ body{
   line-height:1;
 }
 
-/* NEW: tame the glyph width */
-.icon-btn{
-  transform: scaleX(0.9);
+.reset-icon{
+  transform: scaleX(0.92);
 }
+
   
 /* Small hint under ICAO boxes (only shows when ICAO is valid-format but unmapped) */
 .icao-hint{
@@ -1299,13 +1305,6 @@ button:disabled{
   </div>
 
 </div>
-
-button#resetBtn.icon-btn{
-  width:32px !important;
-  height:32px !important;
-  aspect-ratio:1 / 1 !important;
-  box-sizing:border-box !important;
-}
   
 <script>
   console.log("✅ Script loaded");
