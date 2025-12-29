@@ -527,36 +527,24 @@ button:hover{
 /* Rounded orange focus rings (match input border radius) */
 /* ===================================================== */
 
-/* Text inputs */
 input.box:focus,
 input.box:focus-visible{
-  outline: none;
+  outline: none !important;
   box-shadow: 0 0 0 2px #ff8a3d;
 }
 
-/* Aircraft dropdown */
 #aircraft:focus,
 #aircraft:focus-visible{
-  outline: none;
+  outline: none !important;
   box-shadow: 0 0 0 2px #ff8a3d;
 }
 
-/* Keep buttons consistent */
 button:focus,
 button:focus-visible{
-  outline: none;
+  outline: none !important;
   box-shadow: 0 0 0 2px #ff8a3d;
 }
 
-input.box:focus{
-  outline: 2px solid #ff8a3d;
-  outline-offset: 2px;
-}
-
-input.box:focus-visible{
-  outline: 2px solid #ff8a3d;
-  outline-offset: 2px;
-}
   
 button:active{
   transform:translateY(1px);
@@ -569,13 +557,6 @@ button:disabled{
   transform:none;
   box-shadow:none;
 }
-
-button:focus,
-input:focus,
-select:focus{
-  outline: none;
-}
-
   
 /* ---------- OUTPUT ---------- */
 
