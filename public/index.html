@@ -1357,14 +1357,15 @@ function fmtLocalPlain(totalZuluMins, icao){
 }
 
 function buildCrewText(tkIcao, times){
-  const lines = [
-    ["Crew Rest",       times.crewRest],
-    ["Alert",           times.legalAlert],
-    ["Show",            times.showTime],
-    ["Brief",           times.briefTime],
-    ["Step",            times.stepTime],
-    ["Takeoff",         times.takeoffMin],
-  ];
+const lines = [
+  ["Crew Rest", times.crewRest],
+  ["Alert",     times.legalAlert],
+  ["Show",      times.showTime],
+  ["Brief",     times.briefTime],
+  ["Step",      times.stepTime],
+  ["Takeoff",   times.takeoffMin],
+];
+
 
 return [
   "Crew Timing",
