@@ -1350,6 +1350,7 @@ function updateTimeHint(timeInput, hintEl){
   if(raw.length !== 4){
     hintEl.textContent = "";
     hintEl.classList.remove("bad");
+    timeInput.classList.remove("invalid");
     return;
   }
 
@@ -1358,16 +1359,15 @@ function updateTimeHint(timeInput, hintEl){
   hintEl.textContent = ok ? "" : "Invalid";
 
   // ensure invalid time is red, same as invalid ICAO
-  if(ok) hintEl.classList.remove("bad");
-  else hintEl.classList.add("bad");
-
   if(ok){
-  hintEl.classList.remove("bad");
-  timeInput.classList.remove("invalid");
-}else{
-  hintEl.classList.add("bad");
-  timeInput.classList.add("invalid");
+    hintEl.classList.remove("bad");
+    timeInput.classList.remove("invalid");
+  }else{
+    hintEl.classList.add("bad");
+    timeInput.classList.add("invalid");
+  }
 }
+
 
 function setCalcEnabled(){
   const tk = padHHMM(takeoffTime.value);
@@ -1465,28 +1465,34 @@ function updateIcaoHint(icao, hintEl){
   if(key.length !== 4){
     hintEl.textContent = "";
     hintEl.classList.remove("bad");
+
+    const inp = hintEl.previousElementSibling;
+    if(inp && inp.classList.contains("box")){
+      inp.classList.remove("invalid");
+    }
     return;
   }
 
   // ICAO looks valid, but isn't mapped
-if(!getTimeZoneFromICAO(key)){
-  hintEl.textContent = "Invalid";
-  hintEl.classList.add("bad");
+  if(!getTimeZoneFromICAO(key)){
+    hintEl.textContent = "Invalid";
+    hintEl.classList.add("bad");
+
+    const inp = hintEl.previousElementSibling;
+    if(inp && inp.classList.contains("box")){
+      inp.classList.add("invalid");
+    }
+    return;
+  }
+
+  // Mapped — clear
+  hintEl.textContent = "";
+  hintEl.classList.remove("bad");
 
   const inp = hintEl.previousElementSibling;
   if(inp && inp.classList.contains("box")){
-    inp.classList.add("invalid");
+    inp.classList.remove("invalid");
   }
-  return;
-}
-
-  // Mapped — clear
-hintEl.textContent = "";
-hintEl.classList.remove("bad");
-
-const inp = hintEl.previousElementSibling;
-if(inp && inp.classList.contains("box")){
-  inp.classList.remove("invalid");
 }
 
 function formatDayShift(n){
@@ -2284,6 +2290,9 @@ function resetAll({ scrollToTop = false } = {}){
     }
   });
 
+// Clear any red borders on inputs
+document.querySelectorAll("input.box.invalid").forEach(el => el.classList.remove("invalid"));
+  
   hasCalculated = false;
   isDirty = false;
   clearDirty();                 // puts button text back to "Calculate"
