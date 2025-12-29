@@ -1358,7 +1358,7 @@ function fmtLocalPlain(totalZuluMins, icao){
 
 function buildCrewText(tkIcao, times){
   const lines = [
-    ["Enter Crew Rest", times.crewRest],
+    ["Crew Rest", times.crewRest],
     ["Last Beer",       times.lastBeer],
     ["Alert",           times.legalAlert],
     ["Show",            times.showTime],
@@ -1367,12 +1367,15 @@ function buildCrewText(tkIcao, times){
     ["Takeoff",         times.takeoffMin],
   ];
 
-  return lines.map(([label, zuluMins]) => {
+return [
+  "Crew Timing",
+  "",
+  ...lines.map(([label, zuluMins]) => {
     const local = fmtLocalPlain(zuluMins, tkIcao);
     const zulu  = fmtZuluPlain(zuluMins);
     return `${label}: ${local} (${zulu})`;
-  }).join("\n");
-}
+  })
+].join("\n");
 
 async function copyTextToClipboard(text){
   // Modern clipboard API
