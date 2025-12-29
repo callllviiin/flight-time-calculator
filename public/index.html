@@ -1334,7 +1334,90 @@ window.addEventListener("error", (e) => showRuntimeError(e.error || e.message));
 
   
 /* ----------------- helpers ----------------- */
-function showRuntimeError(err){
+
+// ----------------- Crew Text (Phase 2 v1) -----------------
+let lastCrewText = "";   // updated on every Calculate
+
+function fmtZuluPlain(totalMins){
+  const m = ((totalMins % 1440) + 1440) % 1440;
+  return minutesToHHMM(m) + "Z";
+}
+
+function fmtLocalPlain(totalZuluMins, icao){
+  const key = normICAO(icao || "");
+  if(!isICAO(key) || !getTimeZoneFromICAO(key)) return "";
+
+  const zNorm = ((totalZuluMins % 1440) + 1440) % 1440;
+  const zHHMM = minutesToHHMM(zNorm);
+
+  const res = zuluToLocalWithDay(zNorm, key, zHHMM);
+  if(!res) return "";
+
+  return minutesToHHMM(res.localMins) + "L";
+}
+
+function buildCrewText(tkIcao, times){
+  const lines = [
+    ["Enter Crew Rest",  times.crewRest],
+    ["Last Beer",        times.lastBeer],
+    ["Legal for Alert",  times.legalAlert],
+    ["Show Time",        times.showTime],
+    ["Brief Time",       times.briefTime],
+    ["Step Time",        times.stepTime],
+    ["Takeoff",          times.takeoffMin],
+  ];
+
+  return lines.map(([label, zuluMins]) => {
+    const local = fmtLocalPlain(zuluMins, tkIcao);
+    const zulu  = fmtZuluPlain(zuluMins);
+    return `${label} | ${local} | ${zulu}`;
+  }).join("\n");
+}
+
+async function copyTextToClipboard(text){
+  // Modern clipboard API
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  }catch(_){}
+
+  // Fallback
+  try{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    ta.style.top = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  }catch(_){
+    return false;
+  }
+}
+
+function showCrewTextCopied(ok){
+  const out = document.getElementById("output");
+  if(!out) return;
+
+  const msg = document.createElement("div");
+  msg.textContent = ok ? "Crew text copied ✅" : "Couldn’t auto-copy — see console.";
+  msg.style.marginTop = "10px";
+  msg.style.fontSize = "12px";
+  msg.style.fontWeight = "700";
+  msg.style.color = ok ? "#1f2a44" : "#8b0000";
+
+  out.appendChild(msg);
+  setTimeout(() => msg.remove(), 1400);
+}
+
+  
+  function showRuntimeError(err){
   const out = document.getElementById("output");
   if(!out) return;
   out.innerHTML = `
@@ -2215,10 +2298,27 @@ reset2?.addEventListener("click", () => {
 });
 
 const crewTextBtn = document.getElementById("crewTextBtn");
-crewTextBtn?.addEventListener("click", () => {
-  // Placeholder for Phase 2/2.5
-  // Later: generate text + copy to clipboard
-});
+if(crewTextBtn){
+  // enable only after Calculate
+  crewTextBtn.disabled = false;
+
+  // Build the text fresh each Calculate (so it always matches current numbers)
+  lastCrewText = buildCrewText(tkIcao, {
+    crewRest,
+    lastBeer,
+    legalAlert,
+    showTime,
+    briefTime,
+    stepTime,
+    takeoffMin,
+  });
+
+  crewTextBtn.addEventListener("click", async () => {
+    const ok = await copyTextToClipboard(lastCrewText);
+    showCrewTextCopied(ok);
+    if(!ok) console.log("Crew text:\n" + lastCrewText);
+  });
+}
     
     // live-update brief time after first Calculate, without needing to click again
     const offInp = document.getElementById("briefOffsetEdit");
