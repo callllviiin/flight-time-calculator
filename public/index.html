@@ -523,17 +523,29 @@ button:hover{
   font-weight:700;
 }
   
-/* ---------- Global focus / accent color (force orange) ---------- */
-:focus-visible{
-  outline: 2px solid #ff8a3d;
-  outline-offset: 2px;
+/* ===================================================== */
+/* Rounded orange focus rings (match input border radius) */
+/* ===================================================== */
+
+/* Text inputs */
+input.box:focus,
+input.box:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px #ff8a3d;
 }
 
-/* Remove inconsistent browser focus rings */
-button:focus:not(:focus-visible),
-input:focus:not(:focus-visible),
-select:focus:not(:focus-visible){
+/* Aircraft dropdown */
+#aircraft:focus,
+#aircraft:focus-visible{
   outline: none;
+  box-shadow: 0 0 0 2px #ff8a3d;
+}
+
+/* Keep buttons consistent */
+button:focus,
+button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px #ff8a3d;
 }
 
 input.box:focus{
