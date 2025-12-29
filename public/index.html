@@ -1368,18 +1368,19 @@ function fmtLocalDelta(mins){
 }
 
 function buildCrewText(tkIcao, times){
-  const key = normICAO(tkIcao || "");
-
-  // If ICAO isn't valid/mapped, just omit the offset label
-  let hdr = "Crew Timing";
-  if(isICAO(key) && getTimeZoneFromICAO(key)){
-    const zNorm = ((times.takeoffMin % 1440) + 1440) % 1440;
-    const zHHMM = minutesToHHMM(zNorm);
-    const offMin = getUtcOffsetMinutesFromICAO(key, zHHMM);  // minutes offset from UTC at TKOF time
-    if(offMin != null){
-      hdr = `Crew Timing (Zulu = ${fmtLocalDelta(offMin)})`;
-    }
+  // Determine Zulu offset relative to Local at takeoff ICAO
+  let offsetMin = 0;
+  if(isICAO(tkIcao)){
+    const off = getUtcOffsetMinutesFromICAO(tkIcao, "0000");
+    if(typeof off === "number") offsetMin = -off;
   }
+
+  // Format +HH:MM
+  const sign = offsetMin >= 0 ? "+" : "−";
+  const abs  = Math.abs(offsetMin);
+  const hh   = String(Math.floor(abs / 60)).padStart(2, "0");
+  const mm   = String(abs % 60).padStart(2, "0");
+  const offsetStr = `${sign}${hh}:${mm}`;
 
   const lines = [
     ["Crew Rest", times.crewRest],
@@ -1391,15 +1392,13 @@ function buildCrewText(tkIcao, times){
   ];
 
   return [
-    hdr,
+    `Crew Timing (Zulu = Local ${offsetStr})`,
     ...lines.map(([label, zuluMins]) => {
-      const local = fmtLocalPlain(zuluMins, key); // you already have this: returns "HHMML"
+      const local = fmtLocalPlain(zuluMins, tkIcao);
       return `${label}: ${local}`;
     })
   ].join("\n");
 }
-
-
 
 async function copyTextToClipboard(text){
   try{
