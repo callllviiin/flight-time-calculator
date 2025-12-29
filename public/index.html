@@ -161,15 +161,14 @@ input{
 }
 
 .floating-label{
-  position:absolute;
-  left:8px;
-  top:-9px;
-  font-size:10px;
-  color:#666;
-  background:#f5f7fa;
-  padding:0 4px;
-  font-weight:normal;
+  padding: 0 3px;        /* was 0 4px – narrows the chip */
+  font-size: 9px;        /* was 10px – slightly tighter */
+  line-height: 1;       /* prevents vertical bloat */
+  border-radius: 4px;   /* smaller radius = less “pill” look */
+  background: #f5f7fa;
+  opacity: 0.95;    /* softens the chip just a bit */
 }
+
 
 /* Day shift indicator INSIDE the local input box */
 .day-shift{
