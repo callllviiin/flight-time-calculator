@@ -153,6 +153,11 @@ input{
   letter-spacing: 2.2px;
   font-weight: 600;
 }
+
+/* Subtle invalid state — does NOT override focus ring */
+input.box.invalid{
+  border: 1.5px solid #8b0000;
+}
   
 .floating-wrap{
   position: relative;
@@ -1355,6 +1360,13 @@ function updateTimeHint(timeInput, hintEl){
   // ensure invalid time is red, same as invalid ICAO
   if(ok) hintEl.classList.remove("bad");
   else hintEl.classList.add("bad");
+
+  if(ok){
+  hintEl.classList.remove("bad");
+  timeInput.classList.remove("invalid");
+}else{
+  hintEl.classList.add("bad");
+  timeInput.classList.add("invalid");
 }
 
 function setCalcEnabled(){
@@ -1457,15 +1469,24 @@ function updateIcaoHint(icao, hintEl){
   }
 
   // ICAO looks valid, but isn't mapped
-  if(!getTimeZoneFromICAO(key)){
-    hintEl.textContent = "Invalid";
-    hintEl.classList.add("bad");
-    return;
+if(!getTimeZoneFromICAO(key)){
+  hintEl.textContent = "Invalid";
+  hintEl.classList.add("bad");
+
+  const inp = hintEl.previousElementSibling;
+  if(inp && inp.classList.contains("box")){
+    inp.classList.add("invalid");
   }
+  return;
+}
 
   // Mapped — clear
-  hintEl.textContent = "";
-  hintEl.classList.remove("bad");
+hintEl.textContent = "";
+hintEl.classList.remove("bad");
+
+const inp = hintEl.previousElementSibling;
+if(inp && inp.classList.contains("box")){
+  inp.classList.remove("invalid");
 }
 
 function formatDayShift(n){
