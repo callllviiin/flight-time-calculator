@@ -1304,6 +1304,13 @@ button:disabled{
   console.log("✅ Script loaded");
 window.addEventListener("error", (e) => showRuntimeError(e.error || e.message));
 
+button#resetBtn.icon-btn{
+  width:32px !important;
+  height:32px !important;
+  aspect-ratio:1 / 1 !important;
+  box-sizing:border-box !important;
+}
+  
 /* ----------------- helpers ----------------- */
 function showRuntimeError(err){
   const out = document.getElementById("output");
