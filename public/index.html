@@ -1356,8 +1356,30 @@ function fmtLocalPlain(totalZuluMins, icao){
   return minutesToHHMM(res.localMins) + "L";
 }
 
+function fmtOffsetFromMinutes(mins){
+  // mins can be negative (e.g., -300). Return "UTC-05" or "UTC+05:30"
+  const sign = mins >= 0 ? "+" : "-";
+  const a = Math.abs(mins);
+  const hh = String(Math.floor(a / 60)).padStart(2, "0");
+  const mm = a % 60;
+  return mm ? `UTC${sign}${hh}:${String(mm).padStart(2, "0")}` : `UTC${sign}${hh}`;
+}
+
 function buildCrewText(tkIcao, times){
-  const rows = [
+  const key = normICAO(tkIcao || "");
+
+  // If ICAO isn't valid/mapped, just omit the offset label
+  let hdr = "Crew Timing";
+  if(isICAO(key) && getTimeZoneFromICAO(key)){
+    const zNorm = ((times.takeoffMin % 1440) + 1440) % 1440;
+    const zHHMM = minutesToHHMM(zNorm);
+    const offMin = getUtcOffsetMinutesFromICAO(key, zHHMM);  // minutes offset from UTC at TKOF time
+    if(offMin != null){
+      hdr = `Crew Timing (Zulu = ${fmtOffsetFromMinutes(offMin)})`;
+    }
+  }
+
+  const lines = [
     ["Crew Rest", times.crewRest],
     ["Alert",     times.legalAlert],
     ["Show",      times.showTime],
@@ -1366,28 +1388,15 @@ function buildCrewText(tkIcao, times){
     ["Takeoff",   times.takeoffMin],
   ];
 
-  // helper: pad text to a fixed width (monospace alignment)
-  const pad = (s, w) => (s + " ".repeat(w)).slice(0, w);
-
-  const LABEL_W = 12;   // tweak if you want tighter/looser
-  const TIME_W  = 8;    // room for HHMML + spacing
-
-  const lines = rows.map(([label, zuluMins]) => {
-    const local = fmtLocalPlain(zuluMins, tkIcao);
-    const zulu  = fmtZuluPlain(zuluMins);
-
-    return (
-      pad(label, LABEL_W) +
-      pad(local, TIME_W) +
-      zulu
-    );
-  });
-
   return [
-    "CREW TIMING",
-    ...lines
+    hdr,
+    ...lines.map(([label, zuluMins]) => {
+      const local = fmtLocalPlain(zuluMins, key); // you already have this: returns "HHMML"
+      return `${label}: ${local}`;
+    })
   ].join("\n");
 }
+
 
 
 async function copyTextToClipboard(text){
