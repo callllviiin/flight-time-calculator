@@ -68,19 +68,26 @@ body{
 .icon-btn{
   width:32px;
   height:32px;
-  border-radius:8px;
+  aspect-ratio: 1 / 1;     /* hard-lock square */
+  box-sizing:border-box;   /* border stays inside the 32x32 */
+  padding:0;
   border:2px solid #cfcfcf;
+  border-radius:8px;
+
   background:#fff;
   cursor:pointer;
-  font-size:28px;
-  font-weight:700;   /* adds authority */
-  line-height:0;
+
   display:grid;
   place-items:center;
+
+  line-height:0;           /* prevents font metrics from changing height */
+  min-width:0;             /* kills any UA min-width weirdness */
+  min-height:0;
+
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
   color:#1f2a44;
-  padding:0;
 }
+
 
 .reset-icon{
   width:20px;
