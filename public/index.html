@@ -2498,18 +2498,7 @@ homeICAO?.addEventListener("input", () => {
     homeAutoFilled = false;           // user took control
   }
 
-  updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
-
-  // If results already exist, mark output stale (don’t auto-recalc)
-  if(hasCalculated) onUserEdit();
-});
-
-updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
-
-  // If results already exist, mark output stale (don’t auto-recalc)
-  if(hasCalculated) onUserEdit();
-
-    // If user clears Home, immediately snap it back to Takeoff ICAO (if available/mapped)
+  // If user clears Home, immediately snap it back to Takeoff ICAO (if available/mapped)
   if(clean.length === 0){
     const tk = normICAO(takeoffICAO?.value || "");
     const tkMapped = (tk.length === 4 && getTimeZoneFromICAO(tk));
@@ -2524,11 +2513,16 @@ updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
 
       updateIcaoHint(tk, document.getElementById("homeIcaoHint"));
       if(hasCalculated) onUserEdit();
+      return;                  // we're done
     }
   }
+
+  updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
+
+  // If results already exist, mark output stale (don’t auto-recalc)
+  if(hasCalculated) onUserEdit();
 });
 
-  
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
   syncLocalFromZulu(takeoffTime, takeoffICAO, takeoffLocal, "takeoffLocalDay");
 }));
