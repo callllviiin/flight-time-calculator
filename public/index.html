@@ -1357,7 +1357,7 @@ function fmtLocalPlain(totalZuluMins, icao){
 }
 
 function buildCrewText(tkIcao, times){
-  const lines = [
+  const rows = [
     ["Crew Rest", times.crewRest],
     ["Alert",     times.legalAlert],
     ["Show",      times.showTime],
@@ -1366,16 +1366,29 @@ function buildCrewText(tkIcao, times){
     ["Takeoff",   times.takeoffMin],
   ];
 
+  // helper: pad text to a fixed width (monospace alignment)
+  const pad = (s, w) => (s + " ".repeat(w)).slice(0, w);
+
+  const LABEL_W = 12;   // tweak if you want tighter/looser
+  const TIME_W  = 8;    // room for HHMML + spacing
+
+  const lines = rows.map(([label, zuluMins]) => {
+    const local = fmtLocalPlain(zuluMins, tkIcao);
+    const zulu  = fmtZuluPlain(zuluMins);
+
+    return (
+      pad(label, LABEL_W) +
+      pad(local, TIME_W) +
+      zulu
+    );
+  });
+
   return [
-    "Crew Timing",
-    "",
-    ...lines.map(([label, zuluMins]) => {
-      const local = fmtLocalPlain(zuluMins, tkIcao);
-      const zulu  = fmtZuluPlain(zuluMins);
-      return `${label}: ${local} (${zulu})`;
-    })
+    "CREW TIMING",
+    ...lines
   ].join("\n");
 }
+
 
 async function copyTextToClipboard(text){
   try{
