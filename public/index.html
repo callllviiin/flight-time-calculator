@@ -87,6 +87,27 @@ body{
 .icon-btn:active{ transform:translateY(1px); 
 }
 
+.icon-btn{
+  font-size:28px;      /* keep size */
+}
+
+.icon-btn{
+  transform: translateY(0); /* already handled elsewhere */
+}
+
+.icon-btn{
+  font-weight:700;
+}
+
+.icon-btn{
+  line-height:1;
+}
+
+/* NEW: tame the glyph width */
+.icon-btn{
+  transform: scaleX(0.9);
+}
+  
 /* Small hint under ICAO boxes (only shows when ICAO is valid-format but unmapped) */
 .icao-hint{
   font-size:10px;
@@ -1133,7 +1154,7 @@ button:disabled{
   <div class="headerbar">
     <h1 class="app-title">Crew Dawg Calculator</h1>
     <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-      &#x21bb;
+      &#x21ba;
     </button>
   </div>
 
