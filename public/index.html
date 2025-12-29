@@ -81,6 +81,12 @@ body{
   color:#1f2a44;
   padding:0;
 }
+
+.icon-glyph{
+  display:inline-block;
+  transform: scaleX(0.9);   /* slims the icon */
+  line-height:1;
+}
   
 .icon-btn:hover{ filter:brightness(0.98); 
 }
@@ -1153,9 +1159,9 @@ button:disabled{
 
   <div class="headerbar">
     <h1 class="app-title">Crew Dawg Calculator</h1>
-    <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
-      &#x21ba;
-    </button>
+      <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1">
+        <span class="icon-glyph">&#x21bb;</span>
+      </button>
   </div>
 
     <div class="form-grid">
