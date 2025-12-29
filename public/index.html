@@ -153,20 +153,20 @@ input{
   font-weight: 600;
 }
   
-/* Floating label wrapper (for Zulu + Local) */
 .floating-wrap{
-  position:relative;
-  display:inline-block;
-  width:104px;
+  position: relative;
+  display: inline-block;
+  width: 104px;
+  padding-top: 0 !important;   /* IMPORTANT: prevents alignment shift */
+  overflow: visible;           /* ensure focus ring isn’t clipped by wrapper */
 }
 
 .floating-label{
-  padding: 0 3px;        /* was 0 4px – narrows the chip */
-  font-size: 9px;        /* was 10px – slightly tighter */
-  line-height: 1;       /* prevents vertical bloat */
-  border-radius: 4px;   /* smaller radius = less “pill” look */
-  background: #f5f7fa;
-  opacity: 0.95;    /* softens the chip just a bit */
+  position: absolute;
+  left: 8px;
+  top: -9px;                   /* keep your exact positioning */
+  z-index: 3;
+  pointer-events: none;
 }
 
 
@@ -525,6 +525,12 @@ button:focus:not(:focus-visible),
 input:focus:not(:focus-visible),
 select:focus:not(:focus-visible){
   outline: none;
+}
+
+/* For the input boxes, use an inset ring so the floating label can never cover it */
+input.box:focus-visible{
+  outline: none !important;
+  box-shadow: inset 0 0 0 2px #ff8a3d;
 }
   
 button:active{
