@@ -95,6 +95,7 @@ body{
   margin-top:6px;    
   color:#666;
   min-height:14px;    /* ensures stable spacing */
+  transform: translateY(-1px);
 }
 
 .icao-hint.bad{
@@ -1349,7 +1350,7 @@ function updateTimeHint(timeInput, hintEl){
 
   // only validate once they truly have 4 digits
   const ok = isHHMM(raw);
-  hintEl.textContent = ok ? "" : "Invalid time";
+  hintEl.textContent = ok ? "" : "Invalid";
 
   // ensure invalid time is red, same as invalid ICAO
   if(ok) hintEl.classList.remove("bad");
@@ -1457,7 +1458,7 @@ function updateIcaoHint(icao, hintEl){
 
   // ICAO looks valid, but isn't mapped
   if(!getTimeZoneFromICAO(key)){
-    hintEl.textContent = "Invalid ICAO";
+    hintEl.textContent = "Invalid";
     hintEl.classList.add("bad");
     return;
   }
