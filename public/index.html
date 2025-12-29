@@ -496,14 +496,32 @@ input:checked + .slider:before{
   white-space:nowrap;
 }
 
-/* Augmented checkbox: ONLY the box is clickable */
 .crew-check-label{
   display:grid;
-  grid-template-columns:16px 92px;   /* checkbox | text */
+  grid-template-columns: 16px 92px;  /* checkbox | label text (fixed) */
   column-gap:10px;
   align-items:center;
+
+  cursor:pointer;
+  user-select:none;
 }
 
+.crew-check-label input{
+  width:16px;
+  height:16px;
+  transform: translateY(1px);
+}
+
+.crew-check-text{
+  font-family: Arial, sans-serif;
+  font-variant: small-caps;
+  letter-spacing:0.1px;
+  font-size:14px;
+  font-weight:400;
+  color:#555;
+
+  transform: translateY(1px);   /* subtle vertical alignment fix */
+}
 
 /* Bold feedback when checked */
 #augmented:checked + span{
@@ -1257,10 +1275,10 @@ button:disabled{
 </div>
 
 <div class="crew-check">
-<div class="crew-check-label">
-  <input type="checkbox" id="augmented" tabindex="-1">
-  <span id="augLbl" class="crew-check-text">Augmented</span>
-</div>
+  <label class="crew-check-label">
+    <input type="checkbox" id="augmented" tabindex="-1">
+    <span id="augLbl" class="crew-check-text">Augmented</span>
+  </label>
 </div>
     
   </div>
