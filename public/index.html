@@ -1358,19 +1358,19 @@ function fmtLocalPlain(totalZuluMins, icao){
 
 function buildCrewText(tkIcao, times){
   const lines = [
-    ["Enter Crew Rest",  times.crewRest],
-    ["Last Beer",        times.lastBeer],
-    ["Legal for Alert",  times.legalAlert],
-    ["Show Time",        times.showTime],
-    ["Brief Time",       times.briefTime],
-    ["Step Time",        times.stepTime],
-    ["Takeoff",          times.takeoffMin],
+    ["Enter Crew Rest", times.crewRest],
+    ["Last Beer",       times.lastBeer],
+    ["Alert",           times.legalAlert],
+    ["Show",            times.showTime],
+    ["Brief",           times.briefTime],
+    ["Step",            times.stepTime],
+    ["Takeoff",         times.takeoffMin],
   ];
 
   return lines.map(([label, zuluMins]) => {
     const local = fmtLocalPlain(zuluMins, tkIcao);
     const zulu  = fmtZuluPlain(zuluMins);
-    return `${label} | ${local} | ${zulu}`;
+    return `${label}: ${local} (${zulu})`;
   }).join("\n");
 }
 
@@ -1401,20 +1401,43 @@ async function copyTextToClipboard(text){
   }
 }
 
+let crewToastEl = null;
+
 function showCrewTextCopied(ok){
-  const out = document.getElementById("output");
-  if(!out) return;
+  // remove existing toast if present
+  if(crewToastEl) crewToastEl.remove();
 
-  const msg = document.createElement("div");
-  msg.textContent = ok ? "Crew text copied ✅" : "Couldn’t auto-copy — see console.";
-  msg.style.marginTop = "10px";
-  msg.style.fontSize = "12px";
-  msg.style.fontWeight = "700";
-  msg.style.color = ok ? "#1f2a44" : "#8b0000";
+  const el = document.createElement("div");
+  el.textContent = ok ? "Crew text copied ✅" : "Copy failed — see console.";
+  el.style.position = "fixed";
+  el.style.left = "50%";
+  el.style.bottom = "18px";
+  el.style.transform = "translateX(-50%)";
+  el.style.zIndex = "9999";
 
-  out.appendChild(msg);
-  setTimeout(() => msg.remove(), 1400);
+  el.style.padding = "10px 12px";
+  el.style.borderRadius = "10px";
+  el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.18)";
+  el.style.fontFamily = "Arial, sans-serif";
+  el.style.fontSize = "13px";
+  el.style.fontWeight = "800";
+  el.style.letterSpacing = "0.3px";
+
+  el.style.background = ok ? "#ffffff" : "#fff3cd";
+  el.style.color = ok ? "#1f2a44" : "#8b0000";
+  el.style.border = ok ? "1px solid #cfcfcf" : "1px solid #d6b656";
+
+  document.body.appendChild(el);
+  crewToastEl = el;
+
+  setTimeout(() => {
+    if(crewToastEl){
+      crewToastEl.remove();
+      crewToastEl = null;
+    }
+  }, 1400);
 }
+
 
   
   function showRuntimeError(err){
