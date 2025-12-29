@@ -162,11 +162,20 @@ input{
 }
 
 .floating-label{
-  position: absolute;
-  left: 8px;
-  top: -9px;                   /* keep your exact positioning */
-  z-index: 3;
-  pointer-events: none;
+  position:absolute;
+  left:8px;
+  top:-9px;                 /* keep the position you like */
+  z-index:3;
+  pointer-events:none;
+
+  font-size:9px;            /* small */
+  font-weight:600;
+  line-height:1;
+
+  background:#f5f7fa;       /* your page bg (keeps border from slicing text) */
+  padding:0 3px;            /* thinner “chip” */
+  border-radius:4px;
+  color:#666;
 }
 
 
@@ -527,10 +536,14 @@ select:focus:not(:focus-visible){
   outline: none;
 }
 
-/* For the input boxes, use an inset ring so the floating label can never cover it */
+input.box:focus{
+  outline: 2px solid #ff8a3d;
+  outline-offset: 2px;
+}
+
 input.box:focus-visible{
-  outline: none !important;
-  box-shadow: inset 0 0 0 2px #ff8a3d;
+  outline: 2px solid #ff8a3d;
+  outline-offset: 2px;
 }
   
 button:active{
