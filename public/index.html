@@ -1879,7 +1879,11 @@ function localToZuluMinutes(localMins, icao, anchorZuluHHMM){
 let hasCalculated = false;
 let isDirty = false;
 let isCalculating = false;   // NEW
-let briefOffsetMin = 150;
+
+let briefOffsetMin  = 150;   // 2+30
+let stepOffsetMin   = 120;   // 2+00  (NEW)
+let engineOffsetMin = 30;    // 0+30  (NEW)
+
 let isEditingZulu = false;
 
 let homeTouched = false;
@@ -1934,6 +1938,18 @@ if(doExpandAnim){
       if(v != null) briefOffsetMin = v;
     }
 
+const existingStep = document.getElementById("stepOffsetEdit");
+if(existingStep){
+  const v = parseHPlusMM(existingStep.value);
+  if(v != null) stepOffsetMin = v;
+}
+
+const existingEngine = document.getElementById("engineOffsetEdit");
+if(existingEngine){
+  const v = parseHPlusMM(existingEngine.value);
+  if(v != null) engineOffsetMin = v;
+}
+    
     const takeoffMin = hhmmToMinutes(takeoff);
     const landingMin = hhmmToMinutes(landing);
     // For local-time output rows (crew timing uses takeoff ICAO)
@@ -1986,10 +2002,11 @@ const homeShowOrmText =
     const lastBeer   = takeoffMin - 720;
     const legalAlert = takeoffMin - 255;
 
-    const briefTime  = takeoffMin - briefOffsetMin;
+const briefTime  = takeoffMin - briefOffsetMin;
 
-    const stepTime   = takeoffMin - 120;
-    const engine     = takeoffMin - 30;
+const stepTime   = takeoffMin - stepOffsetMin;
+const engine     = takeoffMin - engineOffsetMin;
+
 
     // Treat landing as "next day" if it’s earlier than takeoff on the clock
     const landingAbs = landingMin + (landingMin < takeoffMin ? 1440 : 0);
@@ -2103,11 +2120,24 @@ true,
         </div>
 
 
-      ${row3Html("Step Time", stepTime, tkIcao, true)}
-      <div class="subtext">T/O − 2+00</div>
+${row3Html("Step Time", stepTime, tkIcao, true)}
+<div class="subtext">
+  <span class="subtext-line">
+    T/O − <input id="stepOffsetEdit" class="inline-mini"
+    value="${minutesToHPlusMM(stepOffsetMin)}" maxlength="5"
+    title="H+MM (e.g., 2+00)">
+  </span>
+</div>
 
-      ${row3Html("Engine Start", engine, tkIcao, true)}
-      <div class="subtext">T/O − 0+30</div>
+${row3Html("Engine Start", engine, tkIcao, true)}
+<div class="subtext">
+  <span class="subtext-line">
+    T/O − <input id="engineOffsetEdit" class="inline-mini"
+    value="${minutesToHPlusMM(engineOffsetMin)}" maxlength="5"
+    title="H+MM (e.g., 0+30)">
+  </span>
+</div>
+
 
       ${row3Html("Takeoff", takeoffMin, tkIcao, true)}
       <div class="subtext">T/O − 0+00</div>
@@ -2197,6 +2227,21 @@ crewTextBtn?.addEventListener("click", () => {
       if(v == null) return;
       briefOffsetMin = v;
     });
+
+const stepInp = document.getElementById("stepOffsetEdit");
+stepInp?.addEventListener("input", (e) => {
+  const v = parseHPlusMM(e.target.value);
+  if(v == null) return;
+  stepOffsetMin = v;
+});
+
+const engInp = document.getElementById("engineOffsetEdit");
+engInp?.addEventListener("input", (e) => {
+  const v = parseHPlusMM(e.target.value);
+  if(v == null) return;
+  engineOffsetMin = v;
+});
+
     
     setCalcEnabled();
 
@@ -2380,7 +2425,10 @@ document.querySelectorAll("input.box.invalid").forEach(el => el.classList.remove
   hasCalculated = false;
   isDirty = false;
   clearDirty();                 // puts button text back to "Calculate"
-  briefOffsetMin = 150;
+  briefOffsetMin  = 150;
+  stepOffsetMin   = 120;
+  engineOffsetMin = 30;
+
 
 const out = document.getElementById("output");
 if(out){
