@@ -1380,16 +1380,27 @@ button:disabled{
   background: #fff;
 }
 
-/* Draw borders around EVERY grid cell */
-.form-grid > *{
+/* The form-row wrapper is "invisible" to the grid */
+.form-row{
+  display: contents;
+}
+
+/* Draw borders around EVERY "cell" (each child inside each row) */
+.form-grid .form-row > *{
   outline: 1px solid #999;
   outline-offset: -1px;
   background: rgba(0, 128, 255, 0.03);
 }
 
-/* Make contents not hide borders */
-.form-row{
-  display: contents;
+/* Optional: make the gridlines easier to see by giving each cell a tiny padding */
+.form-grid .form-row > *{
+  padding: 4px 2px;
+}
+
+/* Keep inputs/selects from expanding weirdly due to padding */
+.form-grid .form-row > * input,
+.form-grid .form-row > * select{
+  margin: 0;
 }
 
 
