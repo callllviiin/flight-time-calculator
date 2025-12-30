@@ -43,17 +43,20 @@ body{
 .headerbar{
   position: relative;
   margin: 0 0 8px;
-
-  padding-right: 88px; /* reserves space for Reset button */
+  min-height: 44px;     /* enough for title + reset button */
 }
 
 /* Title */
 .headerbar h1{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
   margin: 10px 0;
-  text-align: center;
   font-size: 30px;
   font-weight: 800;
   line-height: 1.1;
+  text-align: center;
 }
 
 /* Small Reset button (top-right) */
