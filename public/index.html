@@ -41,31 +41,33 @@ body{
    HEADER (TITLE + RESET)
    ========================= */
 .headerbar{
-  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+
   margin: 0 0 8px;
-  min-height: 44px;     /* enough for title + reset button */
+  min-height: 44px;
 }
 
 /* Title */
 .headerbar h1{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  grid-column: 2;
 
   margin: 10px 0;
+  text-align: center;
+
   font-size: 30px;
   font-weight: 800;
   line-height: 1.1;
-  text-align: center;
 }
 
 /* Small Reset button (top-right) */
 .headerbar .header-reset{
-  position: absolute;
-  right: 0;
-  bottom: 0;
+  grid-column: 3;
+  justify-self: end;
+  align-self: end;
 
-  width: 80px;          /* your “80-ish px” target */
+  width: 80px;
   height: 30px;
 
   background: #fff;
