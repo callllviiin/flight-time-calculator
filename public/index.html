@@ -1370,41 +1370,6 @@ button:disabled{
 }
 
 
-/* ================================================= */
-/* TEMP DEBUG: Excel-style grid (REMOVE AFTER USE)  */
-/* ================================================= */
-
-.form-grid{
-  column-gap: 0 !important;
-  row-gap: 0 !important;
-  background: #fff;
-}
-
-/* The form-row wrapper is "invisible" to the grid */
-.form-row{
-  display: contents;
-}
-
-/* Draw borders around EVERY "cell" (each child inside each row) */
-.form-grid .form-row > *{
-  outline: 1px solid #999;
-  outline-offset: -1px;
-  background: rgba(0, 128, 255, 0.03);
-}
-
-/* Optional: make the gridlines easier to see by giving each cell a tiny padding */
-.form-grid .form-row > *{
-  padding: 4px 2px;
-}
-
-/* Keep inputs/selects from expanding weirdly due to padding */
-.form-grid .form-row > * input,
-.form-grid .form-row > * select{
-  margin: 0;
-}
-
-
-
   
 </style>
 
@@ -1427,7 +1392,7 @@ button:disabled{
 </div>
 
 
-    <div class="form-grid debug-cols">
+    <div class="form-grid">
 
 
       <!-- Row 1 -->
