@@ -402,6 +402,11 @@ input.box.invalid{
   font-weight:400;
   color:#555;
   transform: translateY(1px);
+
+  display:inline-block;
+  min-width:9ch;          /* reserves space so bold can't grow */
+  text-align:left;
+
 }
 
 /* Checked emphasis (keep weight-change feature) */
