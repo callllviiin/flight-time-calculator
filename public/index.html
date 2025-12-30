@@ -1370,42 +1370,28 @@ button:disabled{
 }
 
 
-/* ============================
-   DEBUG: Column Shading (TEMP)
-   Toggle by adding .debug-cols to .form-grid
-   Works with .form-row { display: contents; }
-   ============================ */
+/* ================================================= */
+/* TEMP DEBUG: Excel-style grid (REMOVE AFTER USE)  */
+/* ================================================= */
 
-.form-grid.debug-cols .form-row > *{
-  outline: 1px dashed rgba(0,0,0,0.22);
+.form-grid{
+  column-gap: 0 !important;
+  row-gap: 0 !important;
+  background: #fff;
+}
+
+/* Draw borders around EVERY grid cell */
+.form-grid > *{
+  outline: 1px solid #999;
   outline-offset: -1px;
-  border-radius: 4px;
+  background: rgba(0, 128, 255, 0.03);
 }
 
-/* Column 1 (Label) */
-.form-grid.debug-cols .form-row > *:nth-child(5n + 1){
-  background: rgba(255, 0, 0, 0.06);
+/* Make contents not hide borders */
+.form-row{
+  display: contents;
 }
 
-/* Column 2 (Zulu / Aircraft) */
-.form-grid.debug-cols .form-row > *:nth-child(5n + 2){
-  background: rgba(0, 255, 0, 0.06);
-}
-
-/* Column 3 (at / spacer) */
-.form-grid.debug-cols .form-row > *:nth-child(5n + 3){
-  background: rgba(0, 0, 255, 0.06);
-}
-
-/* Column 4 (ICAO / Home) */
-.form-grid.debug-cols .form-row > *:nth-child(5n + 4){
-  background: rgba(255, 165, 0, 0.07);
-}
-
-/* Column 5 (Local / Augmented) */
-.form-grid.debug-cols .form-row > *:nth-child(5n + 5){
-  background: rgba(128, 0, 128, 0.06);
-}
 
 
   
