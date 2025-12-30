@@ -7,8 +7,12 @@
 
 <style>
 /* ======================================================== BEGINNING OF STYLE ======================================================= */
-  html{
-  overflow-y: scroll;   /* always reserve scrollbar space to prevent 1st-click centering shift */
+
+/* =========================
+   GLOBAL / PAGE WRAPPER
+   ========================= */
+html{
+  overflow-y: scroll; /* reserve scrollbar space to prevent 1st-click centering shift */
 }
 
 body{
@@ -26,47 +30,37 @@ body{
   padding:10px;
 }
 
+
+/* =========================
+   HEADER (TITLE + RESET)
+   ========================= */
 .headerbar{
   position:relative;
   margin:0 0 8px;
 }
 
-/* Title: centered, slightly larger, more authority */
+/* Title */
 .headerbar h1{
   margin:10px 0 10px;
   text-align:center;
-  font-size:30px;     /* slightly larger */
-  font-weight:800;    /* bolder */
-  line-height:1.1;    /* tight, predictable baseline */
+  font-size:30px;
+  font-weight:800;
+  line-height:1.1;
 }
-  
-/* Title: small-caps look */
+
 .app-title{
   font-variant: small-caps;
   letter-spacing: 1px;
 }
 
-/* Reset button aligned to title baseline */
+/* Reset button placement relative to title */
 .headerbar .icon-btn{
   position:absolute;
   right:0;
-  bottom:0px;        /* aligns with bottom of title text */
+  bottom:0px;
 }
 
-.topbar{
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:8px;
-  margin:0 0 12px;
-  font-size:12px;
-  color:#555;
-}
-
-.topbar input{ transform:translateY(1px); 
-}
-
-/* ---------- Reset icon button (single source of truth) ---------- */
+/* Reset icon button (single source of truth) */
 .icon-btn{
   width:32px;
   height:32px;
@@ -83,12 +77,10 @@ body{
   display:grid;
   place-items:center;
 
-  /* Prevent font metrics from affecting box size */
   line-height:0;
   font-size:28px;
   font-weight:700;
 
-  /* Prevent UA quirks */
   min-width:0;
   min-height:0;
 
@@ -110,98 +102,31 @@ body{
   stroke-linecap: round;
   stroke-linejoin: round;
 
-  /* subtle optical correction */
-  transform: scaleX(0.92);
+  transform: scaleX(0.92); /* subtle optical correction */
 }
 
 
-  
-.reset-icon{
-  width:20px;
-  height:20px;
-  display:block;
-
-  fill:none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-
-  transform:none; /* IMPORTANT: removes any squash */
-  transform: scaleX(0.92);
-}
-  
-.icon-btn:hover{ filter:brightness(0.98); 
-}
-.icon-btn:active{ transform:translateY(1px); 
-}
-
-  
-/* Small hint under ICAO boxes (only shows when ICAO is valid-format but unmapped) */
-.icao-hint{
-  font-size:10px;
-  font-weight:600;
-  line-height:1.1;
-  margin-top:6px;    
-  color:#666;
-  min-height:14px;    /* ensures stable spacing */
-  transform: translateY(-1px);
-}
-
-.icao-hint.bad{
-  color:#8b0000;       /* subtle dark red */
-}
-  
-/* ---------- TOP FORM (SINGLE GRID) ---------- */
-.form-grid{
-  display:grid;
-  width: 100%;
-  /* Fixed label column so inputs don’t get shoved right */
-  grid-template-columns: 200px 104px 26px 104px 1fr;
-  column-gap:4px;
-  row-gap:20px;
+/* =========================
+   TOPBAR (if used)
+   ========================= */
+.topbar{
+  display:flex;
+  justify-content:flex-end;
   align-items:center;
-  margin-top: 24px;
+  gap:8px;
+  margin:0 0 12px;
+  font-size:12px;
+  color:#555;
 }
 
-.form-row{
-  display:contents;
-  font-weight:bold;
+.topbar input{
+  transform:translateY(1px);
 }
 
-.label{
-  /* allow wrap so label column can stay narrow */
-  white-space:normal;
-  line-height:1.1;
-}
 
-/* Top form labels: small-caps / “manual” look */
-.form-label{
-  font-variant: small-caps;
-  letter-spacing: 0.8px;
-}
-  
-/* all three boxes same size */
-.box{
-  width:104px;
-  padding:6px;
-  font-size:18px;
-  text-align:center;
-  box-sizing:border-box;
-}
-
-/* Lock Home Station input metrics so invalid doesn't change row height */
-.home-wrap input.box{
-  border: 1.5px solid #cfcfcf;   /* same thickness as invalid */
-  border-radius: 4px;
-  background: #fff;
-  box-sizing: border-box;
-}
-  
-input.box{
-  vertical-align: middle;
-}
-  
+/* =========================
+   INPUTS (shared)
+   ========================= */
 input,
 select{
   font-family: Consolas, Menlo, "Courier New", monospace;
@@ -212,96 +137,92 @@ input{
   font-weight: 600;
 }
 
-/* Subtle invalid state — does NOT override focus ring */
+
+/* =========================
+   TOP FORM GRID (ROWS 1–3)
+   ========================= */
+.form-grid{
+  display:grid;
+  width:100%;
+  grid-template-columns: 200px 104px 26px 104px 1fr;
+  column-gap:4px;
+  row-gap:20px;
+  align-items:center;
+  margin-top:24px;
+}
+
+.form-row{
+  display:contents;
+  font-weight:bold;
+}
+
+/* left labels */
+.label{
+  white-space:normal;
+  line-height:1.1;
+}
+
+.form-label{
+  font-variant: small-caps;
+  letter-spacing: 0.8px;
+}
+
+/* common input sizing */
+.box{
+  width:104px;
+  padding:6px;
+  font-size:18px;
+  text-align:center;
+  box-sizing:border-box;
+}
+
+input.box{
+  vertical-align: middle;
+}
+
+/* invalid state (does NOT override focus ring) */
 input.box.invalid{
   border: 1.5px solid #8b0000;
 }
-  
+
+/* Home Station: lock metrics so invalid doesn't change height */
+.home-wrap input.box{
+  border: 1.5px solid #cfcfcf;
+  border-radius: 4px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   FLOATING LABELS + HINTS
+   ========================= */
 .floating-wrap{
   position: relative;
   display: inline-block;
   width: 104px;
-  padding-top: 0 !important;   /* IMPORTANT: prevents alignment shift */
-  overflow: visible;           /* ensure focus ring isn’t clipped by wrapper */
+  padding-top: 0 !important;   /* prevents alignment shift */
+  overflow: visible;           /* ensure focus ring isn’t clipped */
 }
 
 .floating-label{
   position:absolute;
   left:4px;
-  top:-9px;                 /* keep the position you like */
+  top:-9px;
   z-index:3;
   pointer-events:none;
 
-  font-size:9px;            /* small */
+  font-size:9px;
   font-weight:600;
   line-height:1;
 
-  background:#f5f7fa;       /* your page bg (keeps border from slicing text) */
-  padding:0 3px;            /* thinner “chip” */
+  background:#f5f7fa;
+  padding:0 3px;
   border-radius:4px;
   color:#666;
 }
 
-
-/* Day shift indicator INSIDE the local input box */
-.day-shift{
-  position:absolute;
-  right:6px;
-  bottom:6px;          /* inside the box, bottom-right */
-  font-size:10px;
-  color:#666;
-  font-weight:700;
-  line-height:1;
-  pointer-events:none; /* clicks go to the input */
-  background:transparent;
-}
-
-/* Give Local inputs room so the +1/-1 doesn't overlap digits */
-.local-wrap .box{
-  padding-right:18px;
-  padding-left:18px;
-}
-
-.shift-sup{
-  font-size:10px;
-  font-weight:700;
-  margin-left:0px;
-  vertical-align:super;
-
-  color:#000;     /* force standard black */
-  opacity:1;
-}
-
-/* Float day-shift without affecting alignment */
-.timewrap{
-  position:relative;
-  display:inline-block;
-  padding-right:12px;     /* reserves space so columns stay aligned */
-}
-
-.timewrap .shift-sup{
-  position:absolute;
-  right:0;
-  top:-2px;              /* small lift (superscript feel) */
-  margin-left:0;         /* no inline spacing needed */
-}
-  
-.at{
-  font-weight:bold;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.icao-wrap{
-  position:relative;
-  width:104px;
-}
-
-.icao-wrap .box{
-  width:100%;
-}
-
+/* Generic hint (positioned under its field) */
 .icao-hint{
   position:absolute;
   left:0;
@@ -317,83 +238,101 @@ input.box.invalid{
   text-align:center;
   pointer-events:none;
   white-space:nowrap;
-}
-  
-/* Time-only hint: tuck it under the right side of the Zulu input to avoid overlap */
-.icao-hint.time-hint{
-  left:auto;           /* stop stretching full width */
-  right:0;             /* align to right edge of its input */
-  width:104px;         /* match the box width */
-  text-align:right;    /* text hugs the right edge */
+
+  min-height:14px;             /* stable spacing */
+  transform: translateY(-1px); /* subtle tuck */
 }
 
-  
 .icao-hint.bad{
   color:#8b0000;
 }
 
-.icao-hint.bad{
-  color:#8b0000 !important;
+/* Time-only hint: tuck under right edge of a 104px box */
+.icao-hint.time-hint{
+  left:auto;
+  right:0;
+  width:104px;
+  text-align:right;
 }
-  
-/* slightly larger gap between ICAO and Local */
-.local-wrap{ 
+
+/* ICAO wrapper */
+.icao-wrap{
+  position:relative;
+  width:104px;
+}
+.icao-wrap .box{ width:100%; }
+
+/* "at" column */
+.at{
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Local column spacing */
+.local-wrap{
   margin-left:10px;
   justify-self:end;
 }
 
-/* ---------- ROW 3 ---------- */
-
-  /* ========================= */
-/* Phase 3 — Row 3 alignment */
-/* ========================= */
-
-/* Aircraft select should behave like the other input boxes */
-#aircraft{
-  width:104px;
-  height:34px;
-  justify-self:start;
+/* Day shift marker inside local box */
+.day-shift{
+  position:absolute;
+  right:6px;
+  bottom:6px;
+  font-size:10px;
+  color:#666;
+  font-weight:700;
+  line-height:1;
+  pointer-events:none;
+  background:transparent;
 }
 
-/* Home Station input aligns exactly like ICAO boxes above */
-.form-row .home-wrap{
-  width:104px;
-  justify-self:start;
+/* Give Local inputs room so +1/-1 doesn't overlap digits */
+.local-wrap .box{
+  padding-right:18px;
+  padding-left:18px;
 }
 
-/* Augmented column: align vertically + keep spacing sane */
-.form-row .crew-check{
-  display:flex;
-  align-items:center;
-  justify-self:start;
-  margin-left:10px;   /* matches Local column spacing */
-}
-  
-  .aircraft-crew-label{
-  font-weight:bold;
+
+/* =========================
+   TIME SHIFT SUPERSCRIPTS (output + local)
+   ========================= */
+.shift-sup{
+  font-size:10px;
+  font-weight:700;
+  margin-left:0px;
+  vertical-align:super;
+  color:#000;
+  opacity:1;
 }
 
-.third-content-wide{
-  grid-column: 2 / -1;                 /* still spans Zulu → Local columns */
-  display:grid;
-  grid-template-columns: 104px 26px 104px 1fr;  /* match top-row columns */
-  column-gap:4px;
-  align-items:center;
-  width:100%;
-}
-  
-/* Flatten wrappers so #aircraft and .home-wrap can be grid items */
-.aircraft-wrap{
-  display:contents;
+.timewrap{
+  position:relative;
+  display:inline-block;
+  padding-right:12px;
 }
 
+.timewrap .shift-sup{
+  position:absolute;
+  right:0;
+  top:-2px;
+  margin-left:0;
+}
+
+
+/* =========================
+   ROW 3: AIRCRAFT / HOME / AUGMENTED
+   ========================= */
+/* Aircraft select look/feel */
 #aircraft{
   appearance:none;
   -webkit-appearance:none;
   -moz-appearance:none;
 
   width:104px;
-  height:34px;              /* bump to match your inputs visually */
+  height:34px;
   box-sizing:border-box;
 
   border:1px solid #cfcfcf;
@@ -401,9 +340,8 @@ input.box.invalid{
   background:#fff;
   color:#222;
 
-  /* Firefox: let padding do the vertical centering */
-  padding:6px 26px 6px 6px; /* restore vertical padding */
-  line-height:normal;       /* don't fight the UA select metrics */
+  padding:6px 26px 6px 6px;
+  line-height:normal;
 
   font-size:18px;
   font-family: Consolas, Menlo, "Courier New", monospace;
@@ -411,6 +349,8 @@ input.box.invalid{
   text-align:center;
 
   cursor:pointer;
+  justify-self:start;
+  transform: translateY(1px);
 }
 
 #aircraft{
@@ -424,18 +364,11 @@ input.box.invalid{
   background-repeat:no-repeat;
 }
 
-#aircraft{ transform: translateY(1px); }
-  
-/* Let #aircraft and .home-wrap sit in the Row 3 grid columns */
-.aircraft-home{
-  display:contents;
-}
-
+/* Home wrap */
 .home-wrap{
   position:relative;
   width:104px;
 }
-
 .home-wrap .box{
   width:100%;
   padding:6px;
@@ -443,29 +376,39 @@ input.box.invalid{
   text-align:center;
 }
 
-/* ======================================= */
-/* COMPONENT: Crew Check (Augmented)       */
-/* ======================================= */
-
-/* Column placement + overall alignment */
+/* Grid placement for Row 3 items (main 5-col grid) */
+.form-grid .form-row #aircraft{
+  grid-column: 2;
+}
+.form-grid .form-row .at{
+  grid-column: 3;
+}
+.form-grid .form-row .home-wrap{
+  grid-column: 4;
+  justify-self:start;
+}
 .form-grid .form-row .crew-check{
   grid-column: 5;
   display:flex;
   align-items:center;
   justify-self:start;
-  margin-left:17px;          /* row-3 inset from the Home column */
+  margin-left:17px;
   white-space:nowrap;
 }
 
-/* Label layout: checkbox + text */
+/* Row 3 label */
+.aircraft-crew-label{
+  font-weight:bold;
+}
+
+/* Crew Check component */
 .crew-check-label{
   display:flex;
   align-items:center;
-  gap:6px;                   /* ✅ THIS is the spacing between box and word */
+  gap:6px; /* spacing between checkbox and word */
   user-select:none;
 }
 
-/* Checkbox sizing */
 .crew-check-label input[type="checkbox"]{
   width:16px;
   height:16px;
@@ -473,7 +416,6 @@ input.box.invalid{
   cursor:pointer;
 }
 
-/* Text styling (unchecked) */
 .crew-check-text{
   font-family: Arial, sans-serif;
   font-variant: small-caps;
@@ -484,29 +426,16 @@ input.box.invalid{
   transform: translateY(1px);
 }
 
-/* Checked emphasis (keep your weight-change feature) */
+/* Checked emphasis (keep weight-change feature) */
 .crew-check-label input[type="checkbox"]:checked + .crew-check-text{
   font-weight:700;
   color:#000;
 }
-  
-.crew-toggle{
-  justify-self:end;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:10px;
-  white-space:nowrap;
-}
-
-.crew-label{
-  font-weight:normal;
-  color:#333;
-}
-.crew-label.active{ font-weight:bold; }
 
 
-/* ---------- BUTTON ---------- */
+/* =========================
+   PRIMARY BUTTONS
+   ========================= */
 button{
   margin-top:20px;
   padding:14px 12px;
@@ -517,74 +446,15 @@ button{
   width:100%;
   cursor:pointer;
 
-  background:#1f2a44;      /* deep blue/gray */
+  background:#1f2a44;
   color:#fff;
   border:1px solid #141b2d;
   border-radius:10px;
   box-shadow:0 3px 10px rgba(0,0,0,0.15);
 }
 
-button:hover{
-  filter:brightness(1.05);
-}
+button:hover{ filter:brightness(1.05); }
 
-/* Circadian highlight for Home Station Show Time (subtle, scan-friendly) */
-.circ-low{
-  background:#eaf6ee;
-  border:1px solid #c7e7d0;
-  padding:2px 4px;
-  border-radius:4px;
-}
-
-.circ-mod{
-  background:#fff8e3;
-  border:1px solid #f1e0b6;
-  padding:2px 4px;
-  border-radius:4px;
-}
-
-.circ-high{
-  background:#ffe2bf;
-  border:1px solid #f3c08a;
-  padding:2px 4px;
-  border-radius:4px;
-}
-
-.circ-severe{
-  background:#ffd1d1;
-  border:1px solid #f1a0a0;
-  padding:2px 4px;
-  border-radius:4px;
-}
-
-.subtext .home-mini{
-  font-size:11px;
-  font-weight:700;
-}
-  
-/* ===================================================== */
-/* Rounded orange focus rings (match input border radius) */
-/* ===================================================== */
-
-input.box:focus,
-input.box:focus-visible{
-  outline: none !important;
-  box-shadow: 0 0 0 2px #ff8a3d;
-}
-
-#aircraft:focus,
-#aircraft:focus-visible{
-  outline: none !important;
-  box-shadow: 0 0 0 2px #ff8a3d;
-}
-
-button:focus,
-button:focus-visible{
-  outline: none !important;
-  box-shadow: 0 0 0 2px #ff8a3d;
-}
-
-  
 button:active{
   transform:translateY(1px);
   box-shadow:0 2px 6px rgba(0,0,0,0.12);
@@ -596,33 +466,52 @@ button:disabled{
   transform:none;
   box-shadow:none;
 }
-  
-/* ---------- OUTPUT ---------- */
 
- :root{
+
+/* =========================
+   FOCUS RINGS (rounded orange)
+   ========================= */
+input.box:focus,
+input.box:focus-visible{
+  outline:none !important;
+  box-shadow:0 0 0 2px #ff8a3d;
+}
+
+#aircraft:focus,
+#aircraft:focus-visible{
+  outline:none !important;
+  box-shadow:0 0 0 2px #ff8a3d;
+}
+
+button:focus,
+button:focus-visible{
+  outline:none !important;
+  box-shadow:0 0 0 2px #ff8a3d;
+}
+
+
+/* =========================
+   OUTPUT PANEL + ROW SYSTEM
+   ========================= */
+:root{
   --row-label-w: 190px;
   --row-gap: 14px;
   --time-col-w: 92px;
   --row-time-minw: 70px;
-  --row-time-mr: 40px;     /* keeps the local/zulu spacing consistent */
+  --row-time-mr: 40px;
   --row-pad-y: 4px;
   --row-pad-x: 6px;
   --row-radius: 4px;
-} 
-  
+}
+
 .output{
   margin-top:28px;
   padding:20px 20px 12px;
   background:white;
   border-radius:8px;
-  border:1px solid #1f2a44;  /* same as button background */
-
-  /* Phase 3: never scroll inside the output panel */
+  border:1px solid #1f2a44;
   overflow: visible;
-}
 
-/* Visual-only collapse (prevents scroll snap during reset) */
-.output{
   transform-origin: top;
   transition: opacity 260ms ease, transform 260ms ease;
 }
@@ -632,32 +521,20 @@ button:disabled{
   transform: scaleY(0);
 }
 
-/* Reset: shrink results down to the idle-size (NOT to zero) */
 .output.collapsing-to-idle{
   opacity:1;
   transform: scaleY(var(--idleScale, 0.35));
 }
-  
-.output hr{
-  margin:14px 0;
-}
 
-/* Expanded output: behave like a panel without hard pixel-locking */
+.output hr{ margin:14px 0; }
+
 .output.fixed-expanded{
   max-height: calc(100vh - 220px);
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-/* Mobile: don't lock expanded height */
-@media (max-width:620px){
-  .output.fixed-expanded{
-    height:auto !important;
-    overflow:visible !important;
-  }
-}
-  
-/* ---------- OUTPUT ACTION BUTTONS (BOTTOM) ---------- */
+/* Output action buttons (bottom) */
 .output-actions{
   display:flex;
   gap:10px;
@@ -665,24 +542,21 @@ button:disabled{
 }
 
 .output-actions button{
-  margin-top:0;            /* override global button margin */
+  margin-top:0;
   width:100%;
   padding:12px 12px;
   font-size:16px;
   border-radius:10px;
 }
 
-.output-actions button:disabled{
-  opacity:0.55;
-}
+.output-actions button:disabled{ opacity:0.55; }
 
-/* Output panel: idle (pre-calc) */
-/* Output panel: idle (pre-calc) — same height as Calculate button */
+/* Output: idle state */
 .output.idle{
-  height:52px;                 /* match Calculate button height */
-  padding:0 12px;              /* no vertical padding (prevents tall box) */
+  height:52px;
+  padding:0 12px;
 
-  border:1px solid #1f2a44;    /* match expanded output + Calculate */
+  border:1px solid #1f2a44;
   border-radius:10px;
   background:#fff;
 
@@ -699,7 +573,8 @@ button:disabled{
   justify-content:center !important;
   text-align:center;
 }
-  
+
+/* legacy row (flight time block) */
 .row{
   display:flex;
   justify-content:space-between;
@@ -709,29 +584,59 @@ button:disabled{
   font-weight:bold;
 }
 
-/* Flight Time: match Crew Timing row size */
 .row.flight-time .sc-label,
 .row.flight-time .mono{
   font-size:17.5px;
 }
 
-/* Crew Timing: keep labels same size as Duty rows */
-.crew-timing .row3{
-  font-size: inherit;
+/* Headers */
+.sc-head{
+  font-variant: small-caps;
+  letter-spacing: 1px;
 }
 
-/* Crew Timing: slightly emphasize TIMES only */
-.crew-timing .mono{
-  font-size:17.5px;
+.sc-head.timing-head{
+  font-size:20px;
+  margin-top:-10px;
 }
 
-/* Duty section header slightly larger */
 .sc-head.duty-head{
   font-size:19px;
 }
-  
-/* ================= Unified output row system ================= */
 
+/* Labels + mono */
+.sc-label{
+  font-variant: small-caps;
+  letter-spacing: 0.6px;
+}
+
+.mono{
+  font-family: Consolas, Menlo, "Courier New", monospace;
+  letter-spacing: 1px;
+  font-weight: 700;
+  font-size: 1.05em;
+}
+
+.tz-sfx{
+  font-size:10px;
+  font-weight:700;
+  margin-left:1px;
+  color:#000;
+  opacity:1;
+}
+
+/* Subtext under timing rows */
+.subtext{
+  font-size:11px;
+  color:#666;
+  margin-top:-1px;
+  margin-bottom:8px;
+  padding-left: var(--row-pad-x);
+  padding-right: var(--row-pad-x);
+  text-align:left;
+}
+
+/* Unified output rows */
 .row3, .row4{
   display:grid;
   margin-top:12px;
@@ -741,10 +646,6 @@ button:disabled{
   box-sizing:border-box;
 }
 
-/* Row3 variants:
-   - Duty rows (FDP/CDT/TDD/APU): label | message/spacer | zulu
-   - Timing rows: label | spacer | local | zulu
-*/
 .row3.dutyrow{
   grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
 }
@@ -753,8 +654,12 @@ button:disabled{
   grid-template-columns: var(--row-label-w) 1fr var(--time-col-w) var(--time-col-w);
 }
 
-/* spacer/message column (used in timerow, and visually similar to row4 mcol) */
-.row3.timerow .mcol{
+.row4{
+  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w) var(--time-col-w);
+}
+
+.row3.timerow .mcol,
+.row4 .mcol{
   display:flex;
   justify-content:flex-start;
   align-items:center;
@@ -762,7 +667,6 @@ button:disabled{
   font-weight:500;
 }
 
-/* Duty rows: the middle column is text (or empty) */
 .row3.dutyrow .lcol{
   display:flex;
   justify-content:flex-start;
@@ -771,12 +675,6 @@ button:disabled{
   font-weight:500;
 }
 
-/* 4-col rows (Show Time): label | msg | local | zulu */
-.row4{
-  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w) var(--time-col-w);
-}
-
-/* times (shared) */
 .row3 .lcol, .row4 .lcol{
   text-align:right;
   font-weight:700;
@@ -784,65 +682,34 @@ button:disabled{
   min-width: var(--row-time-minw);
   margin-right: 0;
 }
+
 .row3 .zcol, .row4 .zcol{
   text-align:right;
   min-width: var(--row-time-minw);
 }
 
-/* message col (Show Time) */
-.row4 .mcol{
-  display:flex;
-  justify-content:flex-start;
-  align-items:center;
-  padding-left:0;
-  text-align:left;
+/* Crew timing padding frame */
+.crew-timing .row3{
+  font-size: inherit;
+  padding: var(--row-pad-y) var(--row-pad-x);
+  border-radius: var(--row-radius);
 }
 
-/* message rows in duty section (row3.midtext) */
-.row3.midtext{
-  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
-}
-.row3.midtext .lcol{
-  display:flex;
-  justify-content:flex-start;
-  align-items:center;
-  font-weight:500;  /* message lighter */
+.crew-timing .mono{
+  font-size:17.5px;
 }
 
-/* Crew Timing: keep row4 same size as row3 */
 .crew-timing .row4{
   font-size:17.5px;
 }
 
-  /* Show Time: message feels like subtext, circadian time pops */
-.row4.showtime-left .orm-note.show-orm{
-  font-size:12px;
-  font-weight:500;
-  color:#666;
-  white-space:nowrap;
-}
-  
-/* Circadian time inside Show Time ORM message:
-   same monospace structure, but smaller + quieter */
-.showtime-circ{
-  font-size:12px;        /* match subtext size */
-  font-weight:650;      /* calmer than main times */
-  color:#000;
-}
+/* Show Time inline ORM note */
+.showtime-inline{ white-space:nowrap; }
 
-/* Override mono sizing ONLY inside Show Time */
-.showtime-circ .mono{
-  font-size:12px;        /* cancel .mono's enlargement */
-  font-weight:600;
-  color:#000;
-}
-
-
-/* Show Time ORM message: plain Arial, no small-caps, no tracking */
 .show-orm-inline{
-  font-family: Arial, sans-serif;   /* explicit, no inheritance */
-  font-variant: normal;             /* kill small-caps */
-  letter-spacing: normal;           /* kill tracking */
+  font-family: Arial, sans-serif;
+  font-variant: normal;
+  letter-spacing: normal;
   text-transform: none;
 
   font-size:11px;
@@ -851,95 +718,25 @@ button:disabled{
   margin-left:2.5em;
   white-space:nowrap;
 }
-  
+
+.showtime-circ{
+  font-size:12px;
+  font-weight:650;
+  color:#000;
+}
+
+.showtime-circ .mono{
+  font-size:12px;
+  font-weight:600;
+  color:#000;
+}
+
 .show-orm-inline .showtime-circ{
-  font-weight:700;      /* was 800 */
-  color:#333;           /* slightly softer than pure black */
-}
-
-/* Only for Show Time label+note: keep on one line, never truncate */
-.showtime-inline{
-  white-space:nowrap;
-}
-  
-/* Crew Timing highlighted band uses consistent row padding */
-.crew-timing .row3.orm-low,
-.crew-timing .row3.orm-mod,
-.crew-timing .row3.orm-high,
-.crew-timing .row3.orm-severe{
-  /* padding/radius now come from .crew-timing .row3 base rule */
-}
-
-/* Crew Timing rows: always have the same inner frame as highlighted rows */
-.crew-timing .row3{
-  padding: var(--row-pad-y) var(--row-pad-x);
-  border-radius: var(--row-radius);
-}
-  
-/* Local time + ORM label stacked in the middle column (Show Time only) */
-.midstack{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;   /* keeps it lined up with the times */
-  gap:2px;
-}
-
-.midstack .orm-note{
-  font-size:10px;
-  font-weight:800;
-  line-height:1;
-  white-space:nowrap;
-}
-  
-/* small-caps for left-column labels in output rows */
-.sc-label{
-  font-variant: small-caps;
-  letter-spacing: 0.6px;
-}
-  
-/* Section headers in output (Crew Timing, Crew Duty Limitations) */
-.sc-head{
-  font-variant: small-caps;
-  letter-spacing: 1px;
-}
-
-/* Crew Timing header: largest emphasis */
-.sc-head.timing-head{
-  font-size:20px;
-  margin-top:-10px;   /* tighten space above Crew Timing */
-}
-  
-/* Output times should look like your inputs */
-.mono{
-  font-family: Consolas, Menlo, "Courier New", monospace;
-  letter-spacing: 1px;
-  font-weight: 700;
-  font-size: 1.05em;   /* subtle optical correction */
-}
-  
-.tz-sfx{
-  font-size:10px;
   font-weight:700;
-  margin-left:1px;
-
-  color:#000;     /* force standard black */
-  opacity:1;      /* remove dimming */
+  color:#333;
 }
- 
-.subtext{
-  font-size:11px;
-  color:#666;
-  margin-top:-1px;
-  margin-bottom:8px;
 
-  /* Match the row inset so subtext aligns with label text */
-  padding-left: var(--row-pad-x);
-  padding-right: var(--row-pad-x);
-
-  text-align:left;
-}
-  
-/* Small explanatory text in the "middle" column of Duty Limitations */
+/* ORM note */
 .orm-note{
   display:block;
   font-size:11px;
@@ -950,71 +747,58 @@ button:disabled{
   margin-right:0;
 }
 
-/* Home Station ORM message: slightly smaller, allow wrap if needed */
-.orm-note.home-orm{
-  font-size:10px;
-  font-weight:700;
-  white-space:normal;     /* allow wrapping */
-  text-align:center;
-  line-height:1.15;
+.row3.midtext{
+  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
 }
-  
+
+.row3.midtext .lcol{
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  font-weight:500;
+}
+
 .row3.midtext .orm-note{
   white-space:nowrap;
   display:inline-block;
 }
 
-/* Duty section ORM messages (e.g., Flight Duty Period): keep on one line */
 .row3.dutyrow .orm-note{
-  display:inline-block;   /* stop acting like a full-width block */
-  white-space:nowrap;     /* never wrap to a second line */
-}
-  
-.warn{
-  background-color:#fff3cd;
-  padding:4px 6px;
-  border-radius:4px;
+  display:inline-block;
+  white-space:nowrap;
 }
 
-.danger{
-  background-color:#f8d7da;
-  padding:4px 6px;
-  border-radius:4px;
-}
-
-/* ================= ORM bands (FDP = KING) ================= */
-/* FDP: same strong fills, now with a darker border for definition */
+/* ORM color bands (FDP strong) */
 .orm-low{
   background:#d4edda;
-  border:1px solid #7bbf8b;     /* darker green border */
+  border:1px solid #7bbf8b;
   padding:4px 6px;
   border-radius:4px;
 }
 
 .orm-mod{
   background:#fff3cd;
-  border:1px solid #d6b656;     /* darker yellow border */
+  border:1px solid #d6b656;
   padding:4px 6px;
   border-radius:4px;
 }
 
 .orm-high{
-  background:#ffb74d;           /* strong amber/orange */
-  border:1px solid #c77a16;     /* darker orange border */
+  background:#ffb74d;
+  border:1px solid #c77a16;
   padding:4px 6px;
   border-radius:4px;
 }
 
 .orm-severe{
-  background:#f44336;           /* strong red */
-  border:1px solid #a10000;     /* darker red border */
-  color:#000;                   /* keep black text */
+  background:#f44336;
+  border:1px solid #a10000;
+  color:#000;
   padding:4px 6px;
   border-radius:4px;
 }
 .orm-severe .tz-sfx{ color:#000; }
 
-/* Exceeds limit: keep unchanged (your "emergency red" look) */
 .orm-exceed{
   background:#c62828;
   color:#fff;
@@ -1023,36 +807,32 @@ button:disabled{
   outline:2px solid #7f0000;
   outline-offset:-1px;
 }
-.orm-exceed .tz-sfx{
-  color:#fff;
-  opacity:1;
-}
+.orm-exceed .tz-sfx{ color:#fff; opacity:1; }
 
-/* ================= Muted ORM bands (CDT/TDD/APU) ================= */
-/* Softer fills, still readable, still scan-friendly */
+/* ORM muted */
 .ormm-low{
-  background:#eaf6ee;           /* muted green */
+  background:#eaf6ee;
   border:1px solid #c7e7d0;
   padding:4px 6px;
   border-radius:4px;
 }
 
 .ormm-mod{
-  background:#fff8e3;           /* muted yellow */
+  background:#fff8e3;
   border:1px solid #f1e0b6;
   padding:4px 6px;
   border-radius:4px;
 }
 
 .ormm-high{
-  background:#ffe2bf;           /* muted orange */
+  background:#ffe2bf;
   border:1px solid #f3c08a;
   padding:4px 6px;
   border-radius:4px;
 }
 
 .ormm-severe{
-  background:#ffd1d1;           /* muted red */
+  background:#ffd1d1;
   border:1px solid #f1a0a0;
   color:#000;
   padding:4px 6px;
@@ -1074,38 +854,33 @@ button:disabled{
   opacity:1;
   color:#000;
 }
-  
-/* tiny offset editor for brief */
-.inline-mini{
-  width:44px;                          /* slightly smaller */
-  font-size:11px;                     /* slightly tighter */
-  font-family: Consolas, Menlo, "Courier New", monospace;
 
-  padding:1px 1px;                    /* vertical centering for inputs */
+
+/* =========================
+   INLINE MINI EDITORS
+   ========================= */
+.inline-mini{
+  width:44px;
+  font-size:11px;
+  font-family: Consolas, Menlo, "Courier New", monospace;
+  padding:1px 1px;
   text-align:center;
   box-sizing:border-box;
-
   border-radius:4px;
   border:1px solid #cfcfcf;
   background:#fff;
 }
 
-/* ---------- DISCLAIMER / FOOTER ---------- */
-.disclaimer{
-  margin-top:40px;
-  font-size:13px;
-  color:#444;
-  line-height:1.5;
-  text-align:justify;
-  text-justify:inter-word;
-}
 
+/* =========================
+   FOOTER LINKS + MODAL
+   ========================= */
 .footer{
   margin-top:25px;
   text-align:center;
   font-weight:bold;
 }
-  
+
 .footer small{
   display:block;
   font-weight:normal;
@@ -1118,18 +893,15 @@ button:disabled{
   justify-content:center;
   align-items:center;
   gap:14px;
-
-  flex-wrap:nowrap;        /* ✅ force single line */
-  white-space:nowrap;     /* safety net */
-
+  flex-wrap:nowrap;
+  white-space:nowrap;
   font-size:13px;
 }
 
 .info-links button{
   background:#fff;
-  border:1px solid #cfcfcf;   /* subtle but visible */
-
-  padding:6px 10px;           /* slightly heavier hit box */
+  border:1px solid #cfcfcf;
+  padding:6px 10px;
   margin:0;
 
   font-family: Arial, sans-serif;
@@ -1137,23 +909,19 @@ button:disabled{
   font-weight:600;
   color:#1f2a44;
 
-  text-decoration:none;       /* ✅ no underline */
+  text-decoration:none;
   cursor:pointer;
 
   border-radius:8px;
 }
 
-.info-links button:hover{
-  background:#f5f7fa;
-}
-
+.info-links button:hover{ background:#f5f7fa; }
 .info-links button:active{
   background:#e9ecf2;
   transform:translateY(1px);
 }
 
-  
-/* ---------- INFO MODAL (Phase 3) ---------- */
+/* Modal */
 .modal-overlay{
   position:fixed;
   inset:0;
@@ -1165,9 +933,7 @@ button:disabled{
   padding:18px;
 }
 
-.modal-overlay.open{
-  display:flex;
-}
+.modal-overlay.open{ display:flex; }
 
 .modal{
   width:min(560px, 100%);
@@ -1176,7 +942,7 @@ button:disabled{
   border-radius:14px;
   border:1px solid #cfcfcf;
   box-shadow:0 18px 40px rgba(0,0,0,0.25);
-  overflow:hidden; /* keep rounded corners clean */
+  overflow:hidden;
   font-family: Arial, sans-serif;
 }
 
@@ -1214,7 +980,7 @@ button:disabled{
 .modal-body{
   padding:14px;
   max-height: calc(85vh - 52px);
-  overflow:auto; /* ✅ scrolling allowed ONLY inside modal */
+  overflow:auto;
   color:#222;
   font-size:13px;
   line-height:1.55;
@@ -1223,8 +989,10 @@ button:disabled{
 .modal-body p{ margin:0 0 10px; }
 .modal-body strong{ font-weight:900; }
 
-  
-/* ---------- MOBILE ---------- */
+
+/* =========================
+   MOBILE
+   ========================= */
 @media (max-width:620px){
   .form-grid{
     grid-template-columns: max-content 1fr 26px 1fr 1fr;
@@ -1234,65 +1002,10 @@ button:disabled{
   .icao-wrap{ width:100%; }
   .local-wrap{ margin-left:0; }
 
-  .third-row-wrap{
-    grid-template-columns: 1fr;
-    row-gap:8px;
+  .output.fixed-expanded{
+    height:auto !important;
+    overflow:visible !important;
   }
-  .third-content{
-    grid-template-columns: 1fr;
-    gap:10px;
-  }
-  .crew-toggle{ justify-self:end; }
-}
-  
-/* Phase 3: old .third-content-wide crew-check override removed */
-
-/* Row 3 now uses the main 5-column grid: keep items in their columns */
-.form-grid .form-row #aircraft{ width:104px; }
-.form-grid .form-row .home-wrap{ width:104px; }
-  
-  /* Make ONLY the "Augmented" word non-clickable (checkbox stays clickable) */
-/* Prevent Augmented checked-state from shifting the column */
-/*
-  #augLbl{
-  display:inline-block;
-  width:92px;          
-  text-align:left;
-}
-*/
-
-/* Show pointer cursor only over the checkbox */
-.crew-check-label input[type="checkbox"]{
-  cursor: pointer;
-}
-
-/* ================================ */
-/* Phase 3 — Row 3 uses main grid   */
-/* Label | Aircraft | (blank) | Home | Aug */
-/* ================================ */
-
-.form-grid .form-row #aircraft{
-  grid-column: 2 !important;
-  width:104px;
-  justify-self:start;
-}
-
-.form-grid .form-row .at{
-  grid-column: 3 !important;
-}
-
-.form-grid .form-row .home-wrap{
-  grid-column: 4 !important;
-  width:104px;
-  justify-self:start;
-}
-
-.form-grid .form-row .crew-check{
-  grid-column: 5 !important;
-  display:flex;
-  align-items:center;
-  justify-self:start;
-  margin-left:17px;
 }
 
 /* ======================================================== END OF STYLE ======================================================= */
