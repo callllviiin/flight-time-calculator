@@ -42,7 +42,7 @@ body{
    ========================= */
 .headerbar{
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 80px 1fr 80px;
   align-items: end;
 
   margin: 0 0 8px;
@@ -52,7 +52,7 @@ body{
 /* Title */
 .headerbar h1{
   grid-column: 2;
-
+  white-space: nowrap;   /* prevents wrap */
   margin: 10px 0;
   text-align: center;
 
@@ -102,31 +102,6 @@ body{
 .app-title{
   font-variant: small-caps;
   letter-spacing: 1px;
-}
-
-/* Header reset button (small pill, matches footer buttons) */
-.headerbar .header-reset{
-  position:absolute;
-  right:0;
-  bottom:0;
-
-  background:#fff;
-  border:1px solid #cfcfcf;
-
-  padding:6px 10px;
-  margin:0;
-
-  font-family: Arial, sans-serif;
-  font-size:12px;
-  font-weight:700;
-  font-variant: small-caps;
-  letter-spacing:0.6px;
-  color:#1f2a44;
-
-  border-radius:8px;
-  cursor:pointer;
-
-  box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
 /* =========================
