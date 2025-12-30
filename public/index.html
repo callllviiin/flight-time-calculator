@@ -666,13 +666,24 @@ button:focus-visible{
   grid-template-columns: var(--row-label-w) 1fr var(--time-col-w) var(--time-col-w);
 }
 
-.row3.timerow .mcol,
-.row4 .mcol{
+/* Timing rows: left-aligned middle column */
+.row3.timerow .mcol{
   display:flex;
   justify-content:flex-start;
   align-items:center;
   text-align:left;
   font-weight:500;
+}
+
+/* Show Time (row4): centered middle column */
+.row4 .mcol{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  font-weight:500;
+  min-width:0;   /* Safari clipping fix */
+  padding: 0 6px;
 }
 
 /* Center ORM messages in the middle column (duty rows) */
@@ -2110,22 +2121,18 @@ const engine     = takeoffMin - engineOffsetMin;
       ${row3Html("Legal for Alert", legalAlert, tkIcao, true)}
       <div class="subtext">T/O − 4+15</div>
 
-${row3Html(
+${row4Html(
   "Show Time",
   showTime,
   tkIcao,
-  true,
-  `${showCircClass} showtime`,
   (() => {
     if(homeShowLocalMins == null) return "";
 
-    // Recompute local + day shift for Show Time using absolute context
     const baseShift = Math.floor(showTime / 1440);
     const zNorm = ((showTime % 1440) + 1440) % 1440;
     const zHHMM = minutesToHHMM(zNorm);
     const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
 
-    // Build circadian time using SAME renderer as other Local times
     let circHtml = "";
     if(res){
       const totalShift = baseShift + res.dayShift;
@@ -2142,9 +2149,9 @@ ${row3Html(
       ? `${homeShowOrmText}: Circadian Time – <span class="showtime-circ">${circHtml}</span>`
       : `Circadian Time – <span class="showtime-circ">${circHtml}</span>`;
 
-    // IMPORTANT: this goes in the MIDDLE column now (mcol)
     return `<span class="show-orm-inline">${msg}</span>`;
-  })()
+  })(),
+  `${showCircClass} showtime`
 )}
 
 
