@@ -66,35 +66,55 @@ body{
 .topbar input{ transform:translateY(1px); 
 }
 
+/* ---------- Reset icon button (single source of truth) ---------- */
 .icon-btn{
   width:32px;
   height:32px;
-  aspect-ratio: 1 / 1;     /* hard-lock square */
-  box-sizing:border-box;   /* border stays inside the 32x32 */
+  aspect-ratio: 1 / 1;
+  box-sizing:border-box;
+
   padding:0;
   border:2px solid #cfcfcf;
   border-radius:8px;
-
   background:#fff;
+
   cursor:pointer;
 
   display:grid;
   place-items:center;
 
-  line-height:0;           /* prevents font metrics from changing height */
-  min-width:0;             /* kills any UA min-width weirdness */
+  /* Prevent font metrics from affecting box size */
+  line-height:0;
+  font-size:28px;
+  font-weight:700;
+
+  /* Prevent UA quirks */
+  min-width:0;
   min-height:0;
 
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
   color:#1f2a44;
 }
 
-button#resetBtn.icon-btn{
-  width:32px !important;
-  height:32px !important;
-  aspect-ratio:1 / 1 !important;
-  box-sizing:border-box !important;
+.icon-btn:hover{ filter:brightness(0.98); }
+.icon-btn:active{ transform:translateY(1px); }
+
+.reset-icon{
+  width:20px;
+  height:20px;
+  display:block;
+
+  fill:none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  /* subtle optical correction */
+  transform: scaleX(0.92);
 }
+
+
   
 .reset-icon{
   width:20px;
@@ -114,13 +134,6 @@ button#resetBtn.icon-btn{
 .icon-btn:hover{ filter:brightness(0.98); 
 }
 .icon-btn:active{ transform:translateY(1px); 
-}
-
-.icon-btn{
-  font-size:28px;      /* keep size */
-  transform: translateY(0); /* already handled elsewhere */
-  font-weight:700;
-  line-height:1;
 }
 
   
