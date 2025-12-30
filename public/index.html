@@ -41,17 +41,57 @@ body{
    HEADER (TITLE + RESET)
    ========================= */
 .headerbar{
-  position:relative;
-  margin:0 0 8px;
+  position: relative;
+  margin: 0 0 8px;
+
+  padding-right: 88px; /* reserves space for Reset button */
 }
 
 /* Title */
 .headerbar h1{
-  margin:10px 0 10px;
-  text-align:center;
-  font-size:30px;
-  font-weight:800;
-  line-height:1.1;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* Small Reset button (top-right) */
+.headerbar .header-reset{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  width: 80px;          /* your “80-ish px” target */
+  height: 30px;
+
+  background: #fff;
+  border: 1px solid #cfcfcf;
+
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant: small-caps;
+  letter-spacing: 0.6px;
+  color: #1f2a44;
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.headerbar .header-reset:hover{
+  background: #f5f7fa;
+}
+
+.headerbar .header-reset:active{
+  background: #e9ecf2;
+  transform: translateY(1px);
 }
 
 .app-title{
