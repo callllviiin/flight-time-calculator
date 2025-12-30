@@ -644,6 +644,16 @@ button:focus-visible{
   text-align:left;
 }
 
+.row3.dutyrow.duty2{
+  grid-template-columns: 1fr var(--time-col-w);
+}
+
+/* make sure the label can take space without wrapping as easily */
+.row3.dutyrow.duty2 .sc-label{
+  min-width: 0;
+  white-space: nowrap;
+}
+   
 /* Unified output rows */
 .row3, .row4{
   display:grid;
@@ -1694,6 +1704,16 @@ function localHtmlAtRawZulu(rawZuluMinutes, icao, anchorHHMM){
   return sh ? `${base}<span class="shift-sup">${sh}</span>` : base;
 }
 
+function row2DutyHtml(label, zuluMinutes, extraClass=""){
+  const z = zuluHtml(zuluMinutes);
+  return `
+    <div class="row3 dutyrow duty2 ${extraClass}">
+      <span class="sc-label">${label}</span>
+      <span class="zcol">${z}</span>
+    </div>
+  `;
+}
+   
 function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHtml=""){
   const z = zuluHtml(zuluMinutes);
 
@@ -2238,13 +2258,13 @@ ${row3Html("Engine Start", engine, tkIcao, true)}
       )}
       <div class="subtext">Show + ${minutesToHPlusMM(fdp)}</div>
 
-      ${row3Html("Crew Duty Time", showTime + cdp, "", false, ormClassMuted(cdp))}
+      ${row2DutyHtml("Crew Duty Time", showTime + cdp, ormClassMuted(cdp))}
       <div class="subtext">Show + ${minutesToHPlusMM(cdp)}</div>
 
-      ${row3Html("Transition Duty Day", showTime + tdp, "", false, ormClassMuted(tdp))}
+      ${row2DutyHtml("Transition Duty Day", showTime + tdp, ormClassMuted(tdp))}
       <div class="subtext">Show + ${minutesToHPlusMM(tdp)}</div>
 
-      ${row3Html("Autopilot INOP FDP", showTime + apu, "", false, ormClassMuted(apu))}
+      ${row2DutyHtml("Autopilot INOP FDP", showTime + apu, ormClassMuted(apu))}
       <div class="subtext">Show + ${minutesToHPlusMM(apu)}</div>
 
 <hr>
