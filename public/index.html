@@ -2106,42 +2106,44 @@ const engine     = takeoffMin - engineOffsetMin;
       <div class="subtext">T/O − 4+15</div>
 
 ${row3Html(
-  `<span class="showtime-inline">Show Time${
-    (() => {
-      if(homeShowLocalMins == null) return "";
+  "Show Time",
+  showTime,
+  tkIcao,
+  true,
+  `${showCircClass} showtime`,
+  (() => {
+    if (homeShowLocalMins == null) return "";
 
-      // Recompute local + day shift for Show Time using absolute context
-      const baseShift = Math.floor(showTime / 1440);
-      const zNorm = ((showTime % 1440) + 1440) % 1440;
-      const zHHMM = minutesToHHMM(zNorm);
-      const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
+    const baseShift = Math.floor(showTime / 1440);
+    const zNorm = ((showTime % 1440) + 1440) % 1440;
+    const zHHMM = minutesToHHMM(zNorm);
+    const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
 
-      // Build circadian time using the SAME renderer as other Local times (monospace + correct +1/-1)
-      let circHtml = "";
-    if(res){
+    let circHtml = "";
+    if (res) {
       const totalShift = baseShift + res.dayShift;
       const sh = formatShiftSup(totalShift);
 
-      circHtml = `<span class="mono timewrap">${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>${
-      sh ? `<span class="shift-sup">${sh}</span>` : ""
-      }</span>`;
-      }else{
-      // Fallback (should be rare)
-      circHtml = `<span class="mono timewrap">${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span></span>`;
+      circHtml = `<span class="mono timewrap">
+        ${minutesToHHMM(homeShowLocalMins)}
+        <span class="tz-sfx">L</span>
+        ${sh ? `<span class="shift-sup">${sh}</span>` : ""}
+      </span>`;
+    } else {
+      circHtml = `<span class="mono timewrap">
+        ${minutesToHHMM(homeShowLocalMins)}
+        <span class="tz-sfx">L</span>
+      </span>`;
     }
 
-      const msg = homeShowOrmText
+    const msg = homeShowOrmText
       ? `${homeShowOrmText}: Circadian Time – <span class="showtime-circ">${circHtml}</span>`
       : `Circadian Time – <span class="showtime-circ">${circHtml}</span>`;
 
-      return ` <span class="show-orm-inline">${msg}</span>`;
-})()
-}</span>`,
-  showTime,
-  tkIcao,
-true,
-`${showCircClass} showtime`
+    return `<span class="show-orm-inline">${msg}</span>`;
+  })()
 )}
+
 
 <div class="subtext">T/O − 3+15</div>
 
