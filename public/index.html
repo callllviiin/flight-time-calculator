@@ -45,7 +45,7 @@ body{
   grid-template-columns: 80px 1fr 80px;
   align-items: center;
 
-  margin: 0;
+  margin: 10px 0;
   min-height: 44px;
 }
 
@@ -440,15 +440,6 @@ input.box.invalid{
 .crew-check-label input[type="checkbox"]:checked + .crew-check-text{
   font-weight:700;
   color:#000;
-}
-   
-/* =========================
-   SPACING BETWEEN BOTTOM OF 
-   INPUT BOX AND TOP OF CALCULATE 
-   BUTTON
-   ========================= */
-   .input-panel + #calcBtn{
-  margin-top:16px;
 }
    
 /* =========================
@@ -1014,11 +1005,12 @@ button:focus-visible{
 .footer{ margin-top: 0; }         /* spacing controlled below */
 
 /* 18px between each section */
-.headerbar + .input-panel{ margin-top: 18px; }
+.headerbar + .input-panel{ margin-top: 20px; }
 .input-panel + #calcBtn{ margin-top: 18px; }
 #calcBtn + #output{ margin-top: 18px; }
 #output + .info-links{ margin-top: 18px; }
-.info-links + .footer{ margin-top: 18px; }
+#infoModal + .footer{ margin-top: 18px; }
+
 
 
    
