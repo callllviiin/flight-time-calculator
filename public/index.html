@@ -1682,21 +1682,19 @@ function row3Html(label, zuluMinutes, localIcao, showLocal, extraClass="", midHt
   const z = zuluHtml(zuluMinutes);
 
   // TIMING rows: Label | spacer | Local | Zulu
-  if(showLocal){
-    const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
+if(showLocal){
+  const local = localHtmlFromZuluSimple(zuluMinutes, localIcao);
+  const spacer = midHtml || "";
 
-    // If you ever want “extra text” in the spacer column for timing rows, it can go here.
-    const spacer = midHtml || "";
-
-    return `
-      <div class="row3 timerow ${extraClass}">
-        <span class="sc-label">${label}</span>
-        <span class="mcol">${spacer}</span>
-        <span class="lcol">${local}</span>
-        <span class="zcol">${z}</span>
-      </div>
-    `;
-  }
+  return `
+    <div class="row3 timerow ${extraClass}">
+      <span class="sc-label">${label}</span>
+      <span class="mcol">${spacer}</span>
+      <span class="lcol">${local}</span>
+      <span class="zcol">${z}</span>
+    </div>
+  `;
+}
 
   // DUTY rows: Label | message/spacer | Zulu
   // (This matches Flight Duty Period “gold standard” layout.)
@@ -2114,34 +2112,32 @@ ${row3Html(
   true,
   `${showCircClass} showtime`,
   (() => {
-    if (homeShowLocalMins == null) return "";
+    if(homeShowLocalMins == null) return "";
 
+    // Recompute local + day shift for Show Time using absolute context
     const baseShift = Math.floor(showTime / 1440);
     const zNorm = ((showTime % 1440) + 1440) % 1440;
     const zHHMM = minutesToHHMM(zNorm);
     const res = zuluToLocalWithDay(zNorm, homeKey, zHHMM);
 
+    // Build circadian time using SAME renderer as other Local times
     let circHtml = "";
-    if (res) {
+    if(res){
       const totalShift = baseShift + res.dayShift;
       const sh = formatShiftSup(totalShift);
 
-      circHtml = `<span class="mono timewrap">
-        ${minutesToHHMM(homeShowLocalMins)}
-        <span class="tz-sfx">L</span>
-        ${sh ? `<span class="shift-sup">${sh}</span>` : ""}
-      </span>`;
-    } else {
-      circHtml = `<span class="mono timewrap">
-        ${minutesToHHMM(homeShowLocalMins)}
-        <span class="tz-sfx">L</span>
-      </span>`;
+      circHtml = `<span class="mono timewrap">${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span>${
+        sh ? `<span class="shift-sup">${sh}</span>` : ""
+      }</span>`;
+    }else{
+      circHtml = `<span class="mono timewrap">${minutesToHHMM(homeShowLocalMins)}<span class="tz-sfx">L</span></span>`;
     }
 
     const msg = homeShowOrmText
       ? `${homeShowOrmText}: Circadian Time – <span class="showtime-circ">${circHtml}</span>`
       : `Circadian Time – <span class="showtime-circ">${circHtml}</span>`;
 
+    // IMPORTANT: this goes in the MIDDLE column now (mcol)
     return `<span class="show-orm-inline">${msg}</span>`;
   })()
 )}
