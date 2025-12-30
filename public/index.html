@@ -2771,7 +2771,10 @@ homeICAO?.addEventListener("input", () => {
     homeAutoFilled = false;           // user took control
   }
 
-  // If user clears Home, immediately snap it back to Takeoff ICAO (if available/mapped)
+homeICAO?.addEventListener("blur", () => {
+  const clean = normICAO(homeICAO.value);
+
+  // If Home is left blank, then (and only then) default it to Takeoff ICAO (if mapped)
   if(clean.length === 0){
     const tk = normICAO(takeoffICAO?.value || "");
     const tkMapped = (tk.length === 4 && getTimeZoneFromICAO(tk));
@@ -2781,14 +2784,14 @@ homeICAO?.addEventListener("input", () => {
       homeICAO.value = tk;
       suppressHomeTouch = false;
 
-      homeTouched = false;     // user isn't "locking" it by clearing
+      homeTouched = false;
       homeAutoFilled = true;
 
       updateIcaoHint(tk, document.getElementById("homeIcaoHint"));
       if(hasCalculated) onUserEdit();
-      return;                  // we're done
     }
   }
+});
 
   updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
 
