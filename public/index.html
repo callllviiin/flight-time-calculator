@@ -105,25 +105,6 @@ body{
   transform: scaleX(0.92); /* subtle optical correction */
 }
 
-
-/* =========================
-   TOPBAR (if used)
-   ========================= */
-.topbar{
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:8px;
-  margin:0 0 12px;
-  font-size:12px;
-  color:#555;
-}
-
-.topbar input{
-  transform:translateY(1px);
-}
-
-
 /* =========================
    INPUTS (shared)
    ========================= */
@@ -351,9 +332,6 @@ input.box.invalid{
   cursor:pointer;
   justify-self:start;
   transform: translateY(1px);
-}
-
-#aircraft{
   background-image:
     linear-gradient(45deg, transparent 50%, #555 50%),
     linear-gradient(135deg, #555 50%, transparent 50%);
@@ -527,12 +505,6 @@ button:focus-visible{
 }
 
 .output hr{ margin:14px 0; }
-
-.output.fixed-expanded{
-  max-height: calc(100vh - 220px);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
 
 /* Output action buttons (bottom) */
 .output-actions{
@@ -1001,12 +973,6 @@ button:focus-visible{
   .box{ width:100%; }
   .icao-wrap{ width:100%; }
   .local-wrap{ margin-left:0; }
-
-  .output.fixed-expanded{
-    height:auto !important;
-    overflow:visible !important;
-  }
-}
 
 /* ======================================================== END OF STYLE ======================================================= */
 </style>
