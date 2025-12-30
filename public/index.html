@@ -694,10 +694,15 @@ button:focus-visible{
 
 /* Center ORM text in timing rows (Show Time) */
 .row3.timerow .mcol{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  /* Safari/iPad guardrails */
+  min-width: 0;            /* allow grid column to shrink */
+  overflow: hidden;        /* prevent pushing Local/Zulu */
+  white-space: nowrap;     /* keep single-line ORM message */
 }
    
 .row3 .lcol, .row4 .lcol{
