@@ -45,7 +45,7 @@ body{
   grid-template-columns: 80px 1fr 80px;
   align-items: center;
 
-  margin: 0 0 8px;
+  margin: 0;
   min-height: 44px;
 }
 
@@ -121,7 +121,7 @@ input{
 }
 
 .input-panel{
-  margin-top: 14px;
+  margin-top: 0;
   padding: 21px 14px 18px;
 
   background: #fafbfd;
@@ -455,7 +455,7 @@ input.box.invalid{
    PRIMARY BUTTONS
    ========================= */
 button{
-  margin-top:0px;
+  margin-top: 0;
   padding:14px 12px;
   font-size:20px;
   font-weight:800;
@@ -523,7 +523,7 @@ button:focus-visible{
 }
 
 .output{
-  margin-top:16px;
+  margin-top: 0;
   padding:20px 20px 12px;
   background:white;
   border-radius:8px;
@@ -554,7 +554,7 @@ button:focus-visible{
 }
 
 .output-actions button{
-  margin-top:0;
+  margin-top: 0;
   width:100%;
   padding:12px 12px;
   font-size:16px;
@@ -888,7 +888,7 @@ button:focus-visible{
    FOOTER LINKS + MODAL
    ========================= */
 .footer{
-  margin-top:25px;
+  margin-top: 0;
   text-align:center;
   font-weight:bold;
 }
@@ -900,7 +900,7 @@ button:focus-visible{
 }
 
 .info-links{
-  margin-top:30px;
+  margin-top: 0;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -1001,7 +1001,27 @@ button:focus-visible{
 .modal-body p{ margin:0 0 10px; }
 .modal-body strong{ font-weight:900; }
 
+/* =========================
+   SECTION SPACING (18px, border-to-border)
+   ========================= */
 
+/* Remove legacy per-section spacing so the rules below are the single source of truth */
+.headerbar{ margin: 0; }          /* we'll control spacing via sibling rules */
+.input-panel{ margin-top: 0; }    /* spacing controlled below */
+#calcBtn{ margin-top: 0; }        /* spacing controlled below */
+.output{ margin-top: 0; }         /* spacing controlled below */
+.info-links{ margin-top: 0; }     /* spacing controlled below */
+.footer{ margin-top: 0; }         /* spacing controlled below */
+
+/* 18px between each section */
+.headerbar + .input-panel{ margin-top: 18px; }
+.input-panel + #calcBtn{ margin-top: 18px; }
+#calcBtn + #output{ margin-top: 18px; }
+#output + .info-links{ margin-top: 18px; }
+.info-links + .footer{ margin-top: 18px; }
+
+
+   
 /* =========================
    MOBILE PLACEHOLDER
    ========================= */
