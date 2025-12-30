@@ -1139,8 +1139,11 @@ button:disabled{
   margin-top:30px;
   display:flex;
   justify-content:center;
-  gap:18px;
-  flex-wrap:wrap;
+  align-items:center;
+  gap:14px;
+
+  flex-wrap:nowrap;        /* ✅ force single line */
+  white-space:nowrap;     /* safety net */
 
   font-size:13px;
 }
@@ -1148,7 +1151,9 @@ button:disabled{
 .info-links button{
   background:none;
   border:none;
-  padding:0;
+
+  padding:6px 8px;        /* 👈 adjustable hit box */
+  margin:0;
 
   font-family: Arial, sans-serif;
   font-size:13px;
@@ -1157,12 +1162,18 @@ button:disabled{
 
   text-decoration:underline;
   cursor:pointer;
+
+  border-radius:6px;      /* future hover/focus polish */
 }
 
 .info-links button:hover{
   opacity:0.8;
 }
 
+.info-links button:active{
+  background:rgba(31,42,68,0.08);
+}
+  
 /* ---------- INFO MODAL (Phase 3) ---------- */
 .modal-overlay{
   position:fixed;
