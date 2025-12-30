@@ -108,7 +108,7 @@ body{
 }
 
 /* =========================
-   INPUTS (shared)
+   INPUTS & PANEL (border) (shared)
    ========================= */
 input,
 select{
@@ -120,6 +120,16 @@ input{
   font-weight: 600;
 }
 
+.input-panel{
+  margin-top: 16px;
+  padding: 18px 16px 20px;
+
+  background: #fff;
+  border: 1px solid #1f2a44;
+  border-radius: 10px;
+
+  box-sizing: border-box;
+}
 
 /* =========================
    TOP FORM GRID (ROWS 1–3)
@@ -1008,6 +1018,7 @@ button:focus-visible{
 
 </div>
 
+   <div class="input-panel">
     <div class="form-grid">
 
       <!-- Row 1 -->
@@ -1101,8 +1112,9 @@ button:focus-visible{
   </div>
 </div>
 
-</div> <!-- end .form-grid -->
-
+ </div> <!-- end .form-grid -->
+</div> <!-- end .input panel -->
+    
 <button id="calcBtn" tabindex="5">Calculate</button>
 
     <div id="output" class="output"></div>
