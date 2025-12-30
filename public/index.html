@@ -131,11 +131,13 @@ input{
 .form-grid{
   display:grid;
   width:100%;
-  grid-template-columns: 200px 104px 26px 104px 1fr;
-  column-gap:4px;
+  grid-template-columns: 200px 104px 26px 104px 104px; /* fixed Local column */
+  column-gap:10px;                                     /* nicer spacing */
   row-gap:20px;
   align-items:center;
   margin-top:24px;
+
+  justify-content:center; /* centers the whole grid inside the 744px app */
 }
 
 .form-row{
@@ -259,8 +261,8 @@ input.box.invalid{
 
 /* Local column spacing */
 .local-wrap{
-  margin-left:10px;
-  justify-self:end;
+  margin-left:0;
+  justify-self:start;
 }
 
 /* Day shift marker inside local box */
