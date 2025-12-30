@@ -1135,6 +1135,105 @@ button:disabled{
   color:#666;
 }
 
+.info-links{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+
+  font-size:13px;
+}
+
+.info-links button{
+  background:none;
+  border:none;
+  padding:0;
+
+  font-family: Arial, sans-serif;
+  font-size:13px;
+  font-weight:600;
+  color:#1f2a44;
+
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.info-links button:hover{
+  opacity:0.8;
+}
+
+/* ---------- INFO MODAL (Phase 3) ---------- */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.modal-overlay.open{
+  display:flex;
+}
+
+.modal{
+  width:min(560px, 100%);
+  max-height:85vh;
+  background:#fff;
+  border-radius:14px;
+  border:1px solid #cfcfcf;
+  box-shadow:0 18px 40px rgba(0,0,0,0.25);
+  overflow:hidden; /* keep rounded corners clean */
+  font-family: Arial, sans-serif;
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px;
+  border-bottom:1px solid #e6e6e6;
+}
+
+.modal-title{
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:0.3px;
+  color:#1f2a44;
+}
+
+.modal-close{
+  background:none !important;
+  border:none !important;
+  padding:6px 10px !important;
+  margin:0 !important;
+  width:auto !important;
+  font-size:18px !important;
+  font-weight:900 !important;
+  color:#1f2a44 !important;
+  cursor:pointer;
+  box-shadow:none !important;
+  border-radius:10px;
+}
+
+.modal-close:hover{ opacity:0.85; }
+
+.modal-body{
+  padding:14px;
+  max-height: calc(85vh - 52px);
+  overflow:auto; /* ✅ scrolling allowed ONLY inside modal */
+  color:#222;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.modal-body p{ margin:0 0 10px; }
+.modal-body strong{ font-weight:900; }
+
+  
 /* ---------- MOBILE ---------- */
 @media (max-width:620px){
   .form-grid{
@@ -1322,6 +1421,45 @@ button:disabled{
       <p><strong>Donations:</strong> This is a free tool to help manage crew timing. It costs you nothing and costs me a little time and effort. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot do it. I appreciate your consideration, but I have already taken the bonus, so I am screwed either way. Blue skies and fair winds. Cheers!</p>
     </div>
 -->
+
+<div class="info-links">
+  <button type="button" data-modal="disclaimer">Disclaimer</button>
+  <button type="button" data-modal="feedback">Feedback</button>
+  <button type="button" data-modal="credits">Credits</button>
+  <button type="button" data-modal="donations">Donations</button>
+</div>
+
+
+<!-- Modal content sources (kept out of the normal page flow) -->
+<template id="tpl-disclaimer">
+  <p><strong>Disclaimer:</strong> I am a crew dog, not a coder or developer. I created this tool to help other crew dogs do “pilot math.” I try to keep this up to date with current regulations, but there is no guarantee of its accuracy. Please make sure you <em>trust but verify</em> the information generated on this page (technique only). Information in this calculator is based on AFMAN 11-202V3_AMC SUP, 29 JULY 2024.</p>
+
+  <p>Also, as much as I would like to take credit for this and lead you to think I am smart, which I am not, I created this tool with the help of ChatGPT. If you find an error or have a suggetion for a change, please let me know at <strong>[your email]</strong>.</p>
+</template>
+
+<template id="tpl-feedback">
+  <p><strong>Feedback:</strong> Found a bug, wrong timing, missing ICAO, or a UX improvement? Send details (inputs + screenshot if possible) to <strong>[your email]</strong>.</p>
+</template>
+
+<template id="tpl-credits">
+  <p><strong>Credits:</strong> Built by a crew dog for crew dogs. UI/logic assistance provided with ChatGPT. Thanks to early testers who tried to break it.</p>
+</template>
+
+<template id="tpl-donations">
+  <p><strong>Donations:</strong> This is a free tool to help manage crew timing. It costs you nothing and costs me a little time and effort. If you feel so inclined to make a donation, please pay it forward and buy your Crew Chief a beer on the next TDY… or just make the Copilot do it. I appreciate your consideration, but I have already taken the bonus, so I am screwed either way. Blue skies and fair winds. Cheers!</p>
+</template>
+
+<!-- Modal shell (hidden until opened) -->
+<div id="infoModal" class="modal-overlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div id="modalTitle" class="modal-title">Info</div>
+      <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close">✕</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+  </div>
+</div>
+  
    
     <div class="footer">
       NKAWT...GF
@@ -1330,7 +1468,7 @@ button:disabled{
   </div>
 
 </div>
-  
+
 <script>
   console.log("✅ Script loaded");
 window.addEventListener("error", (e) => showRuntimeError(e.error || e.message));
@@ -2859,6 +2997,64 @@ landingLocal.addEventListener("input", () => {
   setCalcEnabled(); // NEW
   if(hasCalculated) onUserEdit();   // or markDirty()
 });
+
+/* ----------------- Phase 3: Info modal wiring ----------------- */
+(function(){
+  const overlay = document.getElementById("infoModal");
+  const bodyEl  = document.getElementById("modalBody");
+  const titleEl = document.getElementById("modalTitle");
+  const closeBtn = document.getElementById("modalCloseBtn");
+
+  if(!overlay || !bodyEl || !titleEl || !closeBtn) return;
+
+  const titleMap = {
+    disclaimer: "Disclaimer",
+    feedback: "Feedback",
+    credits: "Credits",
+    donations: "Donations",
+  };
+
+  function openModal(key){
+    const tpl = document.getElementById(`tpl-${key}`);
+    if(!tpl) return;
+
+    titleEl.textContent = titleMap[key] || "Info";
+    bodyEl.innerHTML = "";
+    bodyEl.appendChild(tpl.content.cloneNode(true));
+
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
+
+    // Prevent page scroll while modal is open (mobile-friendly)
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal(){
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  // Link buttons
+  document.querySelectorAll(".info-links button[data-modal]").forEach(btn => {
+    btn.addEventListener("click", () => openModal(btn.dataset.modal));
+  });
+
+  // Close actions
+  closeBtn.addEventListener("click", closeModal);
+
+  overlay.addEventListener("click", (e) => {
+    // click outside modal closes
+    if(e.target === overlay) closeModal();
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if(e.key === "Escape" && overlay.classList.contains("open")){
+      closeModal();
+    }
+  });
+})();
+
   
 setOutputIdle();
 
