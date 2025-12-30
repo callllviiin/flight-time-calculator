@@ -678,12 +678,21 @@ button:focus-visible{
   font-weight:500;
 }
 
+/* Center ORM messages in the middle column (duty rows) */
 .row3.dutyrow .lcol{
   display:flex;
-  justify-content:flex-start;
+  justify-content:center;   /* <-- key */
   align-items:center;
-  text-align:left;
+  text-align:center;        /* <-- key */
   font-weight:500;
+}
+
+/* Keep the ORM note itself centered as an element */
+.row3.dutyrow .orm-note{
+  display:inline-block;
+  margin:0 auto;
+  text-align:center;
+  white-space:nowrap;       /* keep your single-line look */
 }
 
 .row3 .lcol, .row4 .lcol{
@@ -2066,13 +2075,13 @@ const engine     = takeoffMin - engineOffsetMin;
     function ormMessageFdp(limitMinutes){
       if(limitMinutes <= 0) return "";
       if(landingFromShow > limitMinutes){
-        return "Mission NO-GO. Max Duty Day Exceeded";
+        return "Mission NO-GO. Maximum Duty Day Exceeded";
       }
       const ratio = landingFromShow / limitMinutes;
-      if(ratio >= 0.95) return "ORM Severe: >95% of Max Duty Day";
-      if(ratio >= 0.90) return "ORM High: 90-95% of Max Duty Day";
-      if(ratio >= 0.75) return "ORM Moderate: 75-90% of Max Duty Day";
-      return "ORM Low: <75% of Max Duty Day";
+      if(ratio >= 0.95) return "ORM Severe: >95% of Maximum Duty Day";
+      if(ratio >= 0.90) return "ORM High: 90-95% of Maximum Duty Day";
+      if(ratio >= 0.75) return "ORM Moderate: 75-90% of Maximum Duty Day";
+      return "ORM Low: <75% of Maximum Duty Day";
     }
 
     out.innerHTML = `
