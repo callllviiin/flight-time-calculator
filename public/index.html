@@ -127,9 +127,12 @@ input{
 .form-grid{
   display:grid;
   width:100%;
-  grid-template-columns: 190px 104px 18px 104px 104px;
-  column-gap:8px;
-  row-gap:16px;
+   
+  /* 6 columns: Label | Zulu | at/gap | ICAO | gap | Local */
+  grid-template-columns: 200px 104px 26px 104px 26px 104px;
+   
+  column-gap:10px;
+  row-gap:20px;
   align-items:center;
   margin-top:24px;
 
@@ -255,6 +258,13 @@ input.box.invalid{
   justify-content:center;
 }
 
+.gap{
+  /* same width/behavior as the “at” column, but blank */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+   
 /* Local column spacing */
 .local-wrap{
   margin-left:0;
@@ -370,7 +380,7 @@ input.box.invalid{
   justify-self:start;
 }
 .form-grid .form-row .crew-check{
-  grid-column: 5;
+  grid-column: 6;
   display:flex;
   align-items:center;
   justify-self:start;
@@ -1014,6 +1024,8 @@ button:focus-visible{
         <div id="takeoffIcaoHint" class="icao-hint time-hint"></div>
       </div>
 
+      <div class="gap"></div>
+         
       <div class="floating-wrap local-wrap">
         <div class="floating-label">Local</div>
           <input id="takeoffLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
@@ -1040,11 +1052,12 @@ button:focus-visible{
       <div id="landingIcaoHint" class="icao-hint time-hint"></div>
     </div>
 
-
-        <div class="floating-wrap local-wrap">
-          <div class="floating-label">Local</div>
-           <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
-            <span id="landingLocalDay" class="day-shift"></span>
+      <div class="gap"></div>
+         
+      <div class="floating-wrap local-wrap">
+       <div class="floating-label">Local</div>
+         <input id="landingLocal" class="box" placeholder="HHMM" maxlength="4" tabindex="-1">
+          <span id="landingLocalDay" class="day-shift"></span>
          <div id="landingLocalHint" class="icao-hint bad time-hint"></div>
       </div>
 
@@ -1061,14 +1074,9 @@ button:focus-visible{
     <option disabled>C-5</option>
     <option disabled>C-17</option>
     <option disabled>C-130</option>
-    <option disabled>C-21</option>
-    <option disabled>C-32</option>
-    <option disabled>C-37</option>
-    <option disabled>C-40</option>
-    <option disabled>VC-25</option>
   </select>
 
-  <!-- Col 3: blank spacer (matches the "at" column) -->
+  <!-- Col 3: blank spacer (same width as "at") -->
   <div class="at"></div>
 
   <!-- Col 4: Home -->
@@ -1078,14 +1086,17 @@ button:focus-visible{
     <div id="homeIcaoHint" class="icao-hint time-hint"></div>
   </div>
 
-  <!-- Col 5: Augmented -->
+  <!-- Col 5: NEW blank spacer -->
+  <div class="gap"></div>
+
+  <!-- Col 6: Augmented -->
   <div class="crew-check">
     <label class="crew-check-label">
       <input type="checkbox" id="augmented" tabindex="-1">
       <span id="augLbl" class="crew-check-text">Augmented</span>
     </label>
   </div>
-</div> <!-- end .form-row (Row 3) -->
+</div>
 
 </div> <!-- end .form-grid -->
 
