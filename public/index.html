@@ -180,6 +180,11 @@ input{
   font-size:18px;
   text-align:center;
   box-sizing:border-box;
+
+  /* NEW: standardize look across ALL inputs (Safari included) */
+  background:#fff;
+  border:1.5px solid #b8c0cf;   /* slightly darker/heavier */
+  border-radius:6px;
 }
 
 input.box{
@@ -190,15 +195,6 @@ input.box{
 input.box.invalid{
   border: 1.5px solid #8b0000;
 }
-
-/* Home Station: lock metrics so invalid doesn't change height */
-.home-wrap input.box{
-  border: 1.5px solid #cfcfcf;
-  border-radius: 4px;
-  background: #fff;
-  box-sizing: border-box;
-}
-
 
 /* =========================
    FLOATING LABELS + HINTS
