@@ -341,7 +341,40 @@ input.box.invalid{
 }
 
 /* ---------- ROW 3 ---------- */
-.aircraft-crew-label{
+
+  /* ========================= */
+/* Phase 3 — Row 3 alignment */
+/* ========================= */
+
+/* Aircraft select should behave like the other input boxes */
+#aircraft{
+  width:104px;
+  height:34px;
+  justify-self:start;
+}
+
+/* Home Station input aligns exactly like ICAO boxes above */
+.form-row .home-wrap{
+  width:104px;
+  justify-self:start;
+}
+
+/* Augmented column: align vertically + keep spacing sane */
+.form-row .crew-check{
+  display:flex;
+  align-items:center;
+  justify-self:start;
+  margin-left:10px;   /* matches Local column spacing */
+}
+
+/* Prevent checkbox + label from collapsing inward */
+.crew-check-label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+  
+  .aircraft-crew-label{
   font-weight:bold;
 }
 
