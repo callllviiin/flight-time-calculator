@@ -59,56 +59,29 @@ body{
   letter-spacing: 1px;
 }
 
-/* Reset button placement relative to title */
-.headerbar .icon-btn{
+/* Header reset button (small pill, matches footer buttons) */
+.headerbar .header-reset{
   position:absolute;
   right:0;
-  bottom:0px;
-}
+  bottom:0;
 
-/* Reset icon button (single source of truth) */
-.icon-btn{
-  width:32px;
-  height:32px;
-  aspect-ratio: 1 / 1;
-  box-sizing:border-box;
-
-  padding:0;
-  border:2px solid #cfcfcf;
-  border-radius:8px;
   background:#fff;
+  border:1px solid #cfcfcf;
 
+  padding:6px 10px;
+  margin:0;
+
+  font-family: Arial, sans-serif;
+  font-size:12px;
+  font-weight:700;
+  font-variant: small-caps;
+  letter-spacing:0.6px;
+  color:#1f2a44;
+
+  border-radius:8px;
   cursor:pointer;
 
-  display:grid;
-  place-items:center;
-
-  line-height:0;
-  font-size:28px;
-  font-weight:700;
-
-  min-width:0;
-  min-height:0;
-
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
-  color:#1f2a44;
-}
-
-.icon-btn:hover{ filter:brightness(0.98); }
-.icon-btn:active{ transform:translateY(1px); }
-
-.reset-icon{
-  width:20px;
-  height:20px;
-  display:block;
-
-  fill:none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-
-  transform: scaleX(0.92); /* subtle optical correction */
 }
 
 /* =========================
@@ -993,17 +966,13 @@ button:focus-visible{
 <div class="headerbar">
   <h1 class="app-title">Crew Dawg Calculator</h1>
 
-  <button id="resetBtn" class="icon-btn" title="Reset" tabindex="-1" aria-label="Reset">
-    <svg class="reset-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M21 12a9 9 0 1 1-2.64-6.36" />
-      <path d="M21 3v7h-7" />
-    </svg>
-  </button>
+<button id="resetBtn" class="header-reset" type="button" title="Reset" tabindex="-1">
+  Reset
+</button>
+
 </div>
 
-
     <div class="form-grid">
-
 
       <!-- Row 1 -->
       <div class="form-row">
