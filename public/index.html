@@ -639,7 +639,7 @@ button:disabled{
   background:white;
   border-radius:8px;
   border:1px solid #1f2a44;  /* same as button background */
-  overflow-y: scroll;        /* reserve scrollbar space to prevent text shifting */
+  overflow-y: visible;        /* reserve scrollbar space to prevent text shifting */
 }
 
 /* Visual-only collapse (prevents scroll snap during reset) */
@@ -2329,10 +2329,10 @@ requestAnimationFrame(() => {
   out.classList.remove("collapsing");
 }
     
-setTimeout(() => {
-      // No hard height lock — just turn on panel behavior
-      out.classList.add("fixed-expanded");
-    }, 280); // slightly > 260ms transition
+// Phase 3: no inner scroll panels on any device
+// setTimeout(() => {
+//   out.classList.add("fixed-expanded");
+// }, 280);
 
   });
 });
