@@ -448,14 +448,7 @@ input.box.invalid{
   text-align:center;
 }
 
-/* Row 3 placement: Aircraft in col 1, Home in col 3, Augmented on the right */
-#aircraft{ grid-column:1; }
-.home-wrap{ grid-column:3; }
-.crew-check{
-  grid-column:4;
-  justify-self:start;    /* anchor from the left edge of column 4 */
-  margin-left:10px;      /* match the Local column gap above */
-}
+/* Phase 3: old Row 3 placement rules removed */
   
 .crew-toggle{
   justify-self:end;
@@ -1311,12 +1304,7 @@ button:disabled{
   color:#000 !important;
 }
   
-  /* FINAL OVERRIDE: Row 3 Augmented control starts where Local column starts */
-.third-content-wide .crew-check{
-  grid-column: 4 !important;
-  justify-self: start !important;
-  margin-left: 17px !important;   /* match .local-wrap margin-left */
-}
+/* Phase 3: old .third-content-wide crew-check override removed */
 
 /* Row 3 now uses the main 5-column grid: keep items in their columns */
 .form-grid .form-row #aircraft{ width:104px; }
@@ -1345,6 +1333,42 @@ button:disabled{
 .crew-check-label input[type="checkbox"]{
   cursor: pointer;
 }
+
+/* ================================ */
+/* Phase 3 — Row 3 uses main grid   */
+/* Label | Aircraft | (blank) | Home | Aug */
+/* ================================ */
+
+.form-grid .form-row #aircraft{
+  grid-column: 2 !important;
+  width:104px;
+  justify-self:start;
+}
+
+.form-grid .form-row .at{
+  grid-column: 3 !important;
+}
+
+.form-grid .form-row .home-wrap{
+  grid-column: 4 !important;
+  width:104px;
+  justify-self:start;
+}
+
+.form-grid .form-row .crew-check{
+  grid-column: 5 !important;
+  display:flex;
+  align-items:center;
+  justify-self:start;
+  margin-left:10px;
+}
+
+.form-grid .form-row .crew-check-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
   
 </style>
 
