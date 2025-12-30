@@ -6,7 +6,8 @@
 <title>Crew Dawg Calculator</title>
 
 <style>
-html{
+/* ======================================================== BEGINNING OF STYLE ======================================================= */
+  html{
   overflow-y: scroll;   /* always reserve scrollbar space to prevent 1st-click centering shift */
 }
 
@@ -107,6 +108,7 @@ button#resetBtn.icon-btn{
   stroke-linejoin: round;
 
   transform:none; /* IMPORTANT: removes any squash */
+  transform: scaleX(0.92);
 }
   
 .icon-btn:hover{ filter:brightness(0.98); 
@@ -116,22 +118,9 @@ button#resetBtn.icon-btn{
 
 .icon-btn{
   font-size:28px;      /* keep size */
-}
-
-.icon-btn{
   transform: translateY(0); /* already handled elsewhere */
-}
-
-.icon-btn{
   font-weight:700;
-}
-
-.icon-btn{
   line-height:1;
-}
-
-.reset-icon{
-  transform: scaleX(0.92);
 }
 
   
@@ -366,13 +355,6 @@ input.box.invalid{
   justify-self:start;
   margin-left:10px;   /* matches Local column spacing */
 }
-
-/* Prevent checkbox + label from collapsing inward */
-.crew-check-label{
-  display:flex;
-  align-items:center;
-  gap:4px;
-}
   
   .aircraft-crew-label{
   font-weight:bold;
@@ -448,7 +430,52 @@ input.box.invalid{
   text-align:center;
 }
 
-/* Phase 3: old Row 3 placement rules removed */
+/* ======================================= */
+/* COMPONENT: Crew Check (Augmented)       */
+/* ======================================= */
+
+/* Column placement + overall alignment */
+.form-grid .form-row .crew-check{
+  grid-column: 5;
+  display:flex;
+  align-items:center;
+  justify-self:start;
+  margin-left:17px;          /* row-3 inset from the Home column */
+  white-space:nowrap;
+}
+
+/* Label layout: checkbox + text */
+.crew-check-label{
+  display:flex;
+  align-items:center;
+  gap:6px;                   /* ✅ THIS is the spacing between box and word */
+  user-select:none;
+}
+
+/* Checkbox sizing */
+.crew-check-label input[type="checkbox"]{
+  width:16px;
+  height:16px;
+  transform: translateY(1px);
+  cursor:pointer;
+}
+
+/* Text styling (unchecked) */
+.crew-check-text{
+  font-family: Arial, sans-serif;
+  font-variant: small-caps;
+  letter-spacing:0.1px;
+  font-size:14px;
+  font-weight:400;
+  color:#555;
+  transform: translateY(1px);
+}
+
+/* Checked emphasis (keep your weight-change feature) */
+.crew-check-label input[type="checkbox"]:checked + .crew-check-text{
+  font-weight:700;
+  color:#000;
+}
   
 .crew-toggle{
   justify-self:end;
@@ -465,96 +492,7 @@ input.box.invalid{
 }
 .crew-label.active{ font-weight:bold; }
 
-/* switch */
-.switch{
-  position:relative;
-  width:52px;
-  height:26px;
-  flex:0 0 auto;
-}
-  
-.switch input{
-  position:absolute;
-  opacity:0;
-  width:1px;
-  height:1px;
-}
 
-.slider{
-  position:absolute;
-  inset:0;
-  background:#d0d0d0;
-  border-radius:26px;
-}
-  
-/* Visible focus ring when tabbing to the switch (robust) */
-.switch:focus-within .slider{
-  outline: 2px solid #ff8a3d;
-  outline-offset: 2px; 
-}
-  
-.slider:before{
-  content:"◀";
-  position:absolute;
-  height:22px;
-  width:22px;
-  left:2px;
-  top:2px;
-  background:#fff;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:12px;
-  color:#444;
-  transition:0.25s;
-  box-shadow:0 1px 2px rgba(0,0,0,0.2);
-}
-input:checked + .slider:before{
-  transform:translateX(26px);
-  content:"▶";
-}
-
-/* Row 3: compact Augmented checkbox (replaces slider) */
-.crew-check{
-  justify-self:end;
-  display:flex;
-  align-items:center;
-  white-space:nowrap;
-}
-
-.crew-check-label{
-  display:grid;
-  grid-template-columns: 16px 92px;  /* checkbox | label text (fixed) */
-  column-gap:10px;
-  align-items:center;
-
-  cursor:pointer;
-  user-select:none;
-}
-
-.crew-check-label input{
-  width:16px;
-  height:16px;
-  transform: translateY(1px);
-}
-
-.crew-check-text{
-  font-family: Arial, sans-serif;
-  font-variant: small-caps;
-  letter-spacing:0.1px;
-  font-size:14px;
-  font-weight:400;
-  color:#555;
-
-  transform: translateY(1px);   /* subtle vertical alignment fix */
-}
-
-/* Bold feedback when checked */
-#augmented:checked + span{
-  font-weight:500;
-  color:#000;              /* emphasis without width change */
-}
-  
 /* ---------- BUTTON ---------- */
 button{
   margin-top:20px;
@@ -1293,16 +1231,6 @@ button:disabled{
   }
   .crew-toggle{ justify-self:end; }
 }
-
-/* FINAL OVERRIDE: Augmented text weights (checked must win) */
-.crew-check-text{
-  font-weight:400 !important;   /* unchecked */
-}
-
-.crew-check-label input:checked + .crew-check-text{
-  font-weight:700 !important;   /* checked (subtle bump, minimal width change) */
-  color:#000 !important;
-}
   
 /* Phase 3: old .third-content-wide crew-check override removed */
 
@@ -1319,15 +1247,6 @@ button:disabled{
   text-align:left;
 }
 */
-  
-/* Limit Augmented click area to the checkbox only */
-.crew-check-label{
-  pointer-events: none;
-}
-
-.crew-check-label input{
-  pointer-events: auto;
-}
 
 /* Show pointer cursor only over the checkbox */
 .crew-check-label input[type="checkbox"]{
@@ -1363,14 +1282,7 @@ button:disabled{
   margin-left:17px;
 }
 
-.form-grid .form-row .crew-check-label{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-
-  
+/* ======================================================== END OF STYLE ======================================================= */
 </style>
 
 </head>
