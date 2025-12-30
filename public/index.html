@@ -1149,10 +1149,10 @@ button:disabled{
 }
 
 .info-links button{
-  background:none;
-  border:none;
+  background:#fff;
+  border:1px solid #cfcfcf;   /* subtle but visible */
 
-  padding:6px 8px;        /* 👈 adjustable hit box */
+  padding:6px 10px;           /* slightly heavier hit box */
   margin:0;
 
   font-family: Arial, sans-serif;
@@ -1160,19 +1160,21 @@ button:disabled{
   font-weight:600;
   color:#1f2a44;
 
-  text-decoration:underline;
+  text-decoration:none;       /* ✅ no underline */
   cursor:pointer;
 
-  border-radius:6px;      /* future hover/focus polish */
+  border-radius:8px;
 }
 
 .info-links button:hover{
-  opacity:0.8;
+  background:#f5f7fa;
 }
 
 .info-links button:active{
-  background:rgba(31,42,68,0.08);
+  background:#e9ecf2;
+  transform:translateY(1px);
 }
+
   
 /* ---------- INFO MODAL (Phase 3) ---------- */
 .modal-overlay{
