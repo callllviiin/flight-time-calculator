@@ -1306,6 +1306,48 @@ button:focus-visible{
   }
 }
 
+/* =========================
+   MOBILE TOP GRID — BULLETPROOF FLUID SHRINK (NO VARS)
+   ========================= */
+@media (max-width: 520px){
+
+  /* reclaim outer padding */
+  body{ padding: 8px; }
+  #pageRoot{ padding-left: 6px; padding-right: 6px; }
+
+  /* shrink the fields directly */
+  .box,
+  .floating-wrap,
+  .icao-wrap,
+  .home-wrap,
+  #aircraft{
+    width: clamp(72px, 21vw, 96px) !important;
+  }
+
+  /* tighten the grid columns directly (label + 3 fields + small gaps) */
+  .form-grid{
+    grid-template-columns:
+      clamp(120px, 33vw, 170px)
+      clamp(72px, 21vw, 96px)
+      clamp(8px, 2vw, 14px)
+      clamp(72px, 21vw, 96px)
+      clamp(8px, 2vw, 14px)
+      clamp(72px, 21vw, 96px) !important;
+
+    column-gap: 4px !important;
+    row-gap: 16px;
+  }
+
+  /* local padding so +1/-1 stays readable */
+  .local-wrap .box{
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  /* keep text from forcing width */
+  .label{ min-width: 0; }
+}
+
 
 /* ======================================================== END OF STYLE ======================================================= */
 </style>
