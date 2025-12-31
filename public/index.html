@@ -537,7 +537,7 @@ button:focus-visible{
   --fz-button: 20px;
 
   --fz-out-head: 20px;
-  --fz-out-row: 17.5px;
+  --fz-out-row: var(--fz-out-row);
   --fz-out-orm: 11px;
   --fz-subtext: 11px;
 }
@@ -625,7 +625,7 @@ html{
 
 .row.flight-time .sc-label,
 .row.flight-time .mono{
-  font-size:17.5px;
+  font-size:var(--fz-out-row);
 }
 
 /* Headers */
@@ -689,6 +689,7 @@ html{
 .row3, .row4{
   display:grid;
   margin-top:12px;
+  font-size: var(--fz-out-row);
   font-weight:bold;
   align-items:center;
   column-gap: var(--row-gap);
@@ -775,14 +776,6 @@ html{
   font-size: inherit;
   padding: var(--row-pad-y) var(--row-pad-x);
   border-radius: var(--row-radius);
-}
-
-.crew-timing .mono{
-  font-size:17.5px;
-}
-
-.crew-timing .row4{
-  font-size:17.5px;
 }
 
 /* Show Time inline ORM note */
