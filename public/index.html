@@ -77,7 +77,7 @@ body{
   border: 1px solid #cfcfcf;
 
   font-family: Arial, sans-serif;
-  font-size: 12px;
+  font-size: var(--fz-reset);
   font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.6px;
@@ -233,7 +233,7 @@ input.box.invalid{
   top:100%;
   margin-top:2px;
 
-  font-size:10px;
+  font-size: var(--fz-hint);
   font-weight:600;
   line-height:1.1;
   color:#666;
@@ -291,7 +291,7 @@ input.box.invalid{
   position:absolute;
   right:6px;
   bottom:6px;
-  font-size:10px;
+  font-size: var(--fz-sup);
   color:#666;
   font-weight:700;
   line-height:1;
@@ -310,7 +310,7 @@ input.box.invalid{
    TIME SHIFT SUPERSCRIPTS (output + local)
    ========================= */
 .shift-sup{
-  font-size:10px;
+  font-size: var(--fz-sup);
   font-weight:700;
   margin-left:0px;
   vertical-align:super;
@@ -353,8 +353,8 @@ input.box.invalid{
   padding:6px 26px 6px 6px;
   line-height:normal;
 
-  font-size:18px;
-  font-family: Consolas, Menlo, "Courier New", monospace;
+  font-size: var(--fz-input);
+  font-family: var(--font-mono);
   font-weight:600;
   text-align:center;
 
@@ -379,7 +379,7 @@ input.box.invalid{
 .home-wrap .box{
   width:100%;
   padding:6px;
-  font-size:18px;
+  font-size: var(--fz-input);
   text-align:center;
 }
 
@@ -431,7 +431,7 @@ input.box.invalid{
   font-family: Arial, sans-serif;
   font-variant: small-caps;
   letter-spacing:0.1px;
-  font-size:14px;
+  font-size: var(--fz-toggle);
   font-weight:400;
   color:#555;
   transform: translateY(0px);
@@ -454,6 +454,7 @@ button{
   margin-top: 0;
   padding:14px 12px;
   font-size: var(--fz-button);
+  font-family: var(--font-ui);
   font-weight:800;
   font-variant: small-caps;
   letter-spacing:0.8px;
@@ -535,11 +536,24 @@ button:focus-visible{
   --fz-label: 14px;
   --fz-input: 18px;
   --fz-button: 20px;
-
   --fz-out-head: 20px;
   --fz-out-row: var(--fz-out-row);
   --fz-out-orm: 11px;
   --fz-subtext: 11px;
+  --fz-reset: 12px;
+  --fz-hint: 10px;
+  --fz-sup: 10px;
+  --fz-tz: 10px;
+  --fz-toggle: 14px;
+  --fz-idle: 14px;
+  --fz-mini: 11px;
+  --fz-footer: 12px;
+  --fz-footer-small: 11px;
+  --fz-links: 13px;
+  --fz-modal-title: 16px;
+  --fz-modal-body: 13px;
+  --fz-modal-close: 18px;
+  --fz-runtime: 12px;
 }
 
 /* Prevent iOS/iPadOS from auto-scaling text */
@@ -583,7 +597,7 @@ html{
   margin-top: 0;
   width:100%;
   padding:12px 12px;
-  font-size:16px;
+  font-size: calc(var(--fz-button) - 4px);
   border-radius:10px;
 }
 
@@ -602,7 +616,7 @@ html{
 
   font-variant: small-caps;
   letter-spacing:0.8px;
-  font-size:14px;
+  font-size: var(--fz-idle);
   font-weight:600;
   color:rgba(31,42,68,0.55);
   line-height:1;
@@ -645,19 +659,21 @@ html{
 
 /* Labels + mono */
 .sc-label{
+  font-family: var(--font-ui);
+  font-size: var(--fz-out-row);
   font-variant: small-caps;
   letter-spacing: 0.6px;
 }
 
 .mono{
-  font-family: Consolas, Menlo, "Courier New", monospace;
+  font-family: var(--font-mono);
   letter-spacing: 1px;
   font-weight: 700;
-  font-size: 1.05em;
+  font-size: var(--fz-out-row);
 }
 
 .tz-sfx{
-  font-size:10px;
+  font-size: var(--fz-tz);
   font-weight:700;
   margin-left:1px;
   color:#000;
@@ -666,7 +682,8 @@ html{
 
 /* Subtext under timing rows */
 .subtext{
-  font-size:11px;
+  font-size: var(--fz-subtext);
+  font-family: var(--font-ui);
   color:#666;
   margin-top:-1px;
   margin-bottom:8px;
@@ -696,6 +713,11 @@ html{
   box-sizing:border-box;
 }
 
+.row3 .sc-label,
+.row4 .sc-label{
+  font-size: var(--fz-out-row);
+}
+   
 .row3.dutyrow{
   grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
 }
@@ -773,7 +795,6 @@ html{
 
 /* Crew timing padding frame */
 .crew-timing .row3{
-  font-size: inherit;
   padding: var(--row-pad-y) var(--row-pad-x);
   border-radius: var(--row-radius);
 }
@@ -782,13 +803,11 @@ html{
 .showtime-inline{ white-space:nowrap; }
 
 .show-orm-inline{
-  font-family: Arial, sans-serif;
+  font-family: var(--font-ui);
   font-variant: normal;
   letter-spacing: normal;
   text-transform: none;
-
-  font-size:11px;
-  font-weight:600;
+  font-size: var(--fz-out-orm);
   color:#000;
   margin-left:0;
   white-space:nowrap;
@@ -796,14 +815,16 @@ html{
 }
 
 .showtime-circ{
-  font-size:12px;
-  font-weight:650;
+  font-family: var(--font-mono);
+  font-size: var(--fz-out-orm);
+  font-weight:700;
   color:#000;
 }
 
 .showtime-circ .mono{
-  font-size:12px;
-  font-weight:600;
+  font-family: var(--font-mono);
+  font-size: var(--fz-out-orm);
+  font-weight:700;
   color:#000;
 }
 
@@ -815,8 +836,9 @@ html{
 /* ORM note */
 .orm-note{
   display:block;
-  font-size:11px;
-  font-weight:600;
+  font-family: var(--font-ui);
+  font-size: var(--fz-out-orm);
+  font-weight:700;
   color:inherit;
   line-height:1.1;
   text-align:left;
@@ -937,8 +959,8 @@ html{
    ========================= */
 .inline-mini{
   width:44px;
-  font-size:11px;
-  font-family: Consolas, Menlo, "Courier New", monospace;
+  font-size: var(--fz-mini);
+  font-family: var(--font-mono);
   padding:1px 1px;
   text-align:center;
   box-sizing:border-box;
@@ -955,7 +977,7 @@ html{
   margin-top: 0;
   text-align: center;
   font-variant: small-caps;
-  font-size: 12px;        /* smaller than labels */
+  font-size: var(--fz-footer);
   font-weight: 700;       /* no longer bold-bold */
   letter-spacing: 0.8px;
 
@@ -967,7 +989,7 @@ html{
   display: block;
   margin-top: 4px;
 
-  font-size: 11px;
+  font-size: var(--fz-footer-small);
   font-weight: 400;
   letter-spacing: 0.1px;
 
@@ -983,7 +1005,7 @@ html{
   gap:14px;
   flex-wrap:nowrap;
   white-space:nowrap;
-  font-size:13px;
+  font-size: var(--fz-links);
 }
 
 .info-links button{
@@ -993,7 +1015,7 @@ html{
   margin:0;
 
   font-family: Arial, sans-serif;
-  font-size:13px;
+  font-size: var(--fz-links);
   font-weight:600;
   color:#1f2a44;
 
@@ -1043,7 +1065,7 @@ html{
 }
 
 .modal-title{
-  font-size:16px;
+  font-size: var(--fz-modal-title);
   font-weight:900;
   letter-spacing:0.3px;
   color:#1f2a44;
@@ -1055,7 +1077,7 @@ html{
   padding:6px 10px !important;
   margin:0 !important;
   width:auto !important;
-  font-size:18px !important;
+  font-size: var(--fz-modal-close) !important;
   font-weight:900 !important;
   color:#1f2a44 !important;
   cursor:pointer;
@@ -1070,7 +1092,7 @@ html{
   max-height: calc(85vh - 52px);
   overflow:auto;
   color:#222;
-  font-size:13px;
+  font-size: var(--fz-modal-body);
   line-height:1.55;
 }
 
@@ -1096,7 +1118,19 @@ html{
 #output + .info-links{ margin-top: 18px; }
 #infoModal + .footer{ margin-top: 18px; }
 
+/* =========================
+   RUNTIME
+   ========================= */
 
+.runtime-mono{
+  font-family: var(--font-mono);
+  font-size: var(--fz-runtime);
+  white-space: pre-wrap;
+}
+.runtime-sub{
+  font-size: var(--fz-runtime);
+  color:#333;
+}
 
    
 /* =========================
@@ -1445,10 +1479,10 @@ function showCrewTextCopied(ok){
   out.innerHTML = `
     <div style="margin-top:12px; padding:10px; border-radius:8px; background:#f8d7da;">
       <div style="font-weight:bold;">Something broke (runtime error)</div>
-      <div style="margin-top:6px; font-family:Consolas, Menlo, 'Courier New', monospace; font-size:12px; white-space:pre-wrap;">
+      <div class="runtime-mono" style="margin-top:6px;">
         ${String(err && err.message ? err.message : err)}
       </div>
-      <div style="margin-top:6px; font-size:12px; color:#333;">
+      <div class="runtime-sub" style="margin-top:6px;">
         Copy/paste that error back to me and we’ll fix it fast.
       </div>
     </div>
