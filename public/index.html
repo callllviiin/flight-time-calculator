@@ -1271,34 +1271,41 @@ button:focus-visible{
 
 
 /* =========================
-   DIAGNOSTIC: DOES MOBILE CSS APPLY?
-   Remove after test.
+   PHASE 3.5 — MOBILE TOP GRID (FINAL, FLUID, NO STACKING)
    ========================= */
 @media (max-width: 520px){
-  .input-panel{
-    outline: 6px solid hotpink !important;
+
+  /* Reclaim outer padding (biggest “free” width gain) */
+  body{ padding: 8px; }
+  #pageRoot{ padding-left: 6px; padding-right: 6px; }
+
+  /* Fluid sizes: shrink on phones, cap near iPad look */
+  :root{
+    --fld: clamp(78px, 22vw, 100px);   /* field boxes */
+    --gapcol: clamp(10px, 2.2vw, 18px);/* the “at” + gap columns */
+    --lab: clamp(140px, 34vw, 190px);  /* labels slide toward fields */
   }
-}
-
-
-/* =========================
-   OVERRIDE TEST: FORCE SMALLER TOP INPUT BOXES ON MOBILE
-   (If you don’t see this, something is overriding after it.)
-   ========================= */
-@media (max-width: 520px){
-  .box{ width: 78px !important; }
-  .floating-wrap{ width: 78px !important; }
-  .icao-wrap{ width: 78px !important; }
-  .home-wrap{ width: 78px !important; }
-  #aircraft{ width: 78px !important; }
 
   .form-grid{
-    grid-template-columns: 140px 78px 10px 78px 10px 78px !important;
-    column-gap: 4px !important;
+    grid-template-columns: var(--lab) var(--fld) var(--gapcol) var(--fld) var(--gapcol) var(--fld) !important;
+    column-gap: 5px !important;
+    row-gap: 16px;
+  }
+
+  /* All “104px” wrappers follow --fld */
+  .box{ width: var(--fld) !important; }
+  .floating-wrap{ width: var(--fld) !important; }
+  .icao-wrap{ width: var(--fld) !important; }
+  .home-wrap{ width: var(--fld) !important; }
+  #aircraft{ width: var(--fld) !important; }
+
+  /* Keep Local readable with +1/-1 */
+  .local-wrap .box{
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }
 
-   
 
 /* ======================================================== END OF STYLE ======================================================= */
 </style>
