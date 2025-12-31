@@ -1193,35 +1193,12 @@ button:focus-visible{
     width: 64px;                      /* was 80px */
   }
 
-  /* 2) Tighten top form grid without changing order/stacking */
-  .form-grid{
-    /* Label | Zulu | at | ICAO | gap | Local  */
-    grid-template-columns: 160px 92px 14px 92px 14px 92px; /* was 200/104/20/104/20/104 */
-    column-gap: 6px;                  /* was 8px */
-    row-gap: 16px;                    /* was 20px */
-  }
 
-  /* Make all 104px “boxes” narrower on phones */
-  .box{ width: 92px; font-size: 17px; padding: 6px 4px; }  /* was 104px, 18px */
-  .floating-wrap{ width: 92px; }
-  .icao-wrap{ width: 92px; }
-  .home-wrap{ width: 92px; }
 
-  /* Local padding (keep +1/-1 readable) */
-  .local-wrap .box{
-    padding-right: 16px;
-    padding-left: 16px;
-  }
 
-  /* Aircraft select matches new width */
-  #aircraft{
-    width: 92px;
-    font-size: 17px;
-  }
 
-  /* Labels: keep single line but slightly smaller */
-  .form-label{ font-size: 13px; }
-  input{ letter-spacing: 1.6px; }     /* was 2.2px */
+
+   
 
   /* 3) Output geometry: use your CSS vars to tighten columns/gaps */
   :root{
