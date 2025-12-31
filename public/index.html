@@ -720,7 +720,7 @@ html{
 }
    
 .row3.dutyrow{
-  grid-template-columns: var(--row-label-w) 1fr var(--time-col-w);
+  grid-template-columns: var(--row-label-w) minmax(0, 1fr) var(--time-col-w);
 }
 
 .row3.timerow{
@@ -758,7 +758,7 @@ html{
   align-items:center;
   text-align:center;        /* <-- key */
   font-weight:500;
-  white-space: nowrap;
+  white-space: nowrap !important;
 }
 
 /* Keep the ORM note itself centered as an element */
