@@ -2789,16 +2789,21 @@ homeICAO?.addEventListener("input", () => {
   const clean = normICAO(homeICAO.value);
   if(homeICAO.value !== clean) homeICAO.value = clean;
 
-  // If this was a user action (not our autofill), mark as touched
+  // User took control (unless we’re the ones writing)
   if(!suppressHomeTouch){
-    homeTouched = clean.length > 0;   // once they type something, we stop auto-overwriting
-    homeAutoFilled = false;           // user took control
+    homeTouched = clean.length > 0;   // they typed something real
+    homeAutoFilled = false;           // no longer auto-managed
   }
+
+  updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
+
+  if(hasCalculated) onUserEdit();
+});
 
 homeICAO?.addEventListener("blur", () => {
   const clean = normICAO(homeICAO.value);
 
-  // If Home is left blank, then (and only then) default it to Takeoff ICAO (if mapped)
+  // If Home is left blank, default it to Takeoff ICAO (if mapped)
   if(clean.length === 0){
     const tk = normICAO(takeoffICAO?.value || "");
     const tkMapped = (tk.length === 4 && getTimeZoneFromICAO(tk));
@@ -2808,6 +2813,7 @@ homeICAO?.addEventListener("blur", () => {
       homeICAO.value = tk;
       suppressHomeTouch = false;
 
+      // Important: leaving it blank means “still allow auto-management”
       homeTouched = false;
       homeAutoFilled = true;
 
@@ -2817,6 +2823,10 @@ homeICAO?.addEventListener("blur", () => {
   }
 });
 
+homeICAO?.addEventListener("focus", () => {
+  if(!suppressHomeTouch) homeTouched = true;
+});
+   
   updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
 
   // If results already exist, mark output stale (don’t auto-recalc)
