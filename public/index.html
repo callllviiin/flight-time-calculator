@@ -758,6 +758,7 @@ html{
   align-items:center;
   text-align:center;        /* <-- key */
   font-weight:500;
+  white-space: nowrap;
 }
 
 /* Keep the ORM note itself centered as an element */
@@ -765,7 +766,7 @@ html{
   display:inline-block;
   margin:0 auto;
   text-align:center;
-  white-space:nowrap;       /* keep your single-line look */
+  white-space:nowrap !important;       /* keep your single-line look */
 }
 
 /* Center ORM text in timing rows (Show Time) */
@@ -839,7 +840,7 @@ html{
   display:block;
   font-family: var(--font-ui);
   font-size: var(--fz-orm);
-  font-weight:600;
+  font-weight:500;
   color:inherit;
   line-height:1.1;
   text-align:left;
