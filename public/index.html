@@ -16,7 +16,7 @@ html{
 }
 
 body{
-  font-family: Arial, sans-serif;
+  font-family: var(--font-ui);
   background:#e9edf3;
   margin:0;
   padding:20px;
@@ -56,7 +56,7 @@ body{
   margin: 0;
   text-align: center;
   
-  font-size: 30px;
+  font-size: var(--fz-title);
   font-weight: 800;
   line-height: 1.1;
   text-shadow: 0 0 0.4px rgba(0,0,0,0.6);
@@ -114,7 +114,7 @@ body{
    ========================= */
 input,
 select{
-  font-family: Consolas, Menlo, "Courier New", monospace;
+  font-family: var(--font-mono);
 }
 
 input{
@@ -168,6 +168,7 @@ input{
 }
 
 .form-label{
+  font-size: var(--fz-label); 
   font-variant: small-caps;
   letter-spacing: 0.8px;
   color: #1f2a44;
@@ -177,7 +178,7 @@ input{
 .box{
   width:104px;
   padding:6px;
-  font-size:18px;
+  font-size: var(--fz-input);
   text-align:center;
   box-sizing:border-box;
 
@@ -452,7 +453,7 @@ input.box.invalid{
 button{
   margin-top: 0;
   padding:14px 12px;
-  font-size:20px;
+  font-size: var(--fz-button);
   font-weight:800;
   font-variant: small-caps;
   letter-spacing:0.8px;
@@ -522,8 +523,31 @@ button:focus-visible{
   --row-pad-y: 4px;
   --row-pad-x: 6px;
   --row-radius: 4px;
+
+  /* UI font: consistent across iOS/iPadOS/Windows/macOS/Android */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Mono font: consistent for time fields */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Size tokens (tune these once, affects everywhere) */
+  --fz-title: 30px;
+  --fz-label: 14px;
+  --fz-input: 18px;
+  --fz-button: 20px;
+
+  --fz-out-head: 20px;
+  --fz-out-row: 17.5px;
+  --fz-out-orm: 11px;
+  --fz-subtext: 11px;
 }
 
+/* Prevent iOS/iPadOS from auto-scaling text */
+html{
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+   
 .output{
   margin-top: 0;
   padding:20px 20px 12px;
@@ -611,12 +635,12 @@ button:focus-visible{
 }
 
 .sc-head.timing-head{
-  font-size:20px;
+  font-size: var(--fz-out-head);
   margin-top:-10px;
 }
 
 .sc-head.duty-head{
-  font-size:19px;
+  font-size: calc(var(--fz-out-head) - 1px);
 }
 
 /* Labels + mono */
