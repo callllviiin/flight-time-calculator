@@ -2785,25 +2785,27 @@ if(inp.id === "takeoffICAO"){
   });
 });
 
+// ----------------- Home Station (input + blur) -----------------
 homeICAO?.addEventListener("input", () => {
   const clean = normICAO(homeICAO.value);
   if(homeICAO.value !== clean) homeICAO.value = clean;
 
-  // User took control (unless we’re the ones writing)
+  // If this was a user action (not our autofill), mark as touched
   if(!suppressHomeTouch){
-    homeTouched = clean.length > 0;   // they typed something real
-    homeAutoFilled = false;           // no longer auto-managed
+    homeTouched = clean.length > 0;   // once they type something, we stop auto-overwriting
+    homeAutoFilled = false;           // user took control
   }
 
   updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
 
+  // If results already exist, mark output stale (don’t auto-recalc)
   if(hasCalculated) onUserEdit();
 });
 
 homeICAO?.addEventListener("blur", () => {
   const clean = normICAO(homeICAO.value);
 
-  // If Home is left blank, default it to Takeoff ICAO (if mapped)
+  // If Home is left blank, then (and only then) default it to Takeoff ICAO (if mapped)
   if(clean.length === 0){
     const tk = normICAO(takeoffICAO?.value || "");
     const tkMapped = (tk.length === 4 && getTimeZoneFromICAO(tk));
@@ -2813,7 +2815,6 @@ homeICAO?.addEventListener("blur", () => {
       homeICAO.value = tk;
       suppressHomeTouch = false;
 
-      // Important: leaving it blank means “still allow auto-management”
       homeTouched = false;
       homeAutoFilled = true;
 
@@ -2821,16 +2822,6 @@ homeICAO?.addEventListener("blur", () => {
       if(hasCalculated) onUserEdit();
     }
   }
-});
-
-homeICAO?.addEventListener("focus", () => {
-  if(!suppressHomeTouch) homeTouched = true;
-});
-   
-  updateIcaoHint(clean, document.getElementById("homeIcaoHint"));
-
-  // If results already exist, mark output stale (don’t auto-recalc)
-  if(hasCalculated) onUserEdit();
 });
 
 [takeoffTime, takeoffICAO].forEach(el => el.addEventListener("input", () => {
