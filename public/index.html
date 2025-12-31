@@ -1086,6 +1086,57 @@ button:focus-visible{
    MOBILE PLACEHOLDER
    ========================= */
 
+
+/* =========================
+   PHASE 3.5 — STEP 2 (REVISED): FLUID PHONE GRID (NO STACKING)
+   Goals:
+   - Keep exact same 6-column layout
+   - Allow boxes + gaps + label column to shrink on small screens
+   ========================= */
+@media (max-width: 520px){
+
+  /* Reclaim outer padding first */
+  body{ padding: 8px; }
+  #pageRoot{ padding-left: 6px; padding-right: 6px; }
+
+  /* Define a responsive "field width" used across Zulu/ICAO/Local/Home/Aircraft */
+  :root{
+    --fld: clamp(78px, 22.5vw, 104px);  /* shrinks on phones, caps at 104 */
+    --gapcol: clamp(8px, 2.5vw, 20px);  /* replaces the 20px fixed columns */
+    --lab: clamp(128px, 34vw, 200px);   /* label column shrinks toward fields */
+  }
+
+  .form-grid{
+    grid-template-columns: var(--lab) var(--fld) var(--gapcol) var(--fld) var(--gapcol) var(--fld);
+    column-gap: 6px;     /* slightly tighter */
+    row-gap: 16px;
+  }
+
+  /* Make all "104px" wrappers follow the responsive field width */
+  .box{ width: var(--fld) !important; }
+  .floating-wrap{ width: var(--fld) !important; }
+  .icao-wrap{ width: var(--fld) !important; }
+  .home-wrap{ width: var(--fld) !important; }
+  #aircraft{ width: var(--fld) !important; }
+
+  /* Keep local +1/-1 from colliding */
+  .local-wrap .box{
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  /* Tighten label text slightly so it survives smaller label column */
+  .form-label{
+    letter-spacing: 0.5px;
+  }
+
+  /* Keep Augmented from kissing the edge */
+  .crew-check-label{
+    transform: translateX(-4px) translateY(-2px);
+  }
+}
+
+   
 /* =========================
    PHASE 3.5 — STEP 1: PHONE INPUT TEXT SCALING FIX
    (Fixes: boxes resize but text/labels/hints don’t)
