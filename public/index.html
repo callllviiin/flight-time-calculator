@@ -1087,6 +1087,41 @@ button:focus-visible{
    ========================= */
 
 /* =========================
+   PHASE 3.5 — STEP 1: PHONE INPUT TEXT SCALING FIX
+   (Fixes: boxes resize but text/labels/hints don’t)
+   ========================= */
+@media (max-width: 520px){
+
+  /* Force form control text to scale consistently (Safari/iOS can ignore inherited sizing) */
+  input.box,
+  .box,
+  #aircraft{
+    font-size: 16px !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Floating label + hints also need to scale down */
+  .floating-label{
+    font-size: 8px !important;
+    top: -8px; /* slight adjust so it doesn’t collide */
+  }
+
+  .icao-hint{
+    font-size: 9px !important;
+  }
+
+  /* Reduce digit spacing so 4 numbers fit cleanly in narrower boxes */
+  input{
+    letter-spacing: 1.2px !important;
+  }
+
+  /* Keep "at" from looking oversized relative to reduced fields */
+  .at{
+    font-size: 13px;
+  }
+}
+   
+/* =========================
    PHASE 3.5: PHONE TIGHTENING (NO STACKING)
    Keep layout single-line; recover width by removing padding + shrinking slack.
    ========================= */
