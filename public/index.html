@@ -1193,6 +1193,23 @@ button:focus-visible{
   }
 }
 
+   /* TEMP TEST: unify top field sizing under one authority */
+@media (max-width: 744px){
+  :root{ --fldU: calc(104px * var(--s)); }
+
+  .floating-wrap,
+  .icao-wrap,
+  .home-wrap{
+    width: var(--fldU) !important;
+  }
+
+  .floating-wrap .box,
+  .icao-wrap .box,
+  .home-wrap .box{
+    width: 100% !important;   /* boxes follow wrapper */
+  }
+}
+
 
 /* ======================================================== END OF STYLE ======================================================= */
 </style>
