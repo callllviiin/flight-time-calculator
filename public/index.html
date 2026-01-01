@@ -1209,26 +1209,51 @@ body.show-rails::before{
       calc(50% + 215px) top / var(--rail-w-phone) 100% no-repeat;
 }
 
-   /* ===== Debug rail labels ===== */
-body.show-rails::after{
-  content:
-    "360      390      430                    744";
+/* ===== Debug rail labels (pinned to rails) ===== */
+body.show-rails::after,
+body.show-rails #pageRoot::before,
+body.show-rails #pageRoot::after,
+body.show-rails .app::before{
   position: fixed;
   top: 6px;
-  left: 50%;
   transform: translateX(-50%);
   z-index: 1000000;
+  pointer-events: none;
+  white-space: nowrap;
 
   font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   letter-spacing: 0.5px;
   color: #000;
-
-  pointer-events: none;
-  white-space: pre;
-
-  /* Align text to rail positions */
-  padding-left: 180px; /* aligns 360 under its rail */
+  background: rgba(255,255,255,0.85);
+  padding: 1px 4px;
+  border-radius: 6px;
 }
+
+/* 360 rail (±180) */
+body.show-rails #pageRoot::before{
+  content: "360";
+  left: calc(50% - 180px);
+}
+
+/* 390 rail (±195) */
+body.show-rails #pageRoot::after{
+  content: "390";
+  left: calc(50% - 195px);
+}
+
+/* 430 rail (±215) */
+body.show-rails .app::before{
+  content: "430";
+  left: calc(50% - 215px);
+}
+
+/* 744 rail (±372) THICK BLACK boundary */
+body.show-rails::after{
+  content: "744";
+  left: calc(50% - 372px);
+  font-weight: 900;
+}
+
 
 
 /* ======================================================== END OF STYLE ======================================================= */
