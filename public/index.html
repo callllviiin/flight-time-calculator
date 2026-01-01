@@ -1539,6 +1539,54 @@ html{
   padding: 0 !important;
 }
 
+   /* =========================
+   MOBILE OUTPUT — VERTICAL CONDENSE PASS
+   Paste near END of @media (max-width: 430px)
+   ========================= */
+
+/* 1) Global rhythm tighter */
+:root{
+  --row-gap-y: 3px;     /* was 5px (space between rows) */
+  --orm-gap-y: 0px;     /* was 1px (label -> ORM) */
+}
+
+/* 2) Reduce spacing between a row and the next row */
+.row3,
+.row4{
+  margin-top: var(--row-gap-y) !important;
+  row-gap: 0px !important;              /* label line + orm line closer */
+}
+
+/* 3) ORM line closer to label */
+.mcol,
+.row3.dutyrow .lcol.ormline{
+  margin-top: var(--orm-gap-y) !important;
+  line-height: 1.02 !important;
+  padding-top: 0px !important;
+}
+
+/* 4) Subtext closer to its row (and less bottom padding) */
+.subtext{
+  margin-top: -6px !important;          /* pulls it upward toward the row */
+  margin-bottom: 2px !important;        /* less space after subtext */
+  line-height: 1.05 !important;
+}
+
+/* 5) Make section headers stop “breathing” so much */
+.sc-head.timing-head{
+  margin-top: -6px !important;          /* was -10 in desktop, but mobile wants tighter */
+  margin-bottom: 4px !important;
+}
+.sc-head.duty-head{
+  margin-top: 6px !important;
+  margin-bottom: 4px !important;
+}
+
+/* 6) Tighten HR spacing inside output */
+.output hr{
+  margin: 10px 0 !important;            /* was 14px */
+}
+
    
   /* NOTE:
      Apply your existing color/border palette to the ::before
