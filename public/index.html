@@ -13,9 +13,11 @@
    ========================= */
 html{
   overflow-y: scroll; /* reserve scrollbar space to prevent 1st-click centering shift */
+  overflow-x: hidden;
 }
 
 body{
+  overflow-x: hidden;
   font-family: var(--font-ui);
   background:#e9edf3;
   margin:0;
@@ -1171,6 +1173,21 @@ html{
 @media (max-width: 430px){
 
   :root{ --gutter: 12px; }
+
+  .headerbar{
+    grid-template-columns: 56px 1fr 56px; /* smaller side rails */
+  }
+   
+  .headerbar .header-reset{
+    width: 56px;
+  }
+   
+  .headerbar h1{
+    font-size: 22px;        /* or whatever fits */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
    
   .input-panel{ padding: 16px 8px 14px; } /* was 21px 14px 17px for Desktop/iPad view */
    
