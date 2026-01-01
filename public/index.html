@@ -1311,77 +1311,129 @@ html{
 
 /* ========================= BEGINNING OF OUTPUT PANEL ========================= */
 
-   /* shrink the output panel gutters on phone */
+  /* shrink the output panel gutters on phone */
   #output.output{
-    padding: 12px 10px 10px;  /* tune: try 10/8 if you want it tighter */
+    padding: 12px 10px 10px;
   }
 
- /* Remove ORM class padding when applied to whole ROWS (keeps alignment consistent) */
+  /* Remove ORM class padding when applied to whole ROWS (keeps alignment consistent) */
   .row3.orm-low, .row3.orm-mod, .row3.orm-high, .row3.orm-severe, .row3.orm-exceed,
   .row3.ormm-low, .row3.ormm-mod, .row3.ormm-high, .row3.ormm-severe,
   .row4.orm-low, .row4.orm-mod, .row4.orm-high, .row4.orm-severe, .row4.orm-exceed,
   .row4.ormm-low, .row4.ormm-mod, .row4.ormm-high, .row4.ormm-severe{
     padding: 0 !important;
   }
-   
-   /* 1) Hide ALL ORM message elements */
-  .orm-note,
-  .show-orm-inline{
-    display: none !important;
+
+  /* Baseline row behavior on phone */
+  .row3, .row4{
+    column-gap: 3px !important;
+    row-gap: 2px;                 /* allows ORM tuck under label */
+    width: 100%;
+    justify-content: stretch;
   }
 
-  /* Hard-right align the time columns */
+  /* Labels */
+  .row3 .sc-label, .row4 .sc-label{
+    justify-self: start;
+    text-align: left;
+    padding-right: 4px;
+    font-size: 16.5px;
+    letter-spacing: 0.1px;
+    line-height: 1.05;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  /* Times: hard-right align + size */
   .row3 .lcol, .row3 .zcol,
   .row4 .lcol, .row4 .zcol{
     justify-self: end;
     text-align: right;
   }
 
-  /* Let labels wrap more cleanly (and less often) */
-  .row3 .sc-label, .row4 .sc-label{
-    justify-self: start;
-    text-align: left;
-    padding-right: 4px;
-    font-size: 16.5px;    
-    letter-spacing: 0.1px;
-    line-height: 1.05;
-    min-width: 0;
-    white-space: normal;
-  }
-   
- /* Make the gap between label and times tighter on phone */
-  .row3, .row4{
-    column-gap: 3px !important;
-    width: 100%;
-    justify-content: stretch;
+  .row3 .mono, .row4 .mono{
+    font-size: 16.5px;
   }
 
-   /* Adjust here for just the time output fotn size */
- .row3 .mono, .row4 .mono{
-   font-size: 16.5px;
- }
-   
-  .row3.dutyrow{
-    grid-template-columns: minmax(0, 1fr) var(--time-col-w) !important;
-  }
-  .row3.dutyrow .lcol{
-    display: none !important;
-  }
+  /* =========================
+     PHONE LAYOUT: ORM under label
+     ========================= */
+
+  /* TIMING rows + SHOW TIME:
+     Row 1: label | local | zulu
+     Row 2: orm (full width under label) */
+  .row3.timerow,
   .row4{
     grid-template-columns: minmax(0, 1fr) var(--time-col-w) var(--time-col-w) !important;
+    grid-template-areas:
+      "label lcol zcol"
+      "orm   orm  orm";
   }
+
+  .row3.timerow .sc-label,
+  .row4 .sc-label{ grid-area: label; }
+
+  .row3.timerow .lcol,
+  .row4 .lcol{ grid-area: lcol; }
+
+  .row3.timerow .zcol,
+  .row4 .zcol{ grid-area: zcol; }
+
+  /* ORM line (comes from .mcol for timerow + row4) */
+  .row3.timerow .mcol,
   .row4 .mcol{
-    display: none !important;
+    grid-area: orm;
+    display: block;               /* IMPORTANT: no longer hidden */
+    justify-content: flex-start;
+    text-align: left;
+    min-width: 0;
+    overflow: hidden;
+    white-space: normal;          /* wrap allowed */
+    font-weight: 600;
+    font-size: 12px;              /* tune */
+    line-height: 1.1;
+    opacity: 0.9;
   }
-  .row3.timerow{
-    grid-template-columns: minmax(0, 1fr) var(--time-col-w) var(--time-col-w) !important;
+
+  /* DUTY rows:
+     Row 1: label | zulu
+     Row 2: orm (full width) */
+  .row3.dutyrow{
+    grid-template-columns: minmax(0, 1fr) var(--time-col-w) !important;
+    grid-template-areas:
+      "label zcol"
+      "orm   orm";
   }
-  .row3.timerow .mcol{
-    display: none !important;
+
+  .row3.dutyrow .sc-label{ grid-area: label; }
+  .row3.dutyrow .zcol{ grid-area: zcol; }
+
+  /* ORM line (comes from .lcol for dutyrow) */
+  .row3.dutyrow .lcol{
+    grid-area: orm;
+    display: block;               /* IMPORTANT: no longer hidden */
+    text-align: left;
+    justify-content: flex-start;
+    min-width: 0;
+    overflow: hidden;
+    white-space: normal;          /* wrap allowed */
+    font-weight: 600;
+    font-size: 12px;              /* tune */
+    line-height: 1.1;
+    opacity: 0.9;
   }
+
+  /* Ensure ORM text itself is allowed to wrap */
+  .orm-note,
+  .show-orm-inline{
+    display: inline;
+    white-space: normal !important;
+  }
+/* ========================= END OF OUTPUT PANEL ========================= */
+
 }          /* <-- End } of Media ========================= */
    
-/* ========================= END OF OUTPUT PANEL ========================= */
+
 
 @media (max-width: 430px){
   .row3, .row4{ outline: 1px solid red; }
