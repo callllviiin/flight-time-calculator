@@ -1618,6 +1618,13 @@ html{
   font-weight: 700;   /* or 600 if you want even lighter */
 }
 
+/* Tighten highlight height for Show Time + FDP only */
+.row4.showtime[class*="orm-"]::before,
+.row3.dutyrow[class*="orm-"]::before{
+  top: -1px;
+  bottom: -1px;
+}
+
    
   /* NOTE:
      Apply your existing color/border palette to the ::before
