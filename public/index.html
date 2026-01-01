@@ -1253,6 +1253,15 @@ html, body{
   box-sizing: border-box;
 }
 
+/* ===== DESKTOP CONTAINER (temporary) ===== */
+:root{ --app-max: 744px; }
+
+@media (min-width: 900px){
+  .app{
+    max-width: var(--app-max);
+    margin: 0 auto;
+  }
+}
 
 
 /* ======================================================== END OF STYLE ======================================================= */
