@@ -1157,7 +1157,7 @@ html{
    MOBILE PLACEHOLDER
    ========================= */
 
-/* ===== Debug viewport rails ===== */
+/* ===== Debug: centered phone width rails ===== */
 :root{
   --rail: hotpink;
   --rail-w: 2px;
@@ -1171,17 +1171,48 @@ body.show-rails::before{
   pointer-events: none;
   z-index: 999999;
 
-  /* Rails at 360 / 390 / 393 / 402 / 412 / 430 / 440 */
   background:
-    linear-gradient(var(--rail), var(--rail)) left top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 360px top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 390px top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 393px top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 402px top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 412px top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 430px top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail)) 440px top / var(--rail-w) 100% no-repeat;
+    /* center line */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 1px) top / var(--rail-w) 100% no-repeat,
+
+    /* ±160px (320px phone) */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 160px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% + 160px) top / var(--rail-w) 100% no-repeat,
+
+    /* ±180px (360px phone) */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 180px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% + 180px) top / var(--rail-w) 100% no-repeat,
+
+    /* ±195px (390px iPhone) */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 195px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% + 195px) top / var(--rail-w) 100% no-repeat,
+
+    /* ±201px (402px Pro) */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 201px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% + 201px) top / var(--rail-w) 100% no-repeat,
+
+    /* ±215px (430px big phones) */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 215px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% + 215px) top / var(--rail-w) 100% no-repeat,
+
+    /* ±220px (440px largest phones) */
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% - 220px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail))
+      calc(50% + 220px) top / var(--rail-w) 100% no-repeat;
 }
+
 
 
 
