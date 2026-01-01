@@ -1167,13 +1167,19 @@ html{
    ========================= */
 
 /* =========================
-   PHONE COMPRESS MODE (no stacking)
+   PHONE COMPRESS MODE
    Target: 390px baseline
    ========================= */
 @media (max-width: 430px){
 
-  :root{ --gutter: 12px; }
+  :root{ 
+   --gutter: 12px; }
+   --row-gap: 8px;         /* pulls columns closer (was 14px) */
+   --time-col-w: 76px;     /* slightly narrower time columns (tune 72–80) */
+   --row-time-minw: 0px;   /* allow time cols to shrink if needed */
 
+/* ========================= BEGINNING OF TITLE ========================= */
+   
   .headerbar{
     grid-template-columns: 56px 1fr 56px; /* smaller side rails */
     align-items: center;   /* instead of end */
@@ -1190,9 +1196,15 @@ html{
     line-height: 1.0;   /* or even 0.95 */
   }
 
+/* ========================= END OF TITLE ========================= */
+
+/* ========================= GAP BETWEEN TITLE AND INPUT PANEL ========================= */
 .headerbar + .input-panel{
     margin-top: 14px;
   }
+/* ========================= GAP BETWEEN TITLE AND INPUT PANEL ========================= */
+   
+/* ========================= BEGINNING OF INPUT PANEL ========================= */
    
   .input-panel{ padding: 16px 8px 14px; } /* was 21px 14px 17px for Desktop/iPad view */
    
@@ -1294,53 +1306,53 @@ html{
   }
 }
 
-/* =========================
-   OUTPUT: PHONE DEBUG MODE (hide ORM + reclaim width)
-   ========================= */
-@media (max-width: 430px){
+/* ========================= END OF INPUT PANEL ========================= */
 
-  /* 1) Hide ALL ORM message elements */
+/* ========================= BEGINNING OF OUTPUT PANEL ========================= */
+
+   /* 1) Hide ALL ORM message elements */
   .orm-note,
   .show-orm-inline{
     display: none !important;
   }
 
-  /* 2) Duty rows: remove the middle ORM column entirely
-        From: Label | ORM | Zulu
-        To:   Label | Zulu
-  */
+  /* Hard-right align the time columns */
+  .row3 .lcol, .row3 .zcol,
+  .row4 .lcol, .row4 .zcol{
+    justify-self: end;
+    text-align: right;
+  }
+
+  /* Let labels wrap more cleanly (and less often) */
+  .row3 .sc-label, .row4 .sc-label{
+    min-width: 0;
+    white-space: normal;
+    line-height: 1.05;
+  }
+   
+ /* Make the gap between label and times tighter on phone */
+  .row3, .row4{
+    column-gap: 6px !important;
+  }
   .row3.dutyrow{
     grid-template-columns: 1fr var(--time-col-w) !important;
   }
   .row3.dutyrow .lcol{
     display: none !important;
   }
-
-  /* 3) Show Time row: remove the middle ORM column
-        From: Label | ORM | Local | Zulu
-        To:   Label | Local | Zulu
-  */
   .row4{
     grid-template-columns: 1fr var(--time-col-w) var(--time-col-w) !important;
   }
   .row4 .mcol{
     display: none !important;
   }
-
-  /* 4) Timing rows: optionally remove the middle spacer column too
-        (your timing rows use .mcol mainly as spacer/placeholder)
-        From: Label | spacer | Local | Zulu
-        To:   Label | Local | Zulu
-  */
   .row3.timerow{
     grid-template-columns: 1fr var(--time-col-w) var(--time-col-w) !important;
   }
   .row3.timerow .mcol{
     display: none !important;
   }
-}
-
-
+/* ========================= END OF OUTPUT PANEL ========================= */
 
    /* =========================
    DEBUGGING SECTION
