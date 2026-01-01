@@ -1294,6 +1294,51 @@ html{
   }
 }
 
+/* =========================
+   OUTPUT: PHONE DEBUG MODE (hide ORM + reclaim width)
+   ========================= */
+@media (max-width: 430px){
+
+  /* 1) Hide ALL ORM message elements */
+  .orm-note,
+  .show-orm-inline{
+    display: none !important;
+  }
+
+  /* 2) Duty rows: remove the middle ORM column entirely
+        From: Label | ORM | Zulu
+        To:   Label | Zulu
+  */
+  .row3.dutyrow{
+    grid-template-columns: 1fr var(--time-col-w) !important;
+  }
+  .row3.dutyrow .lcol{
+    display: none !important;
+  }
+
+  /* 3) Show Time row: remove the middle ORM column
+        From: Label | ORM | Local | Zulu
+        To:   Label | Local | Zulu
+  */
+  .row4{
+    grid-template-columns: 1fr var(--time-col-w) var(--time-col-w) !important;
+  }
+  .row4 .mcol{
+    display: none !important;
+  }
+
+  /* 4) Timing rows: optionally remove the middle spacer column too
+        (your timing rows use .mcol mainly as spacer/placeholder)
+        From: Label | spacer | Local | Zulu
+        To:   Label | Local | Zulu
+  */
+  .row3.timerow{
+    grid-template-columns: 1fr var(--time-col-w) var(--time-col-w) !important;
+  }
+  .row3.timerow .mcol{
+    display: none !important;
+  }
+}
 
 
 
