@@ -1170,78 +1170,80 @@ html{
    ========================= */
 @media (max-width: 430px){
 
-  /* tighten overall grid spacing */
   .form-grid{
-    column-gap: 6px;
-    row-gap: 16px;
+    column-gap: 4px;
+    row-gap: 14px;
 
-    /* shrink the label column and all fixed pieces */
     grid-template-columns:
-      minmax(120px, 150px) /* label */
-      6px                  /* label gap */
-      92px                 /* Zulu */
-      14px                 /* at */
-      92px                 /* ICAO */
-      10px                 /* gap */
-      92px;                /* Local */
+      minmax(96px, 120px) /* label (smaller now) */
+      2px                 /* label gap */
+      88px                /* Zulu */
+      10px                /* at */
+      88px                /* ICAO */
+      6px                 /* gap */
+      88px;               /* Local */
   }
 
-  /* make the actual inputs match the compressed columns */
+  /* Labels: shrink hard */
+  .form-grid .form-label{
+    font-size: 13px;
+    letter-spacing: 0.4px;
+    line-height: 1.05;
+  }
+
+  /* Inputs: slightly smaller */
   .box,
   .floating-wrap,
   .icao-wrap,
   .home-wrap{
-    width: 92px;
+    width: 88px;
   }
 
-  /* local box still needs space for +1/-1 */
+  .form-grid .box{
+    font-size: 15px;
+    letter-spacing: 1.4px;
+    padding: 5px 6px;
+  }
+
+  /* 'at' tighter */
+  .at{
+    font-size: 13px;
+  }
+
+  /* Hints tuck tighter */
+  .icao-hint{
+    font-size: 9px;
+    margin-top: 1px;
+  }
+
+  /* keep local day shift readable */
   .local-wrap .box{
-    padding-left: 14px;
+    padding-left: 12px;
     padding-right: 18px;
   }
 
-  /* tighten “at” column */
-  .at{
-    font-size: 14px;
-  }
-
-  /* slightly reduce label font only in the input grid */
-  .form-grid .form-label{
-    font-size: 16px;
-  }
-
-  /* slightly reduce input font so HHMM still breathes */
-  .form-grid .box{
-    font-size: 16px;
-    letter-spacing: 1.8px;
-  }
-
-  /* keep hints from blowing width */
-  .icao-hint{
-    font-size: 9px;
-  }
-
-  /* Row 3: keep things standardized */
+  /* Row 3: match */
   #aircraft{
-    width: 92px;
+    width: 88px;
     height: 32px;
-    font-size: 16px;
-    padding: 0 22px 0 6px;
+    font-size: 15px;
+    padding: 0 20px 0 6px;
     background-position:
-      calc(100% - 14px) 55%,
-      calc(100% - 10px) 55%;
+      calc(100% - 13px) 55%,
+      calc(100% - 9px) 55%;
   }
 
   .form-grid .form-row .crew-check{
-    width: 92px;
+    width: 88px;
     height: 32px;
   }
 
   .crew-check-text{
-    font-size: 13px;
-    min-width: 8ch;
+    font-size: 12px;
+    min-width: 7.5ch;
   }
 }
+
 
 
 
