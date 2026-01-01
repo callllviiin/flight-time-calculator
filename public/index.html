@@ -147,7 +147,8 @@ input{
 
   /* Label is flexible, inputs stay “about 104px”, gaps stay small */
   grid-template-columns:
-    minmax(170px, 220px) /* label: prefers wide, can shrink, can grow */
+    minmax(170px, 220px) /* label */
+    20px                 /* gap */
     104px                /* Zulu */
     20px                 /* at */
     104px                /* ICAO */
@@ -167,7 +168,7 @@ input{
 
 /* left labels */
 .label{
-  text-align: right;
+  text-align: center;
   white-space:normal;
   line-height:1.1;
   min-width: 0; /* important in grid layouts */
@@ -203,6 +204,12 @@ input.box.invalid{
   border: 1.5px solid #8b0000;
 }
 
+   
+/* Gap between Labels and Zulu/Aircraft dropdown boxes */
+.lgap{
+  display:block;
+}
+   
 /* =========================
    FLOATING LABELS + HINTS
    ========================= */
@@ -1174,8 +1181,10 @@ html{
       <!-- Row 1 -->
       <div class="form-row">
         <div class="label form-label">Sched. Takeoff Time:</div>
-
-        <div class="floating-wrap">
+         
+         <div class="lgap"></div>  <!-- NEW -->
+        
+         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
           <div id="takeoffTimeHint" class="icao-hint bad time-hint"></div>
           <input id="takeoffTime" class="box" type="text" inputmode="numeric" pattern="[0-9]*"
@@ -1205,6 +1214,8 @@ html{
       <div class="form-row">
         <div class="label form-label">Sched. Land Time:</div>
 
+      <div class="lgap"></div>  <!-- NEW -->
+         
         <div class="floating-wrap">
           <div class="floating-label">Zulu</div>
           <div id="landingTimeHint" class="icao-hint bad time-hint"></div>
@@ -1235,6 +1246,8 @@ html{
 <div class="form-row">
   <div class="label aircraft-crew-label form-label">Aircraft / Crew:</div>
 
+<div class="lgap"></div>  <!-- NEW -->
+   
   <!-- Col 2: Aircraft -->
   <select id="aircraft" tabindex="-1">
     <option selected>KC-135</option>
