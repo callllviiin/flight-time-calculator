@@ -1324,29 +1324,34 @@ html{
 
   /* Let labels wrap more cleanly (and less often) */
   .row3 .sc-label, .row4 .sc-label{
+    justify-self: start;
+    text-align: left;
+    padding-right: 4px;
+    font-size: 14px;     /* try 13–14 */
+    letter-spacing: 0.2px;
+    line-height: 1.05;
     min-width: 0;
     white-space: normal;
-    line-height: 1.05;
   }
    
  /* Make the gap between label and times tighter on phone */
   .row3, .row4{
-    column-gap: 1px !important;
+    column-gap: 2px !important;
   }
   .row3.dutyrow{
-    grid-template-columns: 1fr var(--time-col-w) !important;
+    grid-template-columns: minmax(0, 1fr) var(--time-col-w) !important;
   }
   .row3.dutyrow .lcol{
     display: none !important;
   }
   .row4{
-    grid-template-columns: 1fr var(--time-col-w) var(--time-col-w) !important;
+    grid-template-columns: minmax(0, 1fr) var(--time-col-w) var(--time-col-w) !important;
   }
   .row4 .mcol{
     display: none !important;
   }
   .row3.timerow{
-    grid-template-columns: 1fr var(--time-col-w) var(--time-col-w) !important;
+    grid-template-columns: minmax(0, 1fr) var(--time-col-w) var(--time-col-w) !important;
   }
   .row3.timerow .mcol{
     display: none !important;
