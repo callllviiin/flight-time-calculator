@@ -1175,39 +1175,45 @@ html{
     row-gap: 14px;
 
     grid-template-columns:
-      minmax(86px, 108px) /* label (smaller now) */
+      minmax(78px, 100px) /* label (smaller now) */
       0px                 /* label gap */
-      88px                /* Zulu */
-      8px                /* at */
-      88px                /* ICAO */
+      84px                /* Zulu */
+      9px                /* at */
+      84px                /* ICAO */
       4px                 /* gap */
-      88px;               /* Local */
+      84px;               /* Local */
   }
 
   /* Labels: shrink hard */
   .form-grid .form-label{
-    font-size: 12px;
-    letter-spacing: 0.3px;
+    font-size: 11px;
+    letter-spacing: 0.2px;
     line-height: 1.02;
   }
 
+.label{
+  text-align: right;    /* pulls text to the right edge of its cell */
+  padding: 0;
+  margin: 0;
+}
   /* Inputs: slightly smaller */
   .box,
   .floating-wrap,
   .icao-wrap,
   .home-wrap{
-    width: 88px;
+    width: 84px;
   }
 
   .form-grid .box{
     font-size: 15px;
-    letter-spacing: 1.4px;
+    letter-spacing: 1.3px;
     padding: 5px 6px;
   }
 
   /* 'at' tighter */
   .at{
-    font-size: 12px;
+    font-size: 11px;
+     letter-spacing: 0;
   }
 
   /* Hints tuck tighter */
