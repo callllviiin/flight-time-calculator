@@ -1172,7 +1172,13 @@ body.show-rails::before{
   z-index: 999999;
 
   background:
-    /* center line */
+    /* ±372px (744px iPad mini portrait baseline) */
+linear-gradient(var(--rail), var(--rail))
+  calc(50% - 372px) top / var(--rail-w) 100% no-repeat,
+linear-gradient(var(--rail), var(--rail))
+  calc(50% + 372px) top / var(--rail-w) 100% no-repeat,
+     
+     /* center line */
     linear-gradient(var(--rail), var(--rail))
       calc(50% - 1px) top / var(--rail-w) 100% no-repeat,
 
