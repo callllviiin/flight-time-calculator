@@ -1170,7 +1170,7 @@ html{
    PHONE COMPRESS MODE
    Target: 390px baseline
    ========================= */
-@media (max-width: 430px){          /* <-- Beginning of Media ========================= */
+@media (max-width: 430px){          /* <-- Beginning { of Media ========================= */
 
   :root{ 
    --gutter: 12px; 
@@ -1315,6 +1315,14 @@ html{
   #output.output{
     padding: 12px 10px 10px;  /* tune: try 10/8 if you want it tighter */
   }
+
+ /* Remove ORM class padding when applied to whole ROWS (keeps alignment consistent) */
+  .row3.orm-low, .row3.orm-mod, .row3.orm-high, .row3.orm-severe, .row3.orm-exceed,
+  .row3.ormm-low, .row3.ormm-mod, .row3.ormm-high, .row3.ormm-severe,
+  .row4.orm-low, .row4.orm-mod, .row4.orm-high, .row4.orm-severe, .row4.orm-exceed,
+  .row4.ormm-low, .row4.ormm-mod, .row4.ormm-high, .row4.ormm-severe{
+    padding: 0 !important;
+  }
    
    /* 1) Hide ALL ORM message elements */
   .orm-note,
@@ -1365,7 +1373,7 @@ html{
   .row3.timerow .mcol{
     display: none !important;
   }
-}          /* <-- Beginning of Media ========================= */
+}          /* <-- End } of Media ========================= */
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
