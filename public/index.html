@@ -1481,6 +1481,67 @@ html{
   line-height: 1.08;
 }
 
+/* =========================
+   MOBILE OUTPUT TIGHTENING PATCH
+   Paste AFTER the merged mobile output rules
+   ========================= */
+
+/* 1) Make Show Time ORM match FDP ORM color + slightly tighter tracking */
+.row4 .mcol,
+.row4 .mcol .show-orm-inline{
+  color: rgba(0,0,0,0.82) !important;   /* match the “slightly less than black” feel */
+  letter-spacing: 0px !important;       /* reduce tracking */
+}
+
+/* Keep FDP ORM consistent too (belt + suspenders) */
+.row3.dutyrow .lcol,
+.row3.dutyrow .lcol .orm-note{
+  color: rgba(0,0,0,0.82) !important;
+  letter-spacing: 0px !important;
+}
+
+/* 2) Nudge ORM lines up + tighten the gap between label row and ORM row */
+.row3, .row4{
+  row-gap: 1px !important;              /* was ~2px */
+}
+
+.row4 .mcol,
+.row3.timerow .mcol,
+.row3.dutyrow .lcol{
+  transform: translateY(-1px);          /* small lift */
+  line-height: 1.05;                    /* tighter */
+}
+
+/* 3) Shrink label subtexts by just a factor of 1 */
+.subtext{
+  font-size: 10px !important;           /* was 11px via --fz-subtext */
+  margin-top: -2px !important;          /* was -1px */
+  margin-bottom: 4px !important;        /* was 8px */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 4) Reduce vertical space almost everywhere in output panel */
+.row3, .row4{
+  margin-top: 6px !important;           /* was 12px */
+}
+
+/* tighten the big section dividers */
+.output hr{
+  margin: 10px 0 !important;            /* was 14px 0 */
+}
+
+/* tighten the Flight Time legacy row spacing */
+.row{
+  margin-top: 8px !important;           /* was 12px */
+}
+
+/* tighten bottom action row spacing */
+.output-actions{
+  margin-top: 6px !important;           /* was 10px */
+  gap: 8px !important;                  /* was 10px */
+}
+
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
