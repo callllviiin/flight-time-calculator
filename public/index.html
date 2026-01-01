@@ -1311,60 +1311,74 @@ html{
 
 /* ========================= BEGINNING OF OUTPUT PANEL ========================= */
 
-  /* shrink the output panel gutters on phone */
+/* =========================
+   MOBILE OUTPUT PANEL — CONSOLIDATED
+   ========================= */
+
+  /* ===== Core tokens (ONE source of truth) ===== */
+  :root{
+    --out-pad-x: 10px;
+    --out-pad-y: 10px;
+
+    --row-gap-y: 6px;
+    --orm-gap-y: 1px;
+
+    --label-fz: 16.5px;
+    --time-fz: 16.5px;
+    --orm-fz: 12px;
+    --sub-fz: 10px;
+
+    --time-col-w: 72px;
+
+    --align-left: 0px;   /* label + ORM start */
+    --sub-indent: 4px;  /* intentional subtext indent */
+
+    --hl-grow-x: 6px;   /* highlight expansion */
+    --hl-grow-y: 1px;
+  }
+
+  /* ===== Output container ===== */
   #output.output{
-    padding: 12px 10px 10px;
+    padding: var(--out-pad-y) var(--out-pad-x);
   }
 
-  /* Remove ORM class padding when applied to whole ROWS (keeps alignment consistent) */
-  .row3.orm-low, .row3.orm-mod, .row3.orm-high, .row3.orm-severe, .row3.orm-exceed,
-  .row3.ormm-low, .row3.ormm-mod, .row3.ormm-high, .row3.ormm-severe,
-  .row4.orm-low, .row4.orm-mod, .row4.orm-high, .row4.orm-severe, .row4.orm-exceed,
-  .row4.ormm-low, .row4.ormm-mod, .row4.ormm-high, .row4.ormm-severe{
-    padding: 0 !important;
-  }
-
-  /* Baseline row behavior on phone */
+  /* ===== Base rows ===== */
   .row3, .row4{
-    column-gap: 3px !important;
-    row-gap: 2px;                 /* allows ORM tuck under label */
+    position: relative;
+    display: grid;
     width: 100%;
-    justify-content: stretch;
+    column-gap: 3px;
+    row-gap: var(--row-gap-y);
+    margin-top: var(--row-gap-y);
   }
 
-  /* Labels */
-  .row3 .sc-label, .row4 .sc-label{
-    justify-self: start;
-    text-align: left;
-    padding-right: 4px;
-    font-size: 16.5px;
-    letter-spacing: 0.1px;
+  /* ===== Labels ===== */
+  .row3 .sc-label,
+  .row4 .sc-label{
+    font-size: var(--label-fz);
     line-height: 1.05;
-    min-width: 0;
+    letter-spacing: 0.1px;
+    padding-left: var(--align-left);
+    text-align: left;
     white-space: normal;
   }
 
-  /* Times: hard-right align + size */
+  /* ===== Times ===== */
   .row3 .lcol, .row3 .zcol,
   .row4 .lcol, .row4 .zcol{
     justify-self: end;
     text-align: right;
   }
 
-  .row3 .mono, .row4 .mono{
-    font-size: 16.5px;
+  .row3 .mono,
+  .row4 .mono{
+    font-size: var(--time-fz);
   }
 
-  /* =========================
-     PHONE LAYOUT: ORM under label
-     ========================= */
-
-  /* TIMING rows + SHOW TIME:
-     Row 1: label | local | zulu
-     Row 2: orm (full width under label) */
+  /* ===== Layout: timing + show time ===== */
   .row3.timerow,
   .row4{
-    grid-template-columns: minmax(0, 1fr) var(--time-col-w) var(--time-col-w) !important;
+    grid-template-columns: minmax(0,1fr) var(--time-col-w) var(--time-col-w);
     grid-template-areas:
       "label lcol zcol"
       "orm   orm  orm";
@@ -1379,27 +1393,9 @@ html{
   .row3.timerow .zcol,
   .row4 .zcol{ grid-area: zcol; }
 
-  /* ORM line (comes from .mcol for timerow + row4) */
-  .row3.timerow .mcol,
-  .row4 .mcol{
-    grid-area: orm;
-    display: block;               /* IMPORTANT: no longer hidden */
-    justify-content: flex-start;
-    text-align: left;
-    min-width: 0;
-    overflow: hidden;
-    white-space: normal;          /* wrap allowed */
-    font-weight: 600;
-    font-size: 12px;              /* tune */
-    line-height: 1.1;
-    opacity: 0.9;
-  }
-
-  /* DUTY rows:
-     Row 1: label | zulu
-     Row 2: orm (full width) */
+  /* ===== Layout: duty rows ===== */
   .row3.dutyrow{
-    grid-template-columns: minmax(0, 1fr) var(--time-col-w) !important;
+    grid-template-columns: minmax(0,1fr) var(--time-col-w);
     grid-template-areas:
       "label zcol"
       "orm   orm";
@@ -1408,259 +1404,56 @@ html{
   .row3.dutyrow .sc-label{ grid-area: label; }
   .row3.dutyrow .zcol{ grid-area: zcol; }
 
-  /* ORM line (comes from .lcol for dutyrow) */
-  .row3.dutyrow .lcol{
+  /* ===== ORM line (single definition) ===== */
+  .row3 .mcol,
+  .row3.dutyrow .lcol,
+  .row4 .mcol{
     grid-area: orm;
-    display: block;               /* IMPORTANT: no longer hidden */
+    margin-top: var(--orm-gap-y);
+    padding-left: var(--align-left);
+    font-size: var(--orm-fz);
+    font-weight: 500;
+    line-height: 1.05;
+    color: rgba(0,0,0,0.82);
     text-align: left;
-    justify-content: flex-start;
-    min-width: 0;
-    overflow: hidden;
-    white-space: normal;          /* wrap allowed */
-    font-weight: 600;
-    font-size: 12px;              /* tune */
-    line-height: 1.1;
-    opacity: 0.9;
+    white-space: normal;
   }
 
-  /* Ensure ORM text itself is allowed to wrap */
-  .orm-note,
-  .show-orm-inline{
-    display: inline;
-    white-space: normal !important;
+  /* ===== Subtext ===== */
+  .subtext{
+    font-size: var(--sub-fz);
+    padding-left: var(--sub-indent);
+    margin-top: -2px;
+    margin-bottom: 3px;
   }
 
-/* =========================
-   MOBILE ORM POLISH PATCH
-   ========================= */
+  /* inline mini inputs */
+  .inline-mini{
+    height: 18px;
+    line-height: 18px;
+    padding: 0 2px;
+    transform: translateY(-1px);
+  }
 
-/* 1) Make ORM line start exactly where the label starts (remove inherited padding) */
-.row4 .mcol,
-.row3.timerow .mcol,
-.row3.dutyrow .lcol{
-  padding: 0 !important;
-  margin: 0 !important;
-  justify-self: stretch;
-}
+  /* ===== Highlight bands grow OUTWARD ===== */
+  .row3[class*="orm-"]::before,
+  .row4[class*="orm-"]::before{
+    content:"";
+    position:absolute;
+    top: calc(-1 * var(--hl-grow-y));
+    bottom: calc(-1 * var(--hl-grow-y));
+    left: calc(-1 * var(--hl-grow-x));
+    right: calc(-1 * var(--hl-grow-x));
+    border-radius: 4px;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-/* 3) Normalize ORM weight so Show Time isn't heavier than FDP */
-.row4 .mcol,
-.row3.timerow .mcol,
-.row3.dutyrow .lcol{
-  font-weight: 500 !important; /* match .orm-note default vibe */
-}
-
-/* 4) Force FDP ORM to be left-aligned under the label (no “creeping right”) */
-.row3.dutyrow .lcol,
-.row3.dutyrow .lcol .orm-note{
-  text-align: left !important;
-  justify-content: flex-start !important;
-  display: block;
-  white-space: normal !important;
-}
-
-/* 1) Also ensure Show Time ORM text aligns left */
-.row4 .mcol,
-.row4 .mcol .show-orm-inline{
-  text-align: left !important;
-  justify-content: flex-start !important;
-}
-
-/* 2) Shrink ONLY the circadian time inside the Show Time ORM line
-      (so your main Local/Zulu times stay 16.5px) */
-.row4 .showtime-circ,
-.row4 .showtime-circ .mono,
-.row4 .showtime-circ .tz-sfx,
-.row4 .showtime-circ .shift-sup{
-  font-size: var(--fz-mini) !important; /* 11px */
-  letter-spacing: 0.2px;
-}
-
-/* Optional: tighten the Show Time ORM line spacing a hair */
-.row4 .mcol{
-  line-height: 1.08;
-}
-
-/* =========================
-   MOBILE OUTPUT TIGHTENING PATCH
-   Paste AFTER the merged mobile output rules
-   ========================= */
-
-/* 1) Make Show Time ORM match FDP ORM color + slightly tighter tracking */
-.row4 .mcol,
-.row4 .mcol .show-orm-inline{
-  color: rgba(0,0,0,0.82) !important;   /* match the “slightly less than black” feel */
-  letter-spacing: 0px !important;       /* reduce tracking */
-}
-
-/* Keep FDP ORM consistent too (belt + suspenders) */
-.row3.dutyrow .lcol,
-.row3.dutyrow .lcol .orm-note{
-  color: rgba(0,0,0,0.82) !important;
-  letter-spacing: 0px !important;
-}
-
-/* 2) Nudge ORM lines up + tighten the gap between label row and ORM row */
-.row3, .row4{
-  row-gap: 1px !important;              /* was ~2px */
-}
-
-.row4 .mcol,
-.row3.timerow .mcol,
-.row3.dutyrow .lcol{
-  transform: translateY(-1px);          /* small lift */
-  line-height: 1.05;                    /* tighter */
-}
-
-/* 3) Shrink label subtexts by just a factor of 1 */
-.subtext{
-  font-size: 10px !important;           /* was 11px via --fz-subtext */
-  margin-top: -2px !important;          /* was -1px */
-  margin-bottom: 4px !important;        /* was 8px */
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-/* 4) Reduce vertical space almost everywhere in output panel */
-.row3, .row4{
-  margin-top: 6px !important;           /* was 12px */
-}
-
-/* tighten the big section dividers */
-.output hr{
-  margin: 10px 0 !important;            /* was 14px 0 */
-}
-
-/* tighten the Flight Time legacy row spacing */
-.row{
-  margin-top: 8px !important;           /* was 12px */
-}
-
-/* tighten bottom action row spacing */
-.output-actions{
-  margin-top: 6px !important;           /* was 10px */
-  gap: 8px !important;                  /* was 10px */
-}
-
-/* =========================
-   MOBILE LABEL ALIGNMENT POLISH
-   ========================= */
-
-/* 1) Collapse vertical space between label row and content
-      (especially noticeable on non-ORM rows) */
-.row3, .row4{
-  row-gap: 0px !important;      /* was 1–2px */
-}
-
-/* For rows that DO have ORM, keep just a whisper of separation */
-.row3.timerow .mcol,
-.row3.dutyrow .lcol,
-.row4 .mcol{
-  margin-top: 1px;              /* replaces grid row-gap, but only where needed */
-}
-
-/* 2) Scoot labels left WITHOUT moving subtext */
-.row3 .sc-label,
-.row4 .sc-label{
-  padding-left: 0 !important;   /* safety */
-  margin-left: -2px;            /* optical alignment with .subtext */
-}
-
-/* =========================
-   MOBILE: FINAL MICRO-POLISH
-   ========================= */
-
-/* 1) Make +1/-1 weight consistent everywhere (duty highlights were forcing it bolder) */
-.shift-sup{
-  font-weight: 700 !important;
-}
-
-/* 2) Scoot times a hair more to the right (without changing your grid) */
-.row3 .lcol, .row3 .zcol,
-.row4 .lcol, .row4 .zcol{
-  margin-right: -2px;          /* tune: -1px to -3px */
-}
-
-/* 3) Highlight bands need more horizontal “breathing room”
-      Add padding to ORM-highlighted rows, then cancel the visual indent. */
-
-/* give the highlighted row a little left/right padding so background doesn’t kiss text */
-.row3.orm-low, .row3.orm-mod, .row3.orm-high, .row3.orm-severe, .row3.orm-exceed,
-.row3.ormm-low, .row3.ormm-mod, .row3.ormm-high, .row3.ormm-severe,
-.row4.orm-low, .row4.orm-mod, .row4.orm-high, .row4.orm-severe, .row4.orm-exceed,
-.row4.ormm-low, .row4.ormm-mod, .row4.ormm-high, .row4.ormm-severe{
-  padding: 1px 6px !important; /* vertical already felt good; add horizontal */
-}
-
-/* cancel the “indent” so label + far-right time still line up with non-highlight rows */
-.row3.orm-low .sc-label, .row3.orm-mod .sc-label, .row3.orm-high .sc-label, .row3.orm-severe .sc-label, .row3.orm-exceed .sc-label,
-.row3.ormm-low .sc-label, .row3.ormm-mod .sc-label, .row3.ormm-high .sc-label, .row3.ormm-severe .sc-label,
-.row4.orm-low .sc-label, .row4.orm-mod .sc-label, .row4.orm-high .sc-label, .row4.orm-severe .sc-label, .row4.orm-exceed .sc-label,
-.row4.ormm-low .sc-label, .row4.ormm-mod .sc-label, .row4.ormm-high .sc-label, .row4.ormm-severe .sc-label{
-  margin-left: -6px;
-}
-
-.row3.orm-low .zcol, .row3.orm-mod .zcol, .row3.orm-high .zcol, .row3.orm-severe .zcol, .row3.orm-exceed .zcol,
-.row3.ormm-low .zcol, .row3.ormm-mod .zcol, .row3.ormm-high .zcol, .row3.ormm-severe .zcol,
-.row4.orm-low .zcol, .row4.orm-mod .zcol, .row4.orm-high .zcol, .row4.orm-severe .zcol, .row4.orm-exceed .zcol,
-.row4.ormm-low .zcol, .row4.ormm-mod .zcol, .row4.ormm-high .zcol, .row4.ormm-severe .zcol{
-  margin-right: -6px;          /* offsets the padding so the Zulu time stays “on the rail” */
-}
-
-   /* =========================
-   MOBILE: ALIGNMENT + INLINE-MINI TIGHTEN
-   ========================= */
-
-/* A) Establish one shared left edge for Label + ORM.
-      (Subtext can be slightly indented on purpose.) */
-:root{
-  --out-left: 0px;     /* tune 0–4px */
-  --orm-left: 0px;     /* relative to label start */
-  --sub-left: 4px;     /* subtext indent (okay to move right) */
-}
-
-/* Labels: set a deterministic left start */
-.row3 .sc-label,
-.row4 .sc-label{
-  margin-left: 0 !important;
-  padding-left: var(--out-left) !important;
-}
-
-/* ORM lines: force same left start as labels */
-.row3.timerow .mcol,
-.row3.dutyrow .lcol,
-.row4 .mcol{
-  padding-left: calc(var(--out-left) + var(--orm-left)) !important;
-  margin-left: 0 !important;
-}
-
-/* B) Subtext: intentionally a touch to the right (so label/ORM can be perfect) */
-.subtext{
-  padding-left: var(--sub-left) !important;
-  padding-right: 0 !important;
-}
-
-/* C) Inline-mini inputs were making that subtext line taller.
-      Bring the input closer to the label by shrinking its vertical footprint. */
-.inline-mini{
-  height: 18px;              /* was implicit; tighten */
-  line-height: 18px;
-  padding: 0 2px;            /* reduce vertical padding */
-  vertical-align: middle;
-  transform: translateY(-1px); /* tiny lift */
-}
-
-/* Reduce the label-to-subtext gap specifically on subtext blocks
-   (keeps a small gap above the input like you want) */
-.subtext{
-  margin-top: -3px !important;  /* pull subtext upward a touch */
-  margin-bottom: 3px !important;
-}
-
-/* Optional: make subtext lines a little tighter overall */
-.subtext-line{
-  line-height: 1.05;
-}
+  .row3 > *,
+  .row4 > *{
+    position: relative;
+    z-index: 1;
+  }
 
    
 /* ========================= END OF OUTPUT PANEL ========================= */
