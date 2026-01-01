@@ -1533,6 +1533,31 @@ html{
   margin-right: var(--time-nudge-right) !important;
 }
 
+/* =========================
+   MOBILE ORM GAP TIGHTEN
+   ========================= */
+
+/* 1) Reduce grid row gap ONLY where ORM exists */
+.row3.timerow,
+.row3.dutyrow,
+.row4{
+  row-gap: 0px !important;
+}
+
+/* 2) Control the label → ORM spacing explicitly */
+.row3.timerow .mcol,
+.row3.dutyrow .lcol,
+.row4 .mcol{
+  margin-top: 0px !important;     /* was too large */
+  line-height: 1.05;
+}
+
+/* 3) Add back a *tiny* intentional separation so it doesn't kiss */
+.row3.timerow .mcol,
+.row3.dutyrow .lcol,
+.row4 .mcol{
+  padding-top: 1px;               /* tune: 0–2px */
+}
 
    
 /* ========================= END OF OUTPUT PANEL ========================= */
