@@ -1257,14 +1257,21 @@ html{
 
   /* keep local day shift readable */
   .local-wrap .box{
-    padding-left: 12px;
-    padding-right: 18px;
+    padding-left: 16px;
+    padding-right: 16px;
     text-align: center;
      
     /* optical recenter: half the padding difference */
     text-indent: 3px; /* (18 - 12) / 2 = 3px */
   }
 
+   /* Day-shift badge overlays at far right */
+   .day-shift{
+    right: 6px;
+    bottom: 6px;
+    font-size: 9px;     /* phone-friendly */
+   }
+      
   /* Row 3: match */
   #aircraft{
     width: 84px;
