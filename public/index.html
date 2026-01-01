@@ -1170,14 +1170,14 @@ html{
    PHONE COMPRESS MODE
    Target: 390px baseline
    ========================= */
-@media (max-width: 430px){
+@media (max-width: 430px){          /* <-- Beginning of Media ========================= */
 
   :root{ 
-   --gutter: 12px; }
+   --gutter: 12px; 
    --row-gap: 8px;         /* pulls columns closer (was 14px) */
    --time-col-w: 76px;     /* slightly narrower time columns (tune 72–80) */
    --row-time-minw: 0px;   /* allow time cols to shrink if needed */
-
+  }
 /* ========================= BEGINNING OF TITLE ========================= */
    
   .headerbar{
@@ -1304,7 +1304,6 @@ html{
     font-size: 12px;
     min-width: 7.5ch;
   }
-}
 
 /* ========================= END OF INPUT PANEL ========================= */
 
@@ -1332,7 +1331,7 @@ html{
    
  /* Make the gap between label and times tighter on phone */
   .row3, .row4{
-    column-gap: 6px !important;
+    column-gap: 3px !important;
   }
   .row3.dutyrow{
     grid-template-columns: 1fr var(--time-col-w) !important;
@@ -1352,6 +1351,8 @@ html{
   .row3.timerow .mcol{
     display: none !important;
   }
+}          /* <-- Beginning of Media ========================= */
+   
 /* ========================= END OF OUTPUT PANEL ========================= */
 
    /* =========================
