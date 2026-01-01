@@ -1172,7 +1172,8 @@ html{
    ========================= */
 @media (max-width: 430px){          /* <-- Beginning { of Media ========================= */
 
-  :root{ 
+  :root{
+   --label-rail: 0px;   /* distance from output inner edge to label start */
    --gutter: 12px; 
    --row-gap: 8px;         /* pulls columns closer (was 14px) */
    --row-pad-x: 2px;   /* was 6px */
@@ -1362,7 +1363,7 @@ html{
     text-align: left;
     white-space: normal;
   }
-
+   
   /* ===== Times ===== */
   .row3 .lcol, .row3 .zcol,
   .row4 .lcol, .row4 .zcol{
@@ -1630,7 +1631,73 @@ html{
   margin-right: -3px !important; /* keep your “push to the right rail” */
 }
 
+/* =========================
+   MOBILE: LABEL RAIL ENFORCEMENT
+   ========================= */
 
+/* All labels, no exceptions */
+.row3 .sc-label,
+.row4 .sc-label{
+  margin: 0 !important;
+  padding: 0 !important;
+
+  /* The rail */
+  padding-left: var(--label-rail) !important;
+
+  /* Defensive resets */
+  text-indent: 0 !important;
+  justify-self: start;
+  text-align: left;
+}
+
+/* =========================
+   MOBILE: HIGHLIGHTS MUST NOT MOVE CONTENT
+   ========================= */
+
+.row3[class*="orm-"],
+.row4[class*="orm-"]{
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  position: relative;
+}
+
+/* Highlight box drawn behind content */
+.row3[class*="orm-"]::before,
+.row4[class*="orm-"]::before{
+  content:"";
+  position:absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -6px;
+  right: -6px;
+  border-radius: 4px;
+  z-index: 0;
+  pointer-events:none;
+}
+
+/* Ensure text stays above highlight */
+.row3 > *,
+.row4 > *{
+  position: relative;
+  z-index: 1;
+}
+
+ /* =========================
+   MOBILE: ZULU RAIL
+   ========================= */
+
+.row3 .zcol,
+.row4 .zcol{
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-self: end;
+  text-align: right;
+
+  /* final optical nudge */
+  margin-right: -3px !important; /* tune -2 to -4 */
+}
+  
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
