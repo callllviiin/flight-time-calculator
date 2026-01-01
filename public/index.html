@@ -1260,6 +1260,9 @@ html{
     padding-left: 12px;
     padding-right: 18px;
     text-align: center;
+     
+    /* optical recenter: half the padding difference */
+    text-indent: 3px; /* (18 - 12) / 2 = 3px */
   }
 
   /* Row 3: match */
@@ -2302,7 +2305,25 @@ const takeoffLocal = document.getElementById("takeoffLocal");
 const landingTime = document.getElementById("landingTime");
 const landingICAO = document.getElementById("landingICAO");
 const landingLocal = document.getElementById("landingLocal");
-  
+
+/* =========================
+   iOS Safari focus scroll guard
+   ========================= */
+function lockScrollOnFocus(el){
+  if(!el) return;
+
+  el.addEventListener("focus", () => {
+    const y = window.scrollY;
+    setTimeout(() => window.scrollTo(0, y), 0);
+    setTimeout(() => window.scrollTo(0, y), 50);
+  });
+}
+
+lockScrollOnFocus(takeoffICAO);
+lockScrollOnFocus(landingICAO);
+lockScrollOnFocus(homeICAO);
+
+   
 /* ----------------- main calc + render ----------------- */
 function calculate(){
   try{
