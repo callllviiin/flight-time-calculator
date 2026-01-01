@@ -364,7 +364,7 @@ input.box.invalid{
   color:#222;
 
   padding:0 26px 0 6px;
-  line-height:34px;
+  line-height:normal;
 
   font-size: var(--fz-input);
   font-family: var(--font-mono);
@@ -1157,6 +1157,32 @@ html{
    MOBILE PLACEHOLDER
    ========================= */
 
+/* ===== Debug viewport rails ===== */
+:root{
+  --rail: hotpink;
+  --rail-w: 2px;
+}
+
+/* Toggle by adding class="show-rails" on <body> */
+body.show-rails::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999999;
+
+  /* Rails at 360 / 390 / 393 / 402 / 412 / 430 / 440 */
+  background:
+    linear-gradient(var(--rail), var(--rail)) left top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 360px top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 390px top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 393px top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 402px top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 412px top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 430px top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail), var(--rail)) 440px top / var(--rail-w) 100% no-repeat;
+}
+
 
 
 /* ======================================================== END OF STYLE ======================================================= */
@@ -1165,7 +1191,12 @@ html{
 </head>
 
 <body>
-<div id="pageRoot">
+   
+<!-- Debug gardralis -->
+   <body class="show-rails">
+<!-- Debug gardralis -->
+      
+   <div id="pageRoot">
 
  <div class="app">
 
