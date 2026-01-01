@@ -1164,14 +1164,16 @@ html{
    MOBILE PLACEHOLDER
    ========================= */
    
-   /* ===== Debug: centered phone width rails ===== */
+/* ===== Debug rails (toggle with body.show-rails) ===== */
 :root{
-  --rail: hotpink;
-  --rail-w: 2px;
+  --rail-phone: hotpink;
+  --rail-744: #000;
+  --rail-w-phone: 2px;
+  --rail-w-744: 6px;     /* THICK black */
+  --rail-w-center: 2px;
 }
 
-   
-/* Toggle by adding class="show-rails" on <body> */
+/* centered vertical rails */
 body.show-rails::before{
   content:"";
   position: fixed;
@@ -1180,57 +1182,53 @@ body.show-rails::before{
   z-index: 999999;
 
   background:
-    /* ±372px (744px iPad mini portrait baseline) */
-linear-gradient(var(--rail), var(--rail))
-  calc(50% - 372px) top / var(--rail-w) 100% no-repeat,
-linear-gradient(var(--rail), var(--rail))
-  calc(50% + 372px) top / var(--rail-w) 100% no-repeat,
-     
-     /* center line */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 1px) top / var(--rail-w) 100% no-repeat,
+    /* 744px boundary (±372) THICK BLACK */
+    linear-gradient(var(--rail-744), var(--rail-744))
+      calc(50% - 372px) top / var(--rail-w-744) 100% no-repeat,
+    linear-gradient(var(--rail-744), var(--rail-744))
+      calc(50% + 372px) top / var(--rail-w-744) 100% no-repeat,
 
-    /* ±160px (320px phone) */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 160px) top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% + 160px) top / var(--rail-w) 100% no-repeat,
+    /* center line (optional) */
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      50% top / var(--rail-w-center) 100% no-repeat,
 
-    /* ±180px (360px phone) */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 180px) top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% + 180px) top / var(--rail-w) 100% no-repeat,
+    /* Phones: 360 / 390 / 430 (±180 / ±195 / ±215) */
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      calc(50% - 180px) top / var(--rail-w-phone) 100% no-repeat,
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      calc(50% + 180px) top / var(--rail-w-phone) 100% no-repeat,
 
-    /* ±195px (390px iPhone) */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 195px) top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% + 195px) top / var(--rail-w) 100% no-repeat,
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      calc(50% - 195px) top / var(--rail-w-phone) 100% no-repeat,
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      calc(50% + 195px) top / var(--rail-w-phone) 100% no-repeat,
 
-    /* ±201px (402px Pro) */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 201px) top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% + 201px) top / var(--rail-w) 100% no-repeat,
-
-    /* ±215px (430px big phones) */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 215px) top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% + 215px) top / var(--rail-w) 100% no-repeat,
-
-    /* ±220px (440px largest phones) */
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% - 220px) top / var(--rail-w) 100% no-repeat,
-    linear-gradient(var(--rail), var(--rail))
-      calc(50% + 220px) top / var(--rail-w) 100% no-repeat;
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      calc(50% - 215px) top / var(--rail-w-phone) 100% no-repeat,
+    linear-gradient(var(--rail-phone), var(--rail-phone))
+      calc(50% + 215px) top / var(--rail-w-phone) 100% no-repeat;
 }
 
-html{ outline: 2px solid lime; }
-body{ outline: 2px solid orange; }
-#pageRoot{ outline: 3px solid hotpink; }
-.app{ outline: 3px solid cyan; }
+   /* ===== Debug rail labels ===== */
+body.show-rails::after{
+  content:
+    "360      390      430                    744";
+  position: fixed;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000000;
+
+  font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.5px;
+  color: #000;
+
+  pointer-events: none;
+  white-space: pre;
+
+  /* Align text to rail positions */
+  padding-left: 180px; /* aligns 360 under its rail */
+}
 
 
 /* ======================================================== END OF STYLE ======================================================= */
