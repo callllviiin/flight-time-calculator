@@ -1587,6 +1587,30 @@ html{
   margin: 10px 0 !important;            /* was 14px */
 }
 
+/* =========================
+   MOBILE OUTPUT — SUBTEXT vs HIGHLIGHT FIX
+   Highlighted rows were overlapping pulled-up subtext
+   ========================= */
+
+/* Keep subtext above any highlight box if they ever overlap */
+.subtext{
+  position: relative;
+  z-index: 5;
+}
+
+/* After a highlighted row, don't pull subtext up as aggressively */
+.row3[class*="orm-"] + .subtext,
+.row4[class*="orm-"] + .subtext{
+  margin-top: -2px !important;   /* was -6px; tune -1 to 0 if needed */
+}
+
+/* Optional: reduce highlight's downward growth only (keeps top grow) */
+.row3[class*="orm-"]::before,
+.row4[class*="orm-"]::before{
+  bottom: 0px !important;        /* prevents highlight from extending into subtext */
+}
+
+
    
   /* NOTE:
      Apply your existing color/border palette to the ::before
