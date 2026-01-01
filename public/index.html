@@ -1446,6 +1446,22 @@ html{
     z-index: 1;
   }
 
+/* ---------- ORM highlight colors on ::before (mobile) ---------- */
+
+/* Strong (FDP / showtime ORM colors) */
+.row3.orm-low::before,  .row4.orm-low::before  { background:#d4edda; border:1px solid #7bbf8b; }
+.row3.orm-mod::before,  .row4.orm-mod::before  { background:#fff3cd; border:1px solid #d6b656; }
+.row3.orm-high::before, .row4.orm-high::before { background:#ffb74d; border:1px solid #c77a16; }
+.row3.orm-severe::before,.row4.orm-severe::before{ background:#f44336; border:1px solid #a10000; }
+.row3.orm-exceed::before,.row4.orm-exceed::before{ background:#c62828; border:1px solid #7f0000; }
+
+/* Muted (CDT/TDD/APU) */
+.row3.ormm-low::before,  .row4.ormm-low::before  { background:#eaf6ee; border:1px solid #c7e7d0; }
+.row3.ormm-mod::before,  .row4.ormm-mod::before  { background:#fff8e3; border:1px solid #f1e0b6; }
+.row3.ormm-high::before, .row4.ormm-high::before { background:#ffe2bf; border:1px solid #f3c08a; }
+.row3.ormm-severe::before,.row4.ormm-severe::before{ background:#ffd1d1; border:1px solid #f1a0a0; }
+
+   
   /* NOTE:
      Apply your existing color/border palette to the ::before
      per ORM class (orm-low / mod / high / etc.) elsewhere,
