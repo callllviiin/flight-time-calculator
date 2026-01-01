@@ -1455,6 +1455,85 @@ html{
     z-index: 1;
   }
 
+/* =========================
+   MOBILE OUTPUT — REGRESSION FIX PATCH
+   Paste AFTER the consolidated block
+   ========================= */
+
+:root{
+  /* 1) Spacing rhythm */
+  --row-gap-y: 6px;          /* keep row spacing */
+  --orm-gap-y: 0px;          /* ORM hugs label a bit more */
+  --sub-gap-up: 4px;         /* pulls subtext closer to label */
+  
+  /* 6) Nudge times right */
+  --time-nudge-right: -3px;  /* tune: -2px to -4px */
+}
+
+/* 1) Larger space above Crew Timing header (but not everywhere) */
+.sc-head.timing-head{
+  margin-top: 6px !important;     /* creates breathing room above the header */
+  margin-bottom: 8px !important;  /* separates header from first row */
+}
+
+/* 1) Subtext closer to its label (including the rows with inline-mini) */
+.subtext{
+  margin-top: calc(-1 * var(--sub-gap-up)) !important;  /* was too low */
+  margin-bottom: 3px !important;
+}
+
+/* 2 + 3) ORM start EXACTLY under label (kill any inherited padding/indent) */
+.row3.timerow .mcol,
+.row4 .mcol,
+.row3.dutyrow .lcol{
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  text-indent: 0 !important;
+  justify-self: start;
+}
+
+/* Make sure the ORM “inner span” isn't adding its own indent */
+.row4 .mcol .show-orm-inline,
+.row3.dutyrow .lcol .orm-note{
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 4) Circadian time inside Show Time ORM: shrink to inline-mini size */
+.row4 .showtime-circ,
+.row4 .showtime-circ .mono,
+.row4 .showtime-circ .tz-sfx,
+.row4 .showtime-circ .shift-sup{
+  font-size: 11px !important;     /* matches your --fz-mini / inline-mini vibe */
+  letter-spacing: 0px !important;
+  font-weight: 700 !important;
+}
+
+/* 5) +1/-1 in Crew Duty Limitations should NOT be extra-bold */
+.shift-sup{
+  font-weight: 700 !important;    /* normalize */
+}
+
+/* BUT: highlighted rows were forcing 900 in your desktop rules */
+.orm-low .shift-sup,
+.orm-mod .shift-sup,
+.orm-high .shift-sup,
+.orm-severe .shift-sup,
+.orm-exceed .shift-sup,
+.ormm-low .shift-sup,
+.ormm-mod .shift-sup,
+.ormm-high .shift-sup,
+.ormm-severe .shift-sup{
+  font-weight: 700 !important;    /* override the old “make it 900” rule */
+}
+
+/* 6) Push times further right without breaking the grid */
+.row3 .lcol, .row3 .zcol,
+.row4 .lcol, .row4 .zcol{
+  margin-right: var(--time-nudge-right) !important;
+}
+
+
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
