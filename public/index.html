@@ -1490,6 +1490,17 @@ html{
   line-height: 1.05;
 }
 
+/* Crew Timing: hard-right align Local + Zulu to the rail */
+.row3:not(.dutyrow) .lcol,
+.row3:not(.dutyrow) .zcol,
+.row4 .lcol,
+.row4 .zcol{
+  justify-self: end;
+  text-align: right;
+  padding-right: 0;
+  margin-right: -3px;   /* optical rail nudge */
+}
+
    
   /* NOTE:
      Apply your existing color/border palette to the ::before
