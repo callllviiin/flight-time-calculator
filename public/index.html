@@ -2314,21 +2314,26 @@ const landingICAO = document.getElementById("landingICAO");
 const landingLocal = document.getElementById("landingLocal");
 
 /* =========================
-   iOS Safari focus scroll guard
+   iOS Safari focus scroll guard (stronger)
    ========================= */
-function lockScrollOnFocus(el){
+function focusNoScroll(el){
   if(!el) return;
 
-  el.addEventListener("focus", () => {
-    const y = window.scrollY;
-    setTimeout(() => window.scrollTo(0, y), 0);
-    setTimeout(() => window.scrollTo(0, y), 50);
-  });
+  const handler = (e) => {
+    // Phone-only
+    if(window.matchMedia("(max-width: 430px)").matches){
+      e.preventDefault();                 // stop Safari’s default focus-scroll
+      el.focus({ preventScroll: true });  // focus without jumping
+    }
+  };
+
+  el.addEventListener("pointerdown", handler, { passive: false });
+  el.addEventListener("touchstart", handler, { passive: false });
 }
 
-lockScrollOnFocus(takeoffICAO);
-lockScrollOnFocus(landingICAO);
-lockScrollOnFocus(homeICAO);
+focusNoScroll(homeICAO);
+focusNoScroll(takeoffICAO);
+focusNoScroll(landingICAO);
 
    
 /* ----------------- main calc + render ----------------- */
