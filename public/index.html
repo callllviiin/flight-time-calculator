@@ -1166,11 +1166,17 @@ html{
    MOBILE PLACEHOLDER
    ========================= */
 
+/* NOTE:
+   Mobile uses a unified grid with duty-row exceptions
+   due to legacy ORM placement (.lcol vs .mcol).
+   Planned refactor (Path B): normalize ORM into .mcol
+   for all rows and remove duty-row overrides.
+*/
+   
 
 @media (max-width: 430px){          /* <-- Beginning { of Media ========================= */
 
   :root{
-   --label-rail: 0px;   /* distance from output inner edge to label start */
    --gutter: 12px; 
    --row-gap: 8px;         /* pulls columns closer (was 14px) */
    --row-pad-x: 2px;   /* was 6px */
@@ -1180,12 +1186,12 @@ html{
    --out-pad-x: 10px;
    --out-pad-y: 10px;
 
-   --row-gap-y: 6px;      /* space between rows */
+   --row-gap-y: 5px;      /* space between rows */
    --orm-gap-y: 1px;      /* label → ORM spacing */
 
    --label-fz: 16.5px;
    --time-fz: 16.5px;
-   --orm-fz: 12px;
+   --orm-fz: 11.5px;
    --sub-fz: 10px;
 
    --sub-indent: 4px;     /* subtext is intentionally indented */
@@ -1396,8 +1402,8 @@ html{
   .subtext{
     font-size: var(--sub-fz);
     padding-left: var(--sub-indent);
-    margin-top: -2px;
-    margin-bottom: 3px;
+    margin-top: -3px;
+    margin-bottom: 2px;
   }
 
   /* inline mini inputs inside subtext */
@@ -1445,16 +1451,8 @@ html{
      per ORM class (orm-low / mod / high / etc.) elsewhere,
      or add them here—either way, geometry will not shift.
   */
-} /* <-- Beginning { of Media ========================= */
-
-
-/*@media (max-width: 430px){
-  .row3, .row4{ outline: 1px solid red; }
-  .row3 > * , .row4 > * { outline: 1px solid blue; }
-  .row3 .sc-label, .row4 .sc-label{ background: rgba(255,255,0,0.15); }
-  .row3 .lcol, .row4 .lcol{ background: rgba(0,255,0,0.12); }
-  .row3 .zcol, .row4 .zcol{ background: rgba(0,0,255,0.10); }
-} */
+   
+} /* <-- End } of Media ========================= */
    
    /* =========================
    DEBUGGING SECTION
