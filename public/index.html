@@ -19,7 +19,6 @@ body{
   font-family: var(--font-ui);
   background:#e9edf3;
   margin:0;
-  padding:20px;
   color:#222;
 }
 
@@ -32,8 +31,8 @@ body{
 }
 
 #pageRoot{
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
   box-sizing: border-box;
 }
 
@@ -532,6 +531,8 @@ button:focus-visible{
    OUTPUT PANEL + ROW SYSTEM
    ========================= */
 :root{
+  --gutter: 20px; /* Overall gutter or boundary padding on ALL devices */
+   
   --row-label-w: 190px;
   --row-gap: 14px;
   --time-col-w: 92px;
