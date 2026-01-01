@@ -1559,6 +1559,78 @@ html{
   padding-top: 1px;               /* tune: 0–2px */
 }
 
+/* =========================
+   MOBILE: HIGHLIGHT ROWS ALIGNMENT (labels + zulu end)
+   Goal: text stays on same rails; box grows outward
+   ========================= */
+
+/* 0) Define how much bigger the highlight box should be */
+:root{
+  --hl-grow-x: 6px;  /* left/right expansion of highlight box */
+  --hl-grow-y: 1px;  /* top/bottom expansion */
+}
+
+/* 1) For highlighted rows: remove padding/border from the ROW so content isn't squished */
+.row3.orm-low, .row3.orm-mod, .row3.orm-high, .row3.orm-severe, .row3.orm-exceed,
+.row3.ormm-low, .row3.ormm-mod, .row3.ormm-high, .row3.ormm-severe,
+.row4.orm-low, .row4.orm-mod, .row4.orm-high, .row4.orm-severe, .row4.orm-exceed,
+.row4.ormm-low, .row4.ormm-mod, .row4.ormm-high, .row4.ormm-severe{
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important; /* background will be drawn by ::before */
+  position: relative;                 /* anchor ::before */
+}
+
+/* 2) Draw the highlight box behind the row, expanded outward */
+.row3.orm-low::before,  .row4.orm-low::before,
+.row3.orm-mod::before,  .row4.orm-mod::before,
+.row3.orm-high::before, .row4.orm-high::before,
+.row3.orm-severe::before,.row4.orm-severe::before,
+.row3.orm-exceed::before,.row4.orm-exceed::before,
+.row3.ormm-low::before, .row4.ormm-low::before,
+.row3.ormm-mod::before, .row4.ormm-mod::before,
+.row3.ormm-high::before,.row4.ormm-high::before,
+.row3.ormm-severe::before,.row4.ormm-severe::before{
+  content:"";
+  position:absolute;
+  top:    calc(-1 * var(--hl-grow-y));
+  bottom: calc(-1 * var(--hl-grow-y));
+  left:   calc(-1 * var(--hl-grow-x));
+  right:  calc(-1 * var(--hl-grow-x));
+  border-radius: 4px;
+  z-index: 0;
+  pointer-events:none;
+}
+
+/* 3) Keep ALL row content above the highlight */
+.row3 > *, .row4 > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* 4) Reapply the exact highlight colors to the ::before box */
+.row3.orm-low::before,  .row4.orm-low::before  { background:#d4edda; border:1px solid #7bbf8b; }
+.row3.orm-mod::before,  .row4.orm-mod::before  { background:#fff3cd; border:1px solid #d6b656; }
+.row3.orm-high::before, .row4.orm-high::before { background:#ffb74d; border:1px solid #c77a16; }
+.row3.orm-severe::before,.row4.orm-severe::before{ background:#f44336; border:1px solid #a10000; color:#000; }
+.row3.orm-exceed::before,.row4.orm-exceed::before{ background:#c62828; border:1px solid #7f0000; }
+
+.row3.ormm-low::before,  .row4.ormm-low::before  { background:#eaf6ee; border:1px solid #c7e7d0; }
+.row3.ormm-mod::before,  .row4.ormm-mod::before  { background:#fff8e3; border:1px solid #f1e0b6; }
+.row3.ormm-high::before, .row4.ormm-high::before { background:#ffe2bf; border:1px solid #f3c08a; }
+.row3.ormm-severe::before,.row4.ormm-severe::before{ background:#ffd1d1; border:1px solid #f1a0a0; }
+
+/* 5) Lock label + zulu rails so highlighted rows match non-highlighted rows */
+.row3 .sc-label, .row4 .sc-label{
+  padding-left: 0 !important;   /* same start for every label */
+  margin-left: 0 !important;
+}
+
+.row3 .zcol, .row4 .zcol{
+  margin-right: -3px !important; /* keep your “push to the right rail” */
+}
+
+
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
