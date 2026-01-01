@@ -1429,6 +1429,59 @@ html{
     display: inline;
     white-space: normal !important;
   }
+
+/* =========================
+   MOBILE ORM POLISH PATCH
+   ========================= */
+
+/* 1) Make ORM line start exactly where the label starts (remove inherited padding) */
+.row4 .mcol,
+.row3.timerow .mcol,
+.row3.dutyrow .lcol{
+  padding: 0 !important;
+  margin: 0 !important;
+  justify-self: stretch;
+}
+
+/* 3) Normalize ORM weight so Show Time isn't heavier than FDP */
+.row4 .mcol,
+.row3.timerow .mcol,
+.row3.dutyrow .lcol{
+  font-weight: 500 !important; /* match .orm-note default vibe */
+}
+
+/* 4) Force FDP ORM to be left-aligned under the label (no “creeping right”) */
+.row3.dutyrow .lcol,
+.row3.dutyrow .lcol .orm-note{
+  text-align: left !important;
+  justify-content: flex-start !important;
+  display: block;
+  white-space: normal !important;
+}
+
+/* 1) Also ensure Show Time ORM text aligns left */
+.row4 .mcol,
+.row4 .mcol .show-orm-inline{
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
+/* 2) Shrink ONLY the circadian time inside the Show Time ORM line
+      (so your main Local/Zulu times stay 16.5px) */
+.row4 .showtime-circ,
+.row4 .showtime-circ .mono,
+.row4 .showtime-circ .tz-sfx,
+.row4 .showtime-circ .shift-sup{
+  font-size: var(--fz-mini) !important; /* 11px */
+  letter-spacing: 0.2px;
+}
+
+/* Optional: tighten the Show Time ORM line spacing a hair */
+.row4 .mcol{
+  line-height: 1.08;
+}
+
+   
 /* ========================= END OF OUTPUT PANEL ========================= */
 
 }          /* <-- End } of Media ========================= */
