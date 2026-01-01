@@ -1163,6 +1163,91 @@ html{
 /* =========================
    MOBILE PLACEHOLDER
    ========================= */
+
+/* =========================
+   PHONE COMPRESS MODE (no stacking)
+   Target: 390px baseline
+   ========================= */
+@media (max-width: 430px){
+
+  /* tighten overall grid spacing */
+  .form-grid{
+    column-gap: 6px;
+    row-gap: 16px;
+
+    /* shrink the label column and all fixed pieces */
+    grid-template-columns:
+      minmax(120px, 150px) /* label */
+      6px                  /* label gap */
+      92px                 /* Zulu */
+      14px                 /* at */
+      92px                 /* ICAO */
+      10px                 /* gap */
+      92px;                /* Local */
+  }
+
+  /* make the actual inputs match the compressed columns */
+  .box,
+  .floating-wrap,
+  .icao-wrap,
+  .home-wrap{
+    width: 92px;
+  }
+
+  /* local box still needs space for +1/-1 */
+  .local-wrap .box{
+    padding-left: 14px;
+    padding-right: 18px;
+  }
+
+  /* tighten “at” column */
+  .at{
+    font-size: 14px;
+  }
+
+  /* slightly reduce label font only in the input grid */
+  .form-grid .form-label{
+    font-size: 16px;
+  }
+
+  /* slightly reduce input font so HHMM still breathes */
+  .form-grid .box{
+    font-size: 16px;
+    letter-spacing: 1.8px;
+  }
+
+  /* keep hints from blowing width */
+  .icao-hint{
+    font-size: 9px;
+  }
+
+  /* Row 3: keep things standardized */
+  #aircraft{
+    width: 92px;
+    height: 32px;
+    font-size: 16px;
+    padding: 0 22px 0 6px;
+    background-position:
+      calc(100% - 14px) 55%,
+      calc(100% - 10px) 55%;
+  }
+
+  .form-grid .form-row .crew-check{
+    width: 92px;
+    height: 32px;
+  }
+
+  .crew-check-text{
+    font-size: 13px;
+    min-width: 8ch;
+  }
+}
+
+
+
+   /* =========================
+   DEBUGGING SECTION
+   ========================= */
    
 /* ===== Debug rails (toggle with body.show-rails) ===== */
 :root{
