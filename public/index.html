@@ -1542,6 +1542,30 @@ html{
   gap: 8px !important;                  /* was 10px */
 }
 
+/* =========================
+   MOBILE LABEL ALIGNMENT POLISH
+   ========================= */
+
+/* 1) Collapse vertical space between label row and content
+      (especially noticeable on non-ORM rows) */
+.row3, .row4{
+  row-gap: 0px !important;      /* was 1–2px */
+}
+
+/* For rows that DO have ORM, keep just a whisper of separation */
+.row3.timerow .mcol,
+.row3.dutyrow .lcol,
+.row4 .mcol{
+  margin-top: 1px;              /* replaces grid row-gap, but only where needed */
+}
+
+/* 2) Scoot labels left WITHOUT moving subtext */
+.row3 .sc-label,
+.row4 .sc-label{
+  padding-left: 0 !important;   /* safety */
+  margin-left: -2px;            /* optical alignment with .subtext */
+}
+
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
