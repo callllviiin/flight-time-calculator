@@ -19,21 +19,26 @@ body{
   font-family: var(--font-ui);
   background:#e9edf3;
   margin:0;
+  padding:0;          /* baseline */
   color:#222;
 }
 
 .app{
   width: 100%;
-  max-width: 744px;     /* iPad mini portrait baseline */
-  margin: 0 auto;
+  max-width: none;     /* full width by default */
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+
+  /* debug only — safe to remove later */
   outline: 3px solid cyan;
 }
-
+   
 #pageRoot{
-  padding-left: var(--gutter);
-  padding-right: var(--gutter);
+  padding: 0;          /* zero-edge baseline */
   box-sizing: border-box;
+
+  /* debug only */
   outline: 3px solid hotpink;
 }
 
@@ -1158,15 +1163,15 @@ html{
 /* =========================
    MOBILE PLACEHOLDER
    ========================= */
-
-@media (max-width: 744px){
+   
+@media (min-width: 960px){
   .app{
-    max-width: none;
-    margin: 0; /* no centering margin because we're full width */
+    max-width: 744px;
+    margin: 0 auto;
   }
 }
    
-/* ===== Debug: centered phone width rails ===== */
+   /* ===== Debug: centered phone width rails ===== */
 :root{
   --rail: hotpink;
   --rail-w: 2px;
@@ -1233,35 +1238,6 @@ html{ outline: 2px solid lime; }
 body{ outline: 2px solid orange; }
 #pageRoot{ outline: 3px solid hotpink; }
 .app{ outline: 3px solid cyan; }
-
-   /* ===== ZERO-EDGE BASELINE (temporary) ===== */
-html, body{
-  margin: 0;
-  padding: 0;
-}
-
-#pageRoot{
-  padding: 0;
-  margin: 0;
-}
-
-.app{
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* ===== DESKTOP CONTAINER (temporary) ===== */
-:root{ --app-max: 744px; }
-
-@media (min-width: 900px){
-  .app{
-    max-width: var(--app-max);
-    margin: 0 auto;
-  }
-}
 
 
 /* ======================================================== END OF STYLE ======================================================= */
