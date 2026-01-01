@@ -147,7 +147,7 @@ input{
 
   /* Label is flexible, inputs stay “about 104px”, gaps stay small */
   grid-template-columns:
-    minmax(170px, 1fr)   /* label: prefers wide, can shrink, can grow */
+    minmax(170px, 220px) /* label: prefers wide, can shrink, can grow */
     104px                /* Zulu */
     20px                 /* at */
     104px                /* ICAO */
@@ -157,7 +157,7 @@ input{
   column-gap:8px;
   row-gap:20px;
   align-items:center;
-  justify-content:center;
+  justify-content:start;
 }
 
 .form-row{
