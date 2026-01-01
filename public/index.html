@@ -1368,6 +1368,9 @@ html{
     grid-template-areas:
       "label lcol zcol"
       "orm   orm  orm";
+
+     padding-top: 1px;
+     padding-bottom: 1px;
   }
 
   /* ---------- Label ---------- */
@@ -1451,8 +1454,8 @@ html{
   .row4[class*="orm-"]::before{
     content:"";
     position:absolute;
-    top: calc(-1 * var(--hl-grow-y));
-    bottom: calc(-1 * var(--hl-grow-y));
+    top: -1px;
+    bottom: -1px;
     left: calc(-1 * var(--hl-grow-x));
     right: calc(-1 * var(--hl-grow-x));
     border-radius: 4px;
