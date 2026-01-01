@@ -1351,11 +1351,16 @@ html{
    
  /* Make the gap between label and times tighter on phone */
   .row3, .row4{
-    font-size: 16px;
     column-gap: 3px !important;
     width: 100%;
     justify-content: stretch;
   }
+
+   /* Adjust here for just the time output fotn size */
+ .row3 .mono, .row4 .mono{
+   font-size: 16px;
+ }
+   
   .row3.dutyrow{
     grid-template-columns: minmax(0, 1fr) var(--time-col-w) !important;
   }
