@@ -1414,11 +1414,22 @@ html{
     transform: translateY(-1px);
   }
 
-  /* ---------- Crew Duty Limits (hide Local only) ---------- */
-  .row3.dutyrow .lcol{
-    display: none;                 /* Local hidden */
-  }
-  /* Zulu remains in column 3; grid stays identical */
+/* ---------- Duty rows: use .lcol as the ORM line (FDP message) ---------- */
+.row3.dutyrow .lcol{
+  grid-area: orm;               /* move it to the stacked ORM row */
+  display: block;               /* ensure it's visible */
+  justify-self: start;
+  text-align: left;
+
+  margin-top: var(--orm-gap-y);
+  font-size: var(--orm-fz);
+  font-weight: 500;
+  line-height: 1.05;
+  color: rgba(0,0,0,0.82);
+
+  white-space: normal;          /* allow wrap if needed */
+  padding: 0;
+}
 
   /* ---------- Highlights (visual only; grows outward) ---------- */
   .row3[class*="orm-"],
