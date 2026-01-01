@@ -1607,6 +1607,61 @@ html{
   margin-right: -6px;          /* offsets the padding so the Zulu time stays “on the rail” */
 }
 
+   /* =========================
+   MOBILE: ALIGNMENT + INLINE-MINI TIGHTEN
+   ========================= */
+
+/* A) Establish one shared left edge for Label + ORM.
+      (Subtext can be slightly indented on purpose.) */
+:root{
+  --out-left: 0px;     /* tune 0–4px */
+  --orm-left: 0px;     /* relative to label start */
+  --sub-left: 4px;     /* subtext indent (okay to move right) */
+}
+
+/* Labels: set a deterministic left start */
+.row3 .sc-label,
+.row4 .sc-label{
+  margin-left: 0 !important;
+  padding-left: var(--out-left) !important;
+}
+
+/* ORM lines: force same left start as labels */
+.row3.timerow .mcol,
+.row3.dutyrow .lcol,
+.row4 .mcol{
+  padding-left: calc(var(--out-left) + var(--orm-left)) !important;
+  margin-left: 0 !important;
+}
+
+/* B) Subtext: intentionally a touch to the right (so label/ORM can be perfect) */
+.subtext{
+  padding-left: var(--sub-left) !important;
+  padding-right: 0 !important;
+}
+
+/* C) Inline-mini inputs were making that subtext line taller.
+      Bring the input closer to the label by shrinking its vertical footprint. */
+.inline-mini{
+  height: 18px;              /* was implicit; tighten */
+  line-height: 18px;
+  padding: 0 2px;            /* reduce vertical padding */
+  vertical-align: middle;
+  transform: translateY(-1px); /* tiny lift */
+}
+
+/* Reduce the label-to-subtext gap specifically on subtext blocks
+   (keeps a small gap above the input like you want) */
+.subtext{
+  margin-top: -3px !important;  /* pull subtext upward a touch */
+  margin-bottom: 3px !important;
+}
+
+/* Optional: make subtext lines a little tighter overall */
+.subtext-line{
+  line-height: 1.05;
+}
+
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
