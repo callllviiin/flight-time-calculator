@@ -25,8 +25,8 @@ body{
 
 .app{
   width: 100%;
-  max-width: none;     /* full width by default */
-  margin: 0;
+  max-width: 744px;     /* full width by default on ANY device */
+  margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
 
@@ -1163,13 +1163,6 @@ html{
 /* =========================
    MOBILE PLACEHOLDER
    ========================= */
-   
-@media (min-width: 744px){
-  .app{
-    max-width: 744px;
-    margin: 0 auto;
-  }
-}
    
    /* ===== Debug: centered phone width rails ===== */
 :root{
