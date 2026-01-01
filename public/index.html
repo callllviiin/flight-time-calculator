@@ -1167,251 +1167,88 @@ html{
    ========================= */
 
 /* =========================
-   PHONE COMPRESS MODE
-   Target: 390px baseline
-   ========================= */
-@media (max-width: 430px){          /* <-- Beginning { of Media ========================= */
-
-  :root{
-   --label-rail: 0px;   /* distance from output inner edge to label start */
-   --gutter: 12px; 
-   --row-gap: 8px;         /* pulls columns closer (was 14px) */
-   --row-pad-x: 2px;   /* was 6px */
-   --row-pad-y: 2px;   /* was 4px */
-   --time-col-w: 72px;     /* slightly narrower time columns (tune 72–80) */
-   --row-time-minw: 0px;   /* allow time cols to shrink if needed */
-  }
-/* ========================= BEGINNING OF TITLE SECTION ========================= */
-   
-  .headerbar{
-    grid-template-columns: 56px 1fr 56px; /* smaller side rails */
-    align-items: center;   /* instead of end */
-  }
-   
-  .headerbar .header-reset{
-    width: 56px;
-  }
-   
-  .headerbar h1{
-    font-size: 24px;        /* or whatever fits */
-    white-space: normal;
-    overflow: hidden;
-    line-height: 1.0;   /* or even 0.95 */
-  }
-
-/* ========================= END OF TITLE SECTION ========================= */
-
-/* ========================= GAP BETWEEN TITLE AND INPUT PANEL ========================= */
-.headerbar + .input-panel{
-    margin-top: 14px;
-  }
-/* ========================= GAP BETWEEN TITLE AND INPUT PANEL ========================= */
-   
-/* ========================= BEGINNING OF INPUT PANEL ========================= */
-   
-  .input-panel{ padding: 16px 8px 14px; } /* was 21px 14px 17px for Desktop/iPad view */
-   
-  .form-grid{
-    column-gap: 2px;
-    row-gap: 14px;
-
-    grid-template-columns:
-      minmax(24px, 72px) /* label (smaller now) */
-      0px                 /* label gap */
-      84px                /* Zulu */
-      9px                /* at */
-      84px                /* ICAO */
-      4px                 /* gap */
-      84px;               /* Local */
-  }
-
-  /* Labels: shrink hard */
-  .form-grid .form-label{
-    font-size: 9px;
-    letter-spacing: 0.1px;
-    line-height: 1.02;
-  }
-
-  .label{
-    text-align: center;    /* pulls text to the right edge of its cell */
-    padding: 0;
-    margin: 0;
- }
-
-  .floating-label{
-    font-size: 6.5px;
-    padding: 0 1px;
-    top: -6px;
-  }
-   
-  /* Inputs: slightly smaller */
-  .box,
-  .floating-wrap,
-  .icao-wrap,
-  .home-wrap{
-    width: 84px;
-  }
-
-  .form-grid .box{
-    font-size: 16px;
-    letter-spacing: 1.3px;
-    padding: 5px 6px;
-  }
-
-  /* 'at' tighter */
-  .at{
-    font-size: 9px;
-    letter-spacing: 0;
-  }
-
-  /* Hints tuck tighter */
-  .icao-hint{
-    font-size: 8px;
-    margin-top: 1px;
-  }
-
-  /* keep local day shift readable */
-  .local-wrap .box{
-    padding-left: 16px;
-    padding-right: 16px;
-    text-align: center;
-     
-    /* optical recenter: half the padding difference */
-    text-indent: 3px; /* (18 - 12) / 2 = 3px */
-  }
-
-   /* Day-shift badge overlays at far right */
-   .day-shift{
-    right: 6px;
-    bottom: 6px;
-    font-size: 9px;     /* phone-friendly */
-   }
-      
-  /* Row 3: match */
-  #aircraft{
-    width: 84px;
-    height: 32px;
-    font-size: 16px;
-    padding: 0 16px 0 6px;
-    background-position:
-      calc(100% - 9px) 55%,
-      calc(100% - 5px) 55%;
-  }
-
-  .form-grid .form-row .crew-check{
-    width: 84px;
-    height: 32px;
-  }
-
-  .crew-check-text{
-    font-size: 12px;
-    min-width: 7.5ch;
-  }
-
-/* ========================= END OF INPUT PANEL ========================= */
-
-/* ========================= BEGINNING OF OUTPUT PANEL ========================= */
-
-/* =========================
-   MOBILE OUTPUT PANEL — CONSOLIDATED
+   MOBILE OUTPUT PANEL (UNIFIED)
    ========================= */
 
-  /* ===== Core tokens (ONE source of truth) ===== */
+@media (max-width: 430px){
+
+  /* ---------- Tokens (single source of truth) ---------- */
   :root{
     --out-pad-x: 10px;
     --out-pad-y: 10px;
 
-    --row-gap-y: 6px;
-    --orm-gap-y: 1px;
+    --row-gap-y: 6px;      /* space between rows */
+    --orm-gap-y: 1px;      /* label → ORM spacing */
 
     --label-fz: 16.5px;
     --time-fz: 16.5px;
     --orm-fz: 12px;
     --sub-fz: 10px;
 
-    --time-col-w: 72px;
+    --time-col-w: 72px;    /* Local / Zulu width */
 
-    --align-left: 0px;   /* label + ORM start */
-    --sub-indent: 4px;  /* intentional subtext indent */
+    --sub-indent: 4px;     /* subtext is intentionally indented */
 
-    --hl-grow-x: 6px;   /* highlight expansion */
+    /* highlight expansion (visual only; never affects geometry) */
+    --hl-grow-x: 6px;
     --hl-grow-y: 1px;
   }
 
-  /* ===== Output container ===== */
+  /* ---------- Output container ---------- */
   #output.output{
     padding: var(--out-pad-y) var(--out-pad-x);
   }
 
-  /* ===== Base rows ===== */
-  .row3, .row4{
+  /* ---------- Base row: ONE grid for all rows ---------- */
+  .row3,
+  .row4{
     position: relative;
     display: grid;
     width: 100%;
     column-gap: 3px;
     row-gap: var(--row-gap-y);
     margin-top: var(--row-gap-y);
-  }
 
-  /* ===== Labels ===== */
-  .row3 .sc-label,
-  .row4 .sc-label{
-    font-size: var(--label-fz);
-    line-height: 1.05;
-    letter-spacing: 0.1px;
-    padding-left: var(--align-left);
-    text-align: left;
-    white-space: normal;
-  }
-   
-  /* ===== Times ===== */
-  .row3 .lcol, .row3 .zcol,
-  .row4 .lcol, .row4 .zcol{
-    justify-self: end;
-    text-align: right;
-  }
+    /* Unified grid: Label | Local | Zulu */
+    grid-template-columns:
+      minmax(0, 1fr)
+      var(--time-col-w)
+      var(--time-col-w);
 
-  .row3 .mono,
-  .row4 .mono{
-    font-size: var(--time-fz);
-  }
-
-  /* ===== Layout: timing + show time ===== */
-  .row3.timerow,
-  .row4{
-    grid-template-columns: minmax(0,1fr) var(--time-col-w) var(--time-col-w);
     grid-template-areas:
       "label lcol zcol"
       "orm   orm  orm";
   }
 
-  .row3.timerow .sc-label,
-  .row4 .sc-label{ grid-area: label; }
-
-  .row3.timerow .lcol,
-  .row4 .lcol{ grid-area: lcol; }
-
-  .row3.timerow .zcol,
-  .row4 .zcol{ grid-area: zcol; }
-
-  /* ===== Layout: duty rows ===== */
-  .row3.dutyrow{
-    grid-template-columns: minmax(0,1fr) var(--time-col-w);
-    grid-template-areas:
-      "label zcol"
-      "orm   orm";
+  /* ---------- Label ---------- */
+  .sc-label{
+    grid-area: label;
+    font-size: var(--label-fz);
+    line-height: 1.05;
+    letter-spacing: 0.1px;
+    text-align: left;
+    white-space: normal;
   }
 
-  .row3.dutyrow .sc-label{ grid-area: label; }
-  .row3.dutyrow .zcol{ grid-area: zcol; }
+  /* ---------- Times ---------- */
+  .lcol{ grid-area: lcol; }
+  .zcol{ grid-area: zcol; }
 
-  /* ===== ORM line (single definition) ===== */
-  .row3 .mcol,
-  .row3.dutyrow .lcol,
-  .row4 .mcol{
+  .lcol,
+  .zcol{
+    justify-self: end;
+    text-align: right;
+  }
+
+  .mono{
+    font-size: var(--time-fz);
+  }
+
+  /* ---------- ORM (stacked; no column) ---------- */
+  .mcol,
+  .row3.dutyrow .lcol.ormline{ /* safety alias if duty ORM lives in lcol */
     grid-area: orm;
     margin-top: var(--orm-gap-y);
-    padding-left: var(--align-left);
     font-size: var(--orm-fz);
     font-weight: 500;
     line-height: 1.05;
@@ -1420,7 +1257,7 @@ html{
     white-space: normal;
   }
 
-  /* ===== Subtext ===== */
+  /* ---------- Subtext ---------- */
   .subtext{
     font-size: var(--sub-fz);
     padding-left: var(--sub-indent);
@@ -1428,7 +1265,7 @@ html{
     margin-bottom: 3px;
   }
 
-  /* inline mini inputs */
+  /* inline mini inputs inside subtext */
   .inline-mini{
     height: 18px;
     line-height: 18px;
@@ -1436,8 +1273,20 @@ html{
     transform: translateY(-1px);
   }
 
-  /* ===== Highlight bands grow OUTWARD ===== */
- /* .row3[class*="orm-"]::before,
+  /* ---------- Crew Duty Limits (hide Local only) ---------- */
+  .row3.dutyrow .lcol{
+    display: none;                 /* Local hidden */
+  }
+  /* Zulu remains in column 3; grid stays identical */
+
+  /* ---------- Highlights (visual only; grows outward) ---------- */
+  .row3[class*="orm-"],
+  .row4[class*="orm-"]{
+    background: transparent;
+    border: 0;
+  }
+
+  .row3[class*="orm-"]::before,
   .row4[class*="orm-"]::before{
     content:"";
     position:absolute;
@@ -1448,7 +1297,7 @@ html{
     border-radius: 4px;
     z-index: 0;
     pointer-events: none;
-  } */
+  }
 
   .row3 > *,
   .row4 > *{
@@ -1456,16 +1305,12 @@ html{
     z-index: 1;
   }
 
-/* ===== DIAGNOSTIC: TEMPORARILY NEUTRALIZE ORM ROW STYLING ===== */
-.row3[class*="orm-"],
-.row4[class*="orm-"]{
-  background: none !important;
-  border: none !important;
+  /* NOTE:
+     Apply your existing color/border palette to the ::before
+     per ORM class (orm-low / mod / high / etc.) elsewhere,
+     or add them here—either way, geometry will not shift.
+  */
 }
-
-
-
-}          /* <-- End } of Media ========================= */
 
 
 /*@media (max-width: 430px){
