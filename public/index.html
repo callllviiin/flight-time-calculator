@@ -1481,6 +1481,15 @@ html{
 .row3.ormm-high::before, .row4.ormm-high::before { background:#ffe2bf; border:1px solid #f3c08a; }
 .row3.ormm-severe::before,.row4.ormm-severe::before{ background:#ffd1d1; border:1px solid #f1a0a0; }
 
+
+/* Tighten label → ORM spacing (mobile only) */
+.mcol,
+.row3.dutyrow .lcol{
+  margin-top: 0;        /* was var(--orm-gap-y) */
+  padding-top: 0;
+  line-height: 1.05;
+}
+
    
   /* NOTE:
      Apply your existing color/border palette to the ::before
