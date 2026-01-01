@@ -1501,6 +1501,44 @@ html{
   margin-right: -3px;   /* optical rail nudge */
 }
 
+/* ===== MOBILE OVERRIDE: beat desktop specificity ===== */
+
+/* Force unified grid onto the specific row variants */
+.row3.timerow,
+.row4{
+  grid-template-columns: minmax(0,1fr) var(--time-col-w) var(--time-col-w) !important;
+  grid-template-areas:
+    "label lcol zcol"
+    "orm   orm  orm" !important;
+}
+
+/* Duty rows still use same 3-col grid, but Local is hidden */
+.row3.dutyrow{
+  grid-template-columns: minmax(0,1fr) var(--time-col-w) var(--time-col-w) !important;
+  grid-template-areas:
+    "label .    zcol"
+    "orm   orm  orm" !important;
+}
+
+/* Ensure Local/Zulu are truly right-railed */
+.row3.timerow .lcol,
+.row3.timerow .zcol,
+.row4 .lcol,
+.row4 .zcol,
+.row3.dutyrow .zcol{
+  justify-self: end !important;
+  text-align: right !important;
+  margin-right: -3px !important; /* tune -2 to -5 */
+}
+
+/* Make sure ORM is left-aligned (prevents Show Time ORM drifting) */
+.row4 .mcol,
+.row3.timerow .mcol{
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding: 0 !important;
+}
+
    
   /* NOTE:
      Apply your existing color/border palette to the ::before
