@@ -1637,98 +1637,6 @@ html{
    /* =========================
    DEBUGGING SECTION
    ========================= */
-   
-/* ===== Debug rails (toggle with body.show-rails) ===== */
-:root{
-  --rail-phone: hotpink;
-  --rail-744: #000;
-  --rail-w-phone: 2px;
-  --rail-w-744: 6px;     /* THICK black */
-  --rail-w-center: 2px;
-}
-
-/* centered vertical rails */
-body.show-rails::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 999999;
-
-  background:
-    /* 744px boundary (±372) THICK BLACK */
-    linear-gradient(var(--rail-744), var(--rail-744))
-      calc(50% - 372px) top / var(--rail-w-744) 100% no-repeat,
-    linear-gradient(var(--rail-744), var(--rail-744))
-      calc(50% + 372px) top / var(--rail-w-744) 100% no-repeat,
-
-    /* center line (optional) */
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      50% top / var(--rail-w-center) 100% no-repeat,
-
-    /* Phones: 360 / 390 / 430 (±180 / ±195 / ±215) */
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      calc(50% - 180px) top / var(--rail-w-phone) 100% no-repeat,
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      calc(50% + 180px) top / var(--rail-w-phone) 100% no-repeat,
-
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      calc(50% - 195px) top / var(--rail-w-phone) 100% no-repeat,
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      calc(50% + 195px) top / var(--rail-w-phone) 100% no-repeat,
-
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      calc(50% - 215px) top / var(--rail-w-phone) 100% no-repeat,
-    linear-gradient(var(--rail-phone), var(--rail-phone))
-      calc(50% + 215px) top / var(--rail-w-phone) 100% no-repeat;
-}
-
-/* ===== Debug rail labels (pinned to rails) ===== */
-body.show-rails::after,
-body.show-rails #pageRoot::before,
-body.show-rails #pageRoot::after,
-body.show-rails .app::before{
-  position: fixed;
-  top: 6px;
-  transform: translateX(-50%);
-  z-index: 1000000;
-  pointer-events: none;
-  white-space: nowrap;
-
-  font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  letter-spacing: 0.5px;
-  color: #000;
-  background: rgba(255,255,255,0.85);
-  padding: 1px 4px;
-  border-radius: 6px;
-}
-
-/* 360 rail (±180) */
-body.show-rails #pageRoot::before{
-  content: "360";
-  left: calc(50% - 180px);
-}
-
-/* 390 rail (±195) */
-body.show-rails #pageRoot::after{
-  content: "390";
-  left: calc(50% - 195px);
-}
-
-/* 430 rail (±215) */
-body.show-rails .app::before{
-  content: "430";
-  left: calc(50% - 215px);
-}
-
-/* 744 rail (±372) THICK BLACK boundary */
-body.show-rails::after{
-  content: "744";
-  left: calc(50% - 372px);
-  font-weight: 900;
-}
-
-
 
 /* ======================================================== END OF STYLE ======================================================= */
 </style>
@@ -1736,11 +1644,7 @@ body.show-rails::after{
 </head>
 
 <body>
-   
-<!-- Debug gardralis -->
-   <body class="show-rails">
 
-      
    <div id="pageRoot">
 
  <div class="app">
