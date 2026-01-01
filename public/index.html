@@ -1566,6 +1566,47 @@ html{
   margin-left: -2px;            /* optical alignment with .subtext */
 }
 
+/* =========================
+   MOBILE: FINAL MICRO-POLISH
+   ========================= */
+
+/* 1) Make +1/-1 weight consistent everywhere (duty highlights were forcing it bolder) */
+.shift-sup{
+  font-weight: 700 !important;
+}
+
+/* 2) Scoot times a hair more to the right (without changing your grid) */
+.row3 .lcol, .row3 .zcol,
+.row4 .lcol, .row4 .zcol{
+  margin-right: -2px;          /* tune: -1px to -3px */
+}
+
+/* 3) Highlight bands need more horizontal “breathing room”
+      Add padding to ORM-highlighted rows, then cancel the visual indent. */
+
+/* give the highlighted row a little left/right padding so background doesn’t kiss text */
+.row3.orm-low, .row3.orm-mod, .row3.orm-high, .row3.orm-severe, .row3.orm-exceed,
+.row3.ormm-low, .row3.ormm-mod, .row3.ormm-high, .row3.ormm-severe,
+.row4.orm-low, .row4.orm-mod, .row4.orm-high, .row4.orm-severe, .row4.orm-exceed,
+.row4.ormm-low, .row4.ormm-mod, .row4.ormm-high, .row4.ormm-severe{
+  padding: 1px 6px !important; /* vertical already felt good; add horizontal */
+}
+
+/* cancel the “indent” so label + far-right time still line up with non-highlight rows */
+.row3.orm-low .sc-label, .row3.orm-mod .sc-label, .row3.orm-high .sc-label, .row3.orm-severe .sc-label, .row3.orm-exceed .sc-label,
+.row3.ormm-low .sc-label, .row3.ormm-mod .sc-label, .row3.ormm-high .sc-label, .row3.ormm-severe .sc-label,
+.row4.orm-low .sc-label, .row4.orm-mod .sc-label, .row4.orm-high .sc-label, .row4.orm-severe .sc-label, .row4.orm-exceed .sc-label,
+.row4.ormm-low .sc-label, .row4.ormm-mod .sc-label, .row4.ormm-high .sc-label, .row4.ormm-severe .sc-label{
+  margin-left: -6px;
+}
+
+.row3.orm-low .zcol, .row3.orm-mod .zcol, .row3.orm-high .zcol, .row3.orm-severe .zcol, .row3.orm-exceed .zcol,
+.row3.ormm-low .zcol, .row3.ormm-mod .zcol, .row3.ormm-high .zcol, .row3.ormm-severe .zcol,
+.row4.orm-low .zcol, .row4.orm-mod .zcol, .row4.orm-high .zcol, .row4.orm-severe .zcol, .row4.orm-exceed .zcol,
+.row4.ormm-low .zcol, .row4.ormm-mod .zcol, .row4.ormm-high .zcol, .row4.ormm-severe .zcol{
+  margin-right: -6px;          /* offsets the padding so the Zulu time stays “on the rail” */
+}
+
    
 /* ========================= END OF OUTPUT PANEL ========================= */
 
